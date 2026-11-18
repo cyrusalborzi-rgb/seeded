@@ -1,0 +1,52 @@
+name: Nightly update
+
+on:
+  schedule:
+    - cron: "0 3 * * *"        # tous les jours à 3h UTC (4h à Paris en hiver)
+  workflow_dispatch: {}         # bouton "Run workflow" pour lancer à la main
+  push:
+    branches: [main]
+    paths: ["src/**", "tournaments/**", ".github/workflows/**"]   # republie dès qu'on modifie le site
+
+permissions:
+  contents: write               # pour sauvegarder l'historique (state/)
+  pages: write
+  id-token: write
+
+concurrency:
+  group: seeded-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Mise à jour complète (données, calculs, site)
+        run: python src/run_all.py --download
+      - name: Sauvegarder l'historique (évolutions d'un jour à l'autre)
+        run: |
+          git config user.name "seeded-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state/
+          git diff --cached --quiet || (git commit -m "state: mise à jour du $(date -u +%F)" && git push)
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

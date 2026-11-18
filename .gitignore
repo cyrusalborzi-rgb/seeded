@@ -1,0 +1,8 @@
+# Données brutes TennisMyLife : jamais publiées (licence non commerciale, redistribution interdite)
+data/
+# Fichiers intermédiaires et site généré (reconstruits à chaque mise à jour)
+outputs/
+site/
+__pycache__/
+*.pyc
+.DS_Store

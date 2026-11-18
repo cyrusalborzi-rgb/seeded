@@ -1,0 +1,17 @@
+[
+  {
+    "slug": "australian-open-2026",
+    "nom": "Australian Open 2026",
+    "draw": "tournaments/ao2026.csv",
+    "surface": "Hard",
+    "bo": 5,
+    "id": "2026-580",
+    "tours_joues": "R128,R64,R32",
+    "featured": true,
+    "note": "Démo : l'Open d'Australie 2026 rejoué comme si on était après le 3e tour. À remplacer par le premier tournoi de la saison.",
+    "next": {
+      "en": "Australian Open 2027 — Seeded odds published as soon as the draw is out",
+      "fr": "Open d'Australie 2027 — probabilités Seeded publiées dès le tirage"
+    }
+  }
+]
