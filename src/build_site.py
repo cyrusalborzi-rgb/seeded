@@ -10,6 +10,8 @@ import methodo
 
 import json
 from paths import OUT, SITE, TOURNAMENTS
+
+FEEDBACK_FORM = "o9RgDP"        # formulaire Tally « Seeded — Feedback » (réponses : tally.so)
 CONFIG = json.loads((TOURNAMENTS / "tournaments.json").read_text())
 FEATURED = next(t for t in CONFIG if t.get("featured"))
 site_data = json.loads((OUT / "site_data.json").read_text())
@@ -67,6 +69,13 @@ select,input{font:inherit;padding:4px 6px;border:1px solid #bbb}
 .foot{border-top:3px solid #1d3557;margin-top:20px;padding:10px 0;color:#777;font-size:11px;line-height:1.7}
 .mock{position:fixed;bottom:8px;right:8px;background:#fff3df;border:1px solid #f0d2a0;color:#a65e00;font-size:11px;padding:4px 8px}
 .page{display:none}
+.fb-btn{position:fixed;right:14px;bottom:14px;z-index:50;font:inherit;font-size:12px;background:#fff;color:#1d3557;border:1px solid #b9c3d1;
+  padding:5px 11px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.12)} .fb-btn:hover{background:#eef2f7}
+.fb-panel{position:fixed;right:14px;bottom:52px;z-index:51;width:380px;max-width:calc(100vw - 28px);height:560px;max-height:calc(100vh - 80px);
+  background:#fff;border:1px solid #1d3557;box-shadow:0 4px 18px rgba(0,0,0,.18);display:none;flex-direction:column}
+.fb-panel.on{display:flex} .fb-head{background:#1d3557;color:#fff;padding:6px 10px;font-weight:bold;display:flex;justify-content:space-between;align-items:center}
+.fb-head button{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;line-height:1}
+.fb-panel iframe{flex:1;border:0;width:100%} .fb-alt{font-size:11px;color:#777;padding:5px 10px;border-top:1px solid #eee}
 td.sp{padding:1px 4px;text-align:center} td.sp svg{display:block;margin:auto}
 __M_CSS__
 .cmp{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:14px;margin-top:14px}
@@ -181,6 +190,9 @@ __TCSS__
 <div class="page" id="p-method"><div class="mt" data-mlang="en">__M_EN__</div><div class="mt" data-mlang="fr">__M_FR__</div></div>
 
 <div class="foot" data-i="foot"></div>
+<button class="fb-btn" id="fb-btn" onclick="fbToggle()"></button>
+<div class="fb-panel" id="fb-panel"><div class="fb-head"><span id="fb-title"></span><button onclick="fbToggle(false)" aria-label="close">×</button></div>
+  <iframe id="fb-frame" title="Feedback"></iframe><div class="fb-alt" id="fb-alt"></div></div>
 </div>
 
 
@@ -214,9 +226,10 @@ const T = {
   pred_meta: 'Pick two players and a surface — powered by the Seeded Rating (real data)', bo3: 'Best of 3', bo5: 'Best of 5',
   rec_meta: 'Every number published before the tournament, checked after it. No hiding.',
   rec_t1: 'Grand Slams 2024–2026: our pre-tournament odds', rec_t2: () => `Calibration (${F.n_slams_calib} Grand Slams)`, rec_calib_note: 'When we say X%, it happens about X% of the time.',
-  foot: 'SEEDED · tennis by the numbers · About · <a href="#method">Methodology</a> · Contact · Advertise with us<br>Data: TennisMyLife (non-commercial use). Seeded is an independent project, not affiliated with the ATP. Not betting advice.',
+  foot: 'SEEDED · tennis by the numbers · About · <a href="#method">Methodology</a> · <a href="javascript:fbToggle(true)">Contact</a> · Advertise with us<br>Data: TennisMyLife (non-commercial use). Seeded is an independent project, not affiliated with the ATP. Not betting advice.',
   mock: 'MOCKUP — real data, layout to discuss',
   // tableaux
+  fb_btn: '💬 Feedback', fb_title: 'Your feedback helps Seeded', fb_alt: u => `Form not showing? <a href="${u}" target="_blank" rel="noopener">Open it in a new tab</a>`,
   h_trend: 'Trend (6 mo)', spark_tip: (a, b) => `6 months ago: ${a} → now: ${b}`,
   h_player: 'Player', h_ctry: 'Ctry', h_rating: 'Rating', h_gap: 'Gap', h_30: '30 days', h_30s: '30 d', h_rising: 'Rising', h_falling: 'Falling',
   h_qf: 'QF', h_sf: 'SF', h_f: 'F', h_win: 'WIN', h_upset: 'Upset alert', h_date: 'Date', h_tourn: 'Tournament', h_rd: 'Rd', h_opp: 'Opponent',
@@ -253,8 +266,9 @@ const T = {
   pred_meta: 'Choisis deux joueurs et une surface — calculé avec le Seeded Rating (vraies données)', bo3: '2 sets gagnants', bo5: '3 sets gagnants',
   rec_meta: 'Chaque chiffre publié avant le tournoi, vérifié après. Sans rien cacher.',
   rec_t1: 'Grands Chelems 2024-2026 : nos probabilités avant le tournoi', rec_t2: () => `Calibration (${F.n_slams_calib} Grands Chelems)`, rec_calib_note: 'Quand on annonce X %, ça arrive environ X % du temps.',
-  foot: 'SEEDED · le tennis en chiffres · À propos · <a href="#method">Méthodologie</a> · Contact · Annoncer chez nous<br>Données : TennisMyLife (usage non commercial). Seeded est un projet indépendant, sans lien avec l\'ATP. Pas un conseil de paris.',
+  foot: 'SEEDED · le tennis en chiffres · À propos · <a href="#method">Méthodologie</a> · <a href="javascript:fbToggle(true)">Contact</a> · Annoncer chez nous<br>Données : TennisMyLife (usage non commercial). Seeded est un projet indépendant, sans lien avec l\'ATP. Pas un conseil de paris.',
   mock: 'MAQUETTE — vraies données, mise en page à discuter',
+  fb_btn: '💬 Ton avis', fb_title: 'Ton avis aide Seeded à progresser', fb_alt: u => `Le formulaire ne s'affiche pas ? <a href="${u}" target="_blank" rel="noopener">Ouvre-le dans un nouvel onglet</a>`,
   h_trend: 'Tendance (6 mois)', spark_tip: (a, b) => `Il y a 6 mois : ${a} → aujourd'hui : ${b}`,
   h_player: 'Joueur', h_ctry: 'Pays', h_rating: 'Note', h_gap: 'Écart', h_30: '30 jours', h_30s: '30 j', h_rising: 'En hausse', h_falling: 'En baisse',
   h_qf: 'QF', h_sf: 'DF', h_f: 'F', h_win: 'TITRE', h_upset: 'Alerte surprise', h_date: 'Date', h_tourn: 'Tournoi', h_rd: 'Tour', h_opp: 'Adversaire',
@@ -468,7 +482,20 @@ function renderRecord() {
 }
 
 let TOUR = null;
-function renderAll() { renderStatic(); renderHome(); renderRating(); renderPlayer(); renderPredictor(); renderRecord(); renderMethod();
+// ---- encadré d'avis (formulaire Tally ; la page et la langue sont transmises en champs cachés)
+const FB = '__FB__';
+function fbUrl(kind) {
+  const page = (location.hash || '#home').slice(1);
+  return `https://tally.so/${kind}/${FB}?page=${encodeURIComponent(page)}&lang=${L}` + (kind === 'embed' ? '&hideTitle=1&transparentBackground=1' : '');
+}
+function fbToggle(force) {
+  const p = $('#fb-panel'), open = force === undefined ? !p.classList.contains('on') : force;
+  p.classList.toggle('on', open);
+  if (open) { $('#fb-frame').src = fbUrl('embed'); $('#fb-alt').innerHTML = t('fb_alt', fbUrl('r')); }
+}
+function renderFeedback() { $('#fb-btn').textContent = t('fb_btn'); $('#fb-title').textContent = t('fb_title'); }
+
+function renderAll() { renderFeedback(); renderStatic(); renderHome(); renderRating(); renderPlayer(); renderPredictor(); renderRecord(); renderMethod();
   if (TOUR) TOUR.setLang(L); else TOUR = SeededTournament($('#tour-app'), DT, L); }
 
 // ------------------------------------------------------------ interactions
@@ -491,7 +518,7 @@ renderAll(); route();
 </script></body></html>"""
 
 def page(data_obj):
-    return (HTML.replace("__M_CSS__", methodo.CSS).replace("__M_EN__", methodo.render("en", facts))
+    return (HTML.replace("__FB__", FEEDBACK_FORM).replace("__M_CSS__", methodo.CSS).replace("__M_EN__", methodo.render("en", facts))
                 .replace("__M_FR__", methodo.render("fr", facts))
                 .replace("__TCSS__", T_CSS).replace("__TJS__", T_JS).replace("__FACTS__", json.dumps(facts))
                 .replace("__TOUR__", tour).replace("__DATA__", json.dumps(data_obj)))
