@@ -67,6 +67,7 @@ select,input{font:inherit;padding:4px 6px;border:1px solid #bbb}
 .foot{border-top:3px solid #1d3557;margin-top:20px;padding:10px 0;color:#777;font-size:11px;line-height:1.7}
 .mock{position:fixed;bottom:8px;right:8px;background:#fff3df;border:1px solid #f0d2a0;color:#a65e00;font-size:11px;padding:4px 8px}
 .page{display:none}
+td.sp{padding:1px 4px;text-align:center} td.sp svg{display:block;margin:auto}
 __M_CSS__
 .cmp{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:14px;margin-top:14px}
 .cmp .big{font-size:34px} .cmp .kv{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #eee}
@@ -216,6 +217,7 @@ const T = {
   foot: 'SEEDED · tennis by the numbers · About · <a href="#method">Methodology</a> · Contact · Advertise with us<br>Data: TennisMyLife (non-commercial use). Seeded is an independent project, not affiliated with the ATP. Not betting advice.',
   mock: 'MOCKUP — real data, layout to discuss',
   // tableaux
+  h_trend: 'Trend (6 mo)', spark_tip: (a, b) => `6 months ago: ${a} → now: ${b}`,
   h_player: 'Player', h_ctry: 'Ctry', h_rating: 'Rating', h_gap: 'Gap', h_30: '30 days', h_30s: '30 d', h_rising: 'Rising', h_falling: 'Falling',
   h_qf: 'QF', h_sf: 'SF', h_f: 'F', h_win: 'WIN', h_upset: 'Upset alert', h_date: 'Date', h_tourn: 'Tournament', h_rd: 'Rd', h_opp: 'Opponent',
   h_opprt: 'Opp. rating', h_score: 'Score', h_pts: 'Points won', h_champ: 'Champion', h_odds: 'Our odds', h_ourrk: 'Our rank', h_fav: 'Our #1 favourite',
@@ -252,6 +254,7 @@ const T = {
   rec_t1: 'Grands Chelems 2024-2026 : nos probabilités avant le tournoi', rec_t2: () => `Calibration (${F.n_slams_calib} Grands Chelems)`, rec_calib_note: 'Quand on annonce X %, ça arrive environ X % du temps.',
   foot: 'SEEDED · le tennis en chiffres · À propos · <a href="#method">Méthodologie</a> · Contact · Annoncer chez nous<br>Données : TennisMyLife (usage non commercial). Seeded est un projet indépendant, sans lien avec l\'ATP. Pas un conseil de paris.',
   mock: 'MAQUETTE — vraies données, mise en page à discuter',
+  h_trend: 'Tendance (6 mois)', spark_tip: (a, b) => `Il y a 6 mois : ${a} → aujourd'hui : ${b}`,
   h_player: 'Joueur', h_ctry: 'Pays', h_rating: 'Note', h_gap: 'Écart', h_30: '30 jours', h_30s: '30 j', h_rising: 'En hausse', h_falling: 'En baisse',
   h_qf: 'QF', h_sf: 'DF', h_f: 'F', h_win: 'TITRE', h_upset: 'Alerte surprise', h_date: 'Date', h_tourn: 'Tournoi', h_rd: 'Tour', h_opp: 'Adversaire',
   h_opprt: 'Note adv.', h_score: 'Score', h_pts: 'Points gagnés', h_champ: 'Vainqueur', h_odds: 'Nos chances', h_ourrk: 'Notre rang', h_fav: 'Notre favori n°1',
@@ -297,6 +300,20 @@ function renderStatic() {
   $('#c3v').textContent = `${F.top3.in_top3} / ${F.top3.n}`;
 }
 
+// ---- mini-courbe de tendance (note relevée chaque semaine sur 6 mois)
+function spark(vals, w = 80, h = 20) {
+  const v = (vals || []).filter(x => x != null);
+  if (v.length < 2) return '';
+  const lo = Math.min(...v), hi = Math.max(...v), span = Math.max(hi - lo, 6);   // échelle mini de 6 points : une petite variation reste petite à l'oeil
+  const mid = (hi + lo) / 2, y = x => h - 3 - ((x - (mid - span / 2)) / span) * (h - 6);
+  const step = (w - 6) / (v.length - 1);
+  const pts = v.map((x, i) => `${(3 + i * step).toFixed(1)},${y(x).toFixed(1)}`).join(' ');
+  const d = v[v.length - 1] - v[0], col = d > 1 ? '#2e8b2e' : d < -1 ? '#c0392b' : '#8a8a8a';
+  const [lx, ly] = [3 + (v.length - 1) * step, y(v[v.length - 1])];
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><title>${t('spark_tip', fmt(v[0]), fmt(v[v.length - 1]))}</title>` +
+    `<polyline fill="none" stroke="${col}" stroke-width="1.5" points="${pts}"/><circle cx="${lx}" cy="${ly}" r="2" fill="${col}"/></svg>`;
+}
+
 function renderHome() {
   $('#h1').textContent = R[0].name; $('#h1s').textContent = `${fmt(R[0].note)} / 100`;
   const und = R.filter(r => r.rank <= 50 && r.atp).sort((a, b) => b.gap - a.gap)[0];
@@ -304,8 +321,8 @@ function renderHome() {
   $('#h4s').textContent = `Seeded ${nr}${und.rank} · ATP ${nr}${und.atp}`;
   $('#ao-mini').innerHTML = `<tr><th>${t('h_player')}</th><th>${t('h_qf')}</th><th>${t('h_sf')}</th><th>${t('h_f')}</th><th>${t('h_win')}</th></tr>` +
     D.ao.slice(0, 5).map(r => `<tr><td><b>${r.player}</b></td><td class="n">${fmt(r.QF)}</td><td class="n">${fmt(r.SF)}</td><td class="n">${fmt(r.F)}</td><td class="n b">${pct(r.Titre)}</td></tr>`).join('');
-  $('#r-mini').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th><th>${t('h_rating')}</th><th>ATP</th><th>${t('h_gap')}</th></tr>` +
-    R.slice(0, 10).map(r => `<tr><td class="n">${r.rank}</td><td><b>${r.name}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td><td class="n b">${fmt(r.note)}</td><td class="n">${r.atp ?? ''}</td>${gapCell(r.gap)}</tr>`).join('');
+  $('#r-mini').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th><th>${t('h_rating')}</th><th>${t('h_trend')}</th><th>ATP</th><th>${t('h_gap')}</th></tr>` +
+    R.slice(0, 10).map(r => `<tr><td class="n">${r.rank}</td><td><b>${r.name}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td><td class="n b">${fmt(r.note)}</td><td class="sp">${spark(r.spark)}</td><td class="n">${r.atp ?? ''}</td>${gapCell(r.gap)}</tr>`).join('');
   const mv = R.filter(r => r.rank <= 100 && r.d30 != null);
   const ups = [...mv].sort((a, b) => b.d30 - a.d30).slice(0, 5), downs = [...mv].sort((a, b) => a.d30 - b.d30).slice(0, 5);
   $('#movers').innerHTML = `<tr><th>${t('h_rising')}</th><th>${t('h_rating')}</th><th>${t('h_30s')}</th><th>${t('h_falling')}</th><th>${t('h_rating')}</th><th>${t('h_30s')}</th></tr>` +
@@ -318,9 +335,9 @@ function renderRating() {
   const q = $('#rq').value.toLowerCase();
   const rows = [...R].sort((a, b) => b[surf] - a[surf]).map((r, i) => ({...r, srank: i + 1}))
     .filter(r => r.name.toLowerCase().includes(q)).slice(0, 100);
-  $('#r-full').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th><th>${t('h_rating')}</th><th>${t('hard')}</th><th>${t('clay')}</th><th>${t('grass')}</th><th>ATP</th><th>${t('h_gap')}</th><th>${t('h_30')}</th></tr>` +
+  $('#r-full').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th><th>${t('h_rating')}</th><th>${t('h_trend')}</th><th>${t('hard')}</th><th>${t('clay')}</th><th>${t('grass')}</th><th>ATP</th><th>${t('h_gap')}</th><th>${t('h_30')}</th></tr>` +
     rows.map(r => `<tr><td class="n">${r.srank}</td><td><b>${r.name}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td>
-    <td class="n ${surf === 'note' ? 'b' : ''}">${fmt(r.note)}</td><td class="n ${surf === 'hard' ? 'b' : ''}">${fmt(r.hard)}</td>
+    <td class="n ${surf === 'note' ? 'b' : ''}">${fmt(r.note)}</td><td class="sp">${spark(r.spark)}</td><td class="n ${surf === 'hard' ? 'b' : ''}">${fmt(r.hard)}</td>
     <td class="n ${surf === 'clay' ? 'b' : ''}">${fmt(r.clay)}</td><td class="n ${surf === 'grass' ? 'b' : ''}">${fmt(r.grass)}</td>
     <td class="n">${r.atp ?? ''}</td>${gapCell(r.gap)}<td class="n ${r.d30 > 0 ? 'up' : r.d30 < 0 ? 'down' : 'z'}">${r.d30 == null ? '–' : (r.d30 > 0 ? '+' : '') + fmt(r.d30)}</td></tr>`).join('');
 }
@@ -378,7 +395,8 @@ function card(i, sf) {
   const r = R[i], f = D.form[i] || [], w = f.filter(x => x[5] === 'W').length;
   const nr = L === 'fr' ? 'n°' : '#';
   const sq = f.slice().reverse().map(x => `<span class="sq ${x[5]}" title="${monthYear(x[0])} · ${t('tour', x[1])} ${t('round', x[2])} · ${x[4]} · ${x[6]}">${x[5] === 'W' ? t('win') : t('loss')}</span>`).join('');
-  return `<div class="big">${fmt(r.note)}</div><div class="meta">Seeded Rating /100</div>
+  return `<div style="display:flex;align-items:flex-end;gap:12px"><div><div class="big">${fmt(r.note)}</div><div class="meta">Seeded Rating /100</div></div>
+    <div style="margin-bottom:10px">${spark(r.spark, 150, 38)}<div class="meta" style="margin:0;text-align:center">${t('h_trend')}</div></div></div>
     <div class="kv"><span>${t('srank')}</span><b>${nr}${r.rank}</b></div>
     <div class="kv"><span>${t('atprank')}</span><b>${r.atp ? nr + r.atp : '–'}</b></div>
     <div class="kv"><span>${t('surf_rt', t(sf))}</span><b>${fmt(r[sf])}</b></div>

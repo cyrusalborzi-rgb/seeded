@@ -20,8 +20,15 @@ watch_id = m.loc[m.winner_name == WATCH, "winner_id"].iloc[0]
 month_marks = sorted({int(pd.Timestamp(y, mo, 1).toordinal()) for y in (YEAR - 1, YEAR) for mo in range(1, 13)
                       if pd.Timestamp(y, mo, 1).toordinal() <= today})
 hist_watch, recent, snap30 = [], [], None
+# relevés hebdomadaires de la note (26 semaines) pour les mini-courbes de tendance
+week_marks = [today - 7 * k for k in range(26, 0, -1)]
+weekly, wi = [], 0
 mi = 0
 for r in m.itertuples(index=False):
+    while wi < len(week_marks) and r.day >= week_marks[wi]:
+        d0 = week_marks[wi]
+        weekly.append({pid: sr.note(pid, d0) for pid in sr.hist if sr.n_recent(pid, d0) >= 5})
+        wi += 1
     while mi < len(month_marks) and r.day >= month_marks[mi]:
         hist_watch.append((date.fromordinal(month_marks[mi]).strftime("%b %y"), round(sr.note(watch_id, month_marks[mi]), 1)))
         mi += 1
@@ -56,7 +63,8 @@ for pid in sr.hist:
                  "clay": round(sr.note(pid, today, "Clay"), 1), "grass": round(sr.note(pid, today, "Grass"), 1),
                  "atp": None if pid not in last.index or pd.isna(last.at[pid, "rank"]) else int(last.at[pid, "rank"]),
                  "d30": round(sr.note(pid, today) - snap30[pid], 1) if snap30 and pid in snap30 else None,
-                 "inactive": bool(today - sr.last_day(pid) > 90)})
+                 "inactive": bool(today - sr.last_day(pid) > 90),
+                 "spark": [round(w[pid], 1) if pid in w else None for w in weekly] + [round(sr.note(pid, today), 1)]})
 df = pd.DataFrame(rows).sort_values("note", ascending=False).reset_index(drop=True)
 df["rank"] = df.index + 1
 df["gap"] = df.atp - df["rank"]
