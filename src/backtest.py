@@ -16,7 +16,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from seeded_model import load_matches, build_bracket, simulate_draw, expected, bo3_to_bo5
-from seeded_rating import SeededRating
+from seeded_rating import SeededRating, to_100
 
 import json
 from paths import DATA, OUT, YEAR
@@ -43,13 +43,14 @@ model = SeededRating()
 preds, snaps = [], {}
 for row in matches.itertuples(index=False):
     if row.tourney_id in slams and row.source == "main" and row.tourney_id not in snaps:
-        snaps[row.tourney_id] = model.view(row.day)
+        snaps[row.tourney_id] = model.view(row.day, row.tourney_id)
         g = slams[row.tourney_id]
         for pid in set(g.winner_id) | set(g.loser_id):      # on fige les notes
             snaps[row.tourney_id].rating(pid, row.surface)
+            snaps[row.tourney_id].display_level(pid, row.surface)
     if row.tourney_date >= 20230101 and row.source == "main":
-        p_s = expected(model.level(row.winner_id, row.day, row.surface),
-                       model.level(row.loser_id, row.day, row.surface))
+        p_s = expected(model.level_match(row.winner_id, row.day, row.surface, row.tourney_id),
+                       model.level_match(row.loser_id, row.day, row.surface, row.tourney_id))
         p_e = model.elo.prob(row.winner_id, row.loser_id, row.surface)
         if row.best_of == 5:
             p_s, p_e = float(bo3_to_bo5(np.array([p_s]))[0]), float(bo3_to_bo5(np.array([p_e]))[0])
@@ -97,7 +98,7 @@ for tid, g in sorted(slams.items(), key=lambda kv: kv[1].tourney_date.iloc[0]):
                         "Rang chez Seeded": f"favori n°{pos}",
                         "Favori n°1 de Seeded": f"{sim.player[0]} ({sim.Titre[0]:.1f} %)"})
     if name == "Australian Open" and year == "2026":
-        ao2026 = sim
+        ao2026, snap_ao = sim, snap
 
 print("\n2) Chances de titre AVANT chaque Grand Chelem 2024-2026 (10 000 simulations)")
 summary = pd.DataFrame(summary)
@@ -124,7 +125,7 @@ FACTS["last_year"] = int(YEAR)
 if ao2026 is None:
     raise SystemExit(0)
 print("\n4) Open d'Australie 2026 — top 10 avant le tournoi")
-ao2026["note"] = ((ao2026.elo - 1000) / 15).clip(0, 100).round(1)       # Seeded Rating /100
+ao2026["note"] = [round(float(to_100(snap_ao.display_level(p, "Hard"))), 1) for p in ao2026.id]   # note /100 (sans rythme)
 cols = ["player", "note", "R64", "R32", "R16", "QF", "SF", "F", "Titre"]
 ao2026[cols].round(1).to_csv(OUT / "ao2026_probas.csv", index=False)
 print(ao2026[["player", "note", "QF", "SF", "F", "Titre"]].head(10).round(1).to_string(index=False))

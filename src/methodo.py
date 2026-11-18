@@ -10,7 +10,7 @@ CSS = r"""
 .flow .st b{display:block;color:#1d3557;font-size:13px;margin-bottom:3px}
 .flow .ar{display:flex;align-items:center;padding:0 6px;color:#1d3557;font-weight:bold;font-size:18px}
 .mt table{width:auto;min-width:420px} .mt .faq b{display:block;margin-top:8px;color:#1d3557}
-.mt .ver td:first-child{font-weight:bold;white-space:nowrap}
+.mt td{white-space:normal;vertical-align:top} .mt .ver td:first-child{font-weight:bold;white-space:nowrap}
 .kpi{display:flex;gap:10px;margin:8px 0} .kpi div{border:1px solid #ccc;padding:8px 12px;background:#fbfcfe;flex:1}
 .kpi b{display:block;font-size:20px;color:#1d3557}
 """
@@ -50,25 +50,36 @@ to turn that level into probabilities. Every number on the site is measured and 
 <li>Matches already played are locked in, and the odds are updated after each day of play.</li>
 <li><b>What if?</b> Your picks are locked in too, and 20,000 draws are replayed instantly in your browser.</li></ul>
 
-<h2>4. Does it work?</h2>
+<h2>4. Match context: what we tested</h2>
+<p>Beyond level, we tested whether the context of a match improves predictions (tuned on 2019–2022, checked on 2023–2026):</p>
+<table class="ver">
+<tr><td>✅ Rhythm</td><td><b>Kept.</b> Each match played in the last 14 days (including earlier rounds and qualifying) adds a small bonus — about +0.9 percentage point per match more than the opponent. Players on a run win a bit more often than their rating says. Positive in every test year.</td></tr>
+<tr><td>❌ Fatigue</td><td>Rejected. The length of the previous match, a deciding set or the minutes played in the tournament do not help. Surprisingly, a player coming out of a marathon wins slightly <i>more</i> often than expected: if he is still there, he is in form.</td></tr>
+<tr><td>❌ Indoor / outdoor</td><td>Rejected: no measurable effect beyond the surface rating.</td></tr>
+<tr><td>❌ Head-to-head</td><td>Rejected (see below).</td></tr>
+</table>
+<p>The rhythm bonus is used for predictions only: it does not change the Seeded Rating shown on the site.</p>
+
+<h2>5. Does it work?</h2>
 <p>The model was tuned on 2010–2022 and tested on {test_years} matches it had never seen.</p>
 <div class="kpi"><div><b>{acc_main}</b>correct picks, ATP main tour ({n_main} matches)</div><div><b>{acc_atp}</b>with the ATP ranking (higher-ranked player wins)</div><div><b>{acc_slam}</b>correct picks in Grand Slams (ATP ranking: {acc_slam_atp})</div></div>
 <p>{top3_en} And when we announce X% chances of winning the title, it happens about X% of the time ({n_calib} Grand Slams since 2012):</p>
 <table class="calib-tbl"></table>
 
-<h2>5. What we don't do — and why</h2>
+<h2>6. What we don't do — and why</h2>
 <ul><li><b>No head-to-head adjustment.</b> We tested it: adding past meetings does not improve predictions (log-loss 0.6043 → 0.6042). We show head-to-heads for context only.</li>
 <li><b>No injury news.</b> The model only sees results. A player carrying an injury can be overrated until he plays.</li>
 <li><b>No betting advice.</b> These are probabilities from a model, not odds or tips.</li>
 <li>Seeded is an independent project, not affiliated with the ATP.</li></ul>
 
-<h2>6. Known limits</h2>
+<h2>7. Known limits</h2>
 <ul><li>Ratings are frozen at the start of a tournament (in-tournament updates are coming).</li>
+<li>Fatigue is not modelled: our tests found no reliable effect.</li>
 <li>Results arrive with about one day of delay.</li>
 <li>The ATP rank shown is the player's rank at his last match.</li>
 <li>Young players and comebacks have little data: their rating moves fast and is less certain.</li></ul>
 
-<h2>7. FAQ</h2>
+<h2>8. FAQ</h2>
 <div class="faq">
 <b>Why is a player rated above his ATP ranking?</b>The ATP ranking adds up points from tournaments over 52 weeks: it rewards playing (and winning) a lot. The Seeded Rating measures how well you play, whatever your schedule. A player back from injury, or who plays few events, can be much better than his ranking.
 <b>Why is a player still #1 if he hasn't played for months?</b>His matches from the last 12 months still count. The "inactive" badge flags it, and his rating updates as soon as he plays again.
@@ -76,11 +87,12 @@ to turn that level into probabilities. Every number on the site is measured and 
 <b>How often is it updated?</b>Every day, and after each day of play during tournaments.
 </div>
 
-<h2>8. Data &amp; credits</h2>
+<h2>9. Data &amp; credits</h2>
 <p>Match data: <b>TennisMyLife</b> (stats.tennismylife.org), used for non-commercial purposes. Thanks to everyone who keeps tennis data open.</p>
 
-<h2>9. Version history</h2>
+<h2>10. Version history</h2>
 <table class="ver">
+<tr><td>v0.6</td><td>Match context tested: rhythm over 14 days kept (fatigue, indoor rejected) · 6-month trend lines</td></tr>
 <tr><td>v0.5</td><td>"What if?" draw simulator, enriched match predictor, site in English &amp; French</td></tr>
 <tr><td>v0.4</td><td>Seeded Rating (point-by-point dominance + Elo) becomes the engine of the simulations</td></tr>
 <tr><td>v0.3</td><td>Tournament pages: odds by round and match-by-match draw</td></tr>
@@ -124,25 +136,36 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <li>Les matchs déjà joués sont figés, et les probabilités sont mises à jour après chaque journée.</li>
 <li><b>Et si ?</b> Tes choix sont figés eux aussi, et 20 000 tableaux sont rejoués instantanément dans ton navigateur.</li></ul>
 
-<h2>4. Est-ce que ça marche ?</h2>
+<h2>4. Le contexte du match : ce qu'on a testé</h2>
+<p>Au-delà du niveau, on a testé si le contexte d'un match améliore les prédictions (réglage sur 2019-2022, vérification sur 2023-2026) :</p>
+<table class="ver">
+<tr><td>✅ Rythme</td><td><b>Retenu.</b> Chaque match joué sur les 14 derniers jours (tours précédents et qualifs compris) ajoute un petit bonus : environ +0,9 point de pourcentage par match de plus que l'adversaire. Un joueur lancé gagne un peu plus souvent que ce que dit sa note. Positif chaque année testée.</td></tr>
+<tr><td>❌ Fatigue</td><td>Rejetée. La durée du match précédent, un set décisif ou les minutes jouées dans le tournoi n'aident pas. Surprise : un joueur qui sort d'un marathon gagne même un peu <i>plus</i> souvent que prévu — s'il est encore là, c'est qu'il est en forme.</td></tr>
+<tr><td>❌ Salle / extérieur</td><td>Rejeté : aucun effet mesurable au-delà de la note par surface.</td></tr>
+<tr><td>❌ Face-à-face</td><td>Rejeté (voir plus bas).</td></tr>
+</table>
+<p>Le bonus de rythme sert uniquement aux prédictions : il ne change pas le Seeded Rating affiché sur le site.</p>
+
+<h2>5. Est-ce que ça marche ?</h2>
 <p>Le modèle a été réglé sur 2010-2022, puis testé sur des matchs {test_years_fr} qu'il n'avait jamais vus.</p>
 <div class="kpi"><div><b>{acc_main}</b>de bons pronostics sur le circuit ATP ({n_main} matchs)</div><div><b>{acc_atp}</b>avec le classement ATP (le mieux classé gagne)</div><div><b>{acc_slam}</b>de bons pronostics en Grand Chelem (classement ATP : {acc_slam_atp})</div></div>
 <p>{top3_fr} Et quand on annonce X % de chances de titre, ça arrive environ X % du temps ({n_calib} Grands Chelems depuis 2012) :</p>
 <table class="calib-tbl"></table>
 
-<h2>5. Ce qu'on ne fait pas — et pourquoi</h2>
+<h2>6. Ce qu'on ne fait pas — et pourquoi</h2>
 <ul><li><b>Pas d'ajustement face-à-face.</b> On l'a testé : ajouter les confrontations passées n'améliore pas les prédictions (log-loss 0,6043 → 0,6042). On affiche le face-à-face pour info seulement.</li>
 <li><b>Pas d'infos blessures.</b> Le modèle ne voit que les résultats. Un joueur blessé peut être surestimé tant qu'il n'a pas joué.</li>
 <li><b>Pas de conseils de paris.</b> Ce sont des probabilités issues d'un modèle, pas des cotes ni des pronostics à jouer.</li>
 <li>Seeded est un projet indépendant, sans lien avec l'ATP.</li></ul>
 
-<h2>6. Limites connues</h2>
+<h2>7. Limites connues</h2>
 <ul><li>Les notes sont figées au début du tournoi (la mise à jour pendant le tournoi arrive).</li>
+<li>La fatigue n'est pas prise en compte : nos tests n'ont trouvé aucun effet fiable.</li>
 <li>Les résultats arrivent avec environ un jour de décalage.</li>
 <li>Le classement ATP affiché est celui du joueur à son dernier match.</li>
 <li>Les jeunes joueurs et les retours de blessure ont peu de données : leur note bouge vite et est moins sûre.</li></ul>
 
-<h2>7. FAQ</h2>
+<h2>8. FAQ</h2>
 <div class="faq">
 <b>Pourquoi un joueur est-il mieux noté que son classement ATP ?</b>Le classement ATP additionne les points des tournois sur 52 semaines : il récompense le fait de jouer (et gagner) beaucoup. Le Seeded Rating mesure ton niveau de jeu, quel que soit ton calendrier. Un joueur qui revient de blessure, ou qui joue peu, peut valoir bien mieux que son classement.
 <b>Pourquoi un joueur reste-t-il n°1 alors qu'il n'a pas joué depuis des mois ?</b>Ses matchs des 12 derniers mois comptent toujours. Le badge « inactif » le signale, et sa note se met à jour dès qu'il rejoue.
@@ -150,11 +173,12 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <b>À quelle fréquence c'est mis à jour ?</b>Chaque jour, et après chaque journée de jeu pendant les tournois.
 </div>
 
-<h2>8. Données et crédits</h2>
+<h2>9. Données et crédits</h2>
 <p>Données des matchs : <b>TennisMyLife</b> (stats.tennismylife.org), utilisées à des fins non commerciales. Merci à tous ceux qui gardent les données du tennis ouvertes.</p>
 
-<h2>9. Historique des versions</h2>
+<h2>10. Historique des versions</h2>
 <table class="ver">
+<tr><td>v0.6</td><td>Contexte du match testé : rythme sur 14 jours retenu (fatigue, salle rejetées) · courbes de tendance sur 6 mois</td></tr>
 <tr><td>v0.5</td><td>Simulateur « Et si ? », comparateur de match enrichi, site en anglais et en français</td></tr>
 <tr><td>v0.4</td><td>Le Seeded Rating (domination aux points + Elo) devient le moteur des simulations</td></tr>
 <tr><td>v0.3</td><td>Pages tournoi : probabilités par tour et tableau match par match</td></tr>

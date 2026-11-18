@@ -32,7 +32,9 @@ COLS = ["tourney_id", "tourney_name", "surface", "tourney_level",
         "winner_id", "winner_name", "winner_rank", "winner_ioc", "winner_entry",
         "loser_id", "loser_name", "loser_rank", "loser_ioc", "loser_entry",
         # stats de service (pour mesurer la domination au point près)
-        "w_svpt", "w_1stWon", "w_2ndWon", "l_svpt", "l_1stWon", "l_2ndWon"]
+        "w_svpt", "w_1stWon", "w_2ndWon", "l_svpt", "l_1stWon", "l_2ndWon",
+        # contexte du match (durée, salle)
+        "minutes", "indoor"]
 
 
 def load_matches(data_dir="data", start_year=1995, end_year=2026):

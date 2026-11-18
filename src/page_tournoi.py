@@ -199,7 +199,7 @@ function SeededTournament(root, D, lang) {
         `<td class="n ${d > 0 ? 'up' : 'down'}">${d > 0 ? '+' : ''}${nf(d)}</td>`;
       const cls = o.out ? 'out' : o.wout ? 'wout' : FW[o.i] > RW[o.i] ? 'pick' : '';
       return `<tr class="${cls}"><td class="n">${n}</td><td class="pl">${o.p.name}${FW[o.i] > RW[o.i] ? ' 🔮' : ''}</td><td>${o.p.ioc || ''}</td>
-        <td class="n">${o.p.atp ?? ''}</td><td class="n">${nf((o.p.level - 1000) / 15)}</td>` +
+        <td class="n">${o.p.atp ?? ''}</td><td class="n">${nf(o.p.note ?? (o.p.level - 1000) / 15)}</td>` +
         cols.map(k => o.out ? '<td class="n z">–</td>' : cell(o.r[k])).join('') + dc + '</tr>';
     }).join('');
     R('t').innerHTML = h;

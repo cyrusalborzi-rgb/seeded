@@ -225,6 +225,7 @@ const T = {
   inactive: 'inactive', last_match: 'last match', under: n => `Underrated by ${n} places`, over: n => `Overrated by ${n} places`, inline: 'In line with his level',
   win: 'W', loss: 'L', grid_t: s => `Top 8 head-to-head grid — chance that the row player beats the column player (${s}, best of 3)`,
   pred_exp: (s, a, av, b, bv, g) => `${s} rating: ${a} <b>${av}</b> vs ${b} <b>${bv}</b> (gap ${g} points).`,
+  rhythm_line: (who, d, an, a, bn, b) => `Rhythm: ${an} ${a} match${a === 1 ? '' : 'es'} in the last 14 days, ${bn} ${b}` + (who ? ` → <b>+${d} for ${who}</b>` : ' → no real effect') + ' <a href="#method">(?)</a>',
   pred_lock: 'Head-to-head is shown for context only: we tested it, and adding it does not improve our predictions (log-loss 0.6043 → 0.6042 on 2023–26 matches).',
   h2h_t: 'Head-to-head', on_surf: s => `On ${s.toLowerCase()}`, last_meet: 'Last meeting', never: 'They have never played each other (tour, Challenger or qualifying).',
   form_t: 'Last 10 matches', rec: (w, l) => `${w}–${l}`, trend: 'Last 30 days', srank: 'Seeded rank', atprank: 'ATP rank', surf_rt: s => `${s} rating`,
@@ -262,6 +263,7 @@ const T = {
   inactive: 'inactif', last_match: 'dernier match le', under: n => `Sous-coté de ${n} places`, over: n => `Surcoté de ${n} places`, inline: 'Conforme à son niveau',
   win: 'V', loss: 'D', grid_t: s => `Face-à-face du top 8 — chances que le joueur en ligne batte le joueur en colonne (${s}, 2 sets gagnants)`,
   pred_exp: (s, a, av, b, bv, g) => `Note ${s.toLowerCase()} : ${a} <b>${av}</b> contre ${b} <b>${bv}</b> (écart de ${g} points).`,
+  rhythm_line: (who, d, an, a, bn, b) => `Rythme : ${an} ${a} match${a > 1 ? 's' : ''} sur les 14 derniers jours, ${bn} ${b}` + (who ? ` → <b>+${d} pour ${who}</b>` : ' → effet négligeable') + ' <a href="#method">(?)</a>',
   pred_lock: 'Le face-à-face est affiché pour info : on l\'a testé, et l\'ajouter n\'améliore pas nos prédictions (log-loss 0,6043 → 0,6042 sur les matchs 2023-26).',
   h2h_t: 'Face-à-face', on_surf: s => `Sur ${s.toLowerCase()}`, last_meet: 'Dernier match', never: 'Ils ne se sont jamais affrontés (circuit, Challenger ou qualifs).',
   form_t: '10 derniers matchs', rec: (w, l) => `${w} V – ${l} D`, trend: '30 derniers jours', srank: 'Rang Seeded', atprank: 'Classement ATP', surf_rt: s => `Note ${s.toLowerCase()}`,
@@ -372,11 +374,15 @@ function renderPredictor() {
   $('#pa').innerHTML = opts; $('#pb').innerHTML = opts;
   $('#pa').value = keep[0] || 0; $('#pb').value = keep[1] || 1;
   const a = R[$('#pa').value], b = R[$('#pb').value], sf = $('#ps').value;
-  let p = 1 / (1 + Math.pow(10, -(a[sf] - b[sf]) * 15 / 400));      // note /100 -> échelle Elo
+  const RH = 6.25;                                                   // bonus de rythme (Elo par match sur 14 jours)
+  const rdiff = RH * ((a.n14 || 0) - (b.n14 || 0));
+  let p = 1 / (1 + Math.pow(10, -((a[sf] - b[sf]) * 15 + rdiff) / 400));   // note /100 -> échelle Elo, + rythme
   if ($('#pbo').value === '5') p = bo5(p);
   $('#ba').style.width = (100 * p) + '%'; $('#bb').style.width = (100 * (1 - p)) + '%';
   $('#ba').textContent = `${a.name} ${pct(100 * p, 0)}`; $('#bb').textContent = `${pct(100 * (1 - p), 0)} ${b.name}`;
-  $('#pexp').innerHTML = t('pred_exp', t(sf), a.name, fmt(a[sf]), b.name, fmt(b[sf]), fmt(Math.abs(a[sf] - b[sf]))) +
+  const p0 = 1 / (1 + Math.pow(10, -((a[sf] - b[sf]) * 15) / 400)), dr = 100 * (p - (($('#pbo').value === '5') ? bo5(p0) : p0));
+  const rhythm = (a.n14 || 0) === (b.n14 || 0) ? '' : '<br>' + t('rhythm_line', Math.abs(dr) < 0.5 ? null : (dr > 0 ? a.name : b.name), pct(Math.abs(dr), 1), a.name, a.n14 || 0, b.name, b.n14 || 0);
+  $('#pexp').innerHTML = t('pred_exp', t(sf), a.name, fmt(a[sf]), b.name, fmt(b[sf]), fmt(Math.abs(a[sf] - b[sf]))) + rhythm +
     `<br><span style="color:#888">ⓘ ${t('pred_lock')}</span>`;
   renderCompare(+$('#pa').value, +$('#pb').value, sf);
   const T8 = R.slice(0, 8);

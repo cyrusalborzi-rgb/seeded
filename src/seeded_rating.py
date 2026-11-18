@@ -38,6 +38,12 @@ C_SLOPE = 0.000659         # logit(% points gagnés) ≈ C_SLOPE × écart Elo
 K_EQUIV = 0.65             # 1 point de "note de domination" ≈ 0.65 point Elo
 BLEND = 0.30               # part de la note de domination dans la note finale
 
+# Rythme (testé : seul effet de contexte retenu, v0.6) : chaque match joué sur les
+# 14 derniers jours (tournoi en cours compris, qualifs comprises) ajoute ce bonus au
+# niveau utilisé pour PRÉDIRE un match. Il n'entre pas dans la note affichée.
+RHYTHM_ELO = 6.25
+RHYTHM_DAYS = 14
+
 # échelle /100 :  note = (niveau - OFFSET) / SCALE   (15 pts Elo = 1 point)
 OFFSET, SCALE = 1000.0, 15.0
 
@@ -57,6 +63,7 @@ class SeededRating:
         self.half_life, self.surface_boost = half_life, surface_boost
         self.max_matches, self.window = max_matches, window
         self.hist = {}       # joueur -> deque de (jour, note_perf, poids, surface)
+        self.recent = {}     # joueur -> deque de (jour, tournoi) pour le rythme
         self.elo = EloModel()
 
     # --- note actuelle d'un joueur -----------------------------------------
@@ -83,13 +90,21 @@ class SeededRating:
         elo = self.elo.overall.get(pid, self.elo.start) if surface is None else self.elo.rating(pid, surface)
         return (1 - BLEND) * elo + BLEND * K_EQUIV * self.rating(pid, day, surface)
 
+    def n_rhythm(self, pid, day, tid=None):
+        """Nb de matchs joués sur les 14 derniers jours (+ ceux déjà joués dans ce tournoi)."""
+        return sum(1 for d, t in self.recent.get(pid, ()) if (tid is not None and t == tid) or 0 < day - d <= RHYTHM_DAYS)
+
+    def level_match(self, pid, day, surface, tid=None):
+        """Niveau utilisé pour prédire un match : niveau + bonus de rythme."""
+        return self.level(pid, day, surface) + RHYTHM_ELO * self.n_rhythm(pid, day, tid)
+
     def note(self, pid, day, surface=None):
         """Le Seeded Rating sur 100."""
         return float(to_100(self.level(pid, day, surface)))
 
-    def view(self, day):
-        """Objet compatible avec simulate_draw (notes figées au jour `day`)."""
-        return _LevelView(self, day)
+    def view(self, day, tid=None):
+        """Objet compatible avec simulate_draw (niveaux figés au jour `day`, rythme compris)."""
+        return _LevelView(self, day, tid)
 
     def fit(self, matches, stop_before_tourney=None):
         """Traite tout l'historique (s'arrête avant le tableau principal d'un tournoi)."""
@@ -130,6 +145,7 @@ class SeededRating:
         for pid, perf in ((row.winner_id, perf_w), (row.loser_id, perf_l)):
             h = self.hist.setdefault(pid, deque(maxlen=self.max_matches))
             h.append((day, perf, w, surf))
+            self.recent.setdefault(pid, deque(maxlen=25)).append((day, row.tourney_id))
         self.elo.update(row.winner_id, row.loser_id, surf, self.elo.multiplier(row), day)
 
 
@@ -149,11 +165,18 @@ def fit_slope(matches, until=20190101, since=20100101):
 
 class _LevelView:
     """Vue figée des niveaux à une date (utilisée par le simulateur de tableau)."""
-    def __init__(self, sr, day):
-        self.sr, self.day, self.names, self._cache = sr, day, sr.elo.names, {}
+    def __init__(self, sr, day, tid=None):
+        self.sr, self.day, self.tid, self.names, self._cache = sr, day, tid, sr.elo.names, {}
 
     def rating(self, pid, surface):
         key = (pid, surface)
+        if key not in self._cache:
+            self._cache[key] = self.sr.level_match(pid, self.day, surface, self.tid)
+        return self._cache[key]
+
+    def display_level(self, pid, surface):
+        """Niveau sans le bonus de rythme (pour afficher la note)."""
+        key = ("disp", pid, surface)
         if key not in self._cache:
             self._cache[key] = self.sr.level(pid, self.day, surface)
         return self._cache[key]

@@ -167,7 +167,7 @@ def main():
 
     engine = SeededRating()
     day0 = engine.fit(matches, stop_before_tourney=tid)   # niveaux figés au début du tournoi
-    model = engine.view(day0)                             # Seeded Rating à cette date
+    model = engine.view(day0, tid)                        # niveaux à cette date (+ rythme 14 jours)
     bracket, unknown = match_players(draw, model, matches)
     if unknown:
         print("⚠ Joueurs inconnus de la base (note de départ 1500) :", ", ".join(unknown))
@@ -251,6 +251,8 @@ def main():
     players = [{"name": str(S.at[p, "player"]), "ioc": str(S.at[p, "ioc"] or "") if pd.notna(S.at[p, "ioc"]) else "",
                 "atp": None if pd.isna(S.at[p, "atp"]) else int(S.at[p, "atp"]),
                 "level": round(float(S.at[p, "elo"]), 2), "delta": num(S.at[p, "delta"]),
+                "note": round(float(to_100(model.display_level(p, a.surface))), 1) if not p.startswith("QUALIF-") else round(float(to_100(S.at[p, "elo"])), 1),
+                "n14": engine.n_rhythm(p, day0, tid) if not p.startswith("QUALIF-") else 0,
                 "reach": [100.0] + [round(float(S.at[p, count_label[size >> k]]), 3) for k in range(1, n_rounds + 1)]}
                for p in ids]
     played_js = []

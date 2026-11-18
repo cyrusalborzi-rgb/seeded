@@ -64,6 +64,7 @@ for pid in sr.hist:
                  "atp": None if pid not in last.index or pd.isna(last.at[pid, "rank"]) else int(last.at[pid, "rank"]),
                  "d30": round(sr.note(pid, today) - snap30[pid], 1) if snap30 and pid in snap30 else None,
                  "inactive": bool(today - sr.last_day(pid) > 90),
+                 "n14": sr.n_rhythm(pid, today),
                  "spark": [round(w[pid], 1) if pid in w else None for w in weekly] + [round(sr.note(pid, today), 1)]})
 df = pd.DataFrame(rows).sort_values("note", ascending=False).reset_index(drop=True)
 df["rank"] = df.index + 1
