@@ -87,7 +87,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 <b>Why is a player rated above his ATP ranking?</b>The ATP ranking adds up points from tournaments over 52 weeks: it rewards playing (and winning) a lot. The Seeded Rating measures how well you play, whatever your schedule. A player back from injury, or who plays few events, can be much better than his ranking.
 <b>Why is a player still #1 if he hasn't played for months?</b>His matches from the last 12 months still count. The "inactive" badge flags it, and his rating updates as soon as he plays again.
 <b>Is Seeded a betting tool?</b>No. Seeded publishes its own probabilities to understand and enjoy tennis. It gives no tips.
-<b>Why show the bookmakers' probabilities?</b>For Grand Slams, Masters 1000 and ATP 500 events, we show next to ours the average probability of about 15 European bookmakers (margin removed; offshore sites not licensed in France are excluded). Our model never uses them: it only looks at match results, so it sometimes disagrees with the market — sometimes a lot. That is the point: it is an independent opinion. Disagreeing with the market is not a reason to bet: bookmakers also know things our model cannot see (injuries, last-minute news). 18+ · Gambling involves risks.
+<b>Why show the bookmakers' probabilities?</b>For Grand Slams, Masters 1000 and ATP 500 events, we show next to ours the average probability of about 15 European bookmakers (margin removed; offshore sites not licensed in France are excluded). Our model never uses them: it only looks at match results, so it sometimes disagrees with the market — sometimes a lot. That is the point: it is an independent opinion. Since November 2026 we keep a live record of both, match after match, on the Track record page. Disagreeing with the market is not a reason to bet: bookmakers also know things our model cannot see (injuries, last-minute news). 18+ · Gambling involves risks.
 <b>Which players have a page?</b>Every player in the Seeded top 300 (15+ matches in the last 12 months). Each page shows his rating over the last 24 months, his rating and rank on each surface, his record over the last 12 months and his recent matches. Click any name on the site to open it.
 <b>How often is it updated?</b>Every day, and after each day of play during tournaments.
 </div>
@@ -97,6 +97,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 
 <h2>10. Version history</h2>
 <table class="ver">
+<tr><td>v0.11</td><td>Live record against the bookmakers on the Track record page (both probabilities saved before each match, result checked after)</td></tr>
 <tr><td>v0.10</td><td>Bookmakers' probabilities shown next to ours for big tournaments (comparator), never used by the model</td></tr>
 <tr><td>v0.9</td><td>Ratings updated after every match during a tournament (shown with their change since the start of the tournament)</td></tr>
 <tr><td>v0.8</td><td>2027 calendar, season results incl. Challengers (with our pre-tournament favourite) and pages by surface · site adapted to phones</td></tr>
@@ -181,7 +182,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <b>Pourquoi un joueur est-il mieux noté que son classement ATP ?</b>Le classement ATP additionne les points des tournois sur 52 semaines : il récompense le fait de jouer (et gagner) beaucoup. Le Seeded Rating mesure ton niveau de jeu, quel que soit ton calendrier. Un joueur qui revient de blessure, ou qui joue peu, peut valoir bien mieux que son classement.
 <b>Pourquoi un joueur reste-t-il n°1 alors qu'il n'a pas joué depuis des mois ?</b>Ses matchs des 12 derniers mois comptent toujours. Le badge « inactif » le signale, et sa note se met à jour dès qu'il rejoue.
 <b>Seeded est-il un outil de paris ?</b>Non. Seeded publie ses propres probabilités pour comprendre et apprécier le tennis. Il ne donne aucun pronostic à jouer.
-<b>Pourquoi afficher les probabilités des bookmakers ?</b>Pour les Grands Chelems, Masters 1000 et ATP 500, on affiche à côté des nôtres la probabilité moyenne d'une quinzaine de bookmakers européens (marge retirée ; les sites offshore non agréés en France sont exclus). Notre modèle ne les utilise jamais : il ne regarde que les résultats des matchs, donc il n'est parfois pas d'accord avec le marché — parfois franchement. C'est tout l'intérêt : c'est un avis indépendant. Être en désaccord avec le marché n'est pas une raison de parier : les bookmakers savent aussi des choses que notre modèle ne voit pas (blessures, infos de dernière minute). 18+ · Jouer comporte des risques.
+<b>Pourquoi afficher les probabilités des bookmakers ?</b>Pour les Grands Chelems, Masters 1000 et ATP 500, on affiche à côté des nôtres la probabilité moyenne d'une quinzaine de bookmakers européens (marge retirée ; les sites offshore non agréés en France sont exclus). Notre modèle ne les utilise jamais : il ne regarde que les résultats des matchs, donc il n'est parfois pas d'accord avec le marché — parfois franchement. C'est tout l'intérêt : c'est un avis indépendant. Depuis novembre 2026, on tient un bilan en direct des deux, match après match, sur la page Bilan. Être en désaccord avec le marché n'est pas une raison de parier : les bookmakers savent aussi des choses que notre modèle ne voit pas (blessures, infos de dernière minute). 18+ · Jouer comporte des risques.
 <b>Quels joueurs ont une page ?</b>Tous les joueurs du top 300 Seeded (15 matchs ou plus sur 12 mois). Chaque page montre l'évolution de sa note sur 24 mois, sa note et son rang sur chaque surface, son bilan sur 12 mois et ses derniers matchs. Clique sur n'importe quel nom du site pour l'ouvrir.
 <b>À quelle fréquence c'est mis à jour ?</b>Chaque jour, et après chaque journée de jeu pendant les tournois.
 </div>
@@ -191,6 +192,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 
 <h2>10. Historique des versions</h2>
 <table class="ver">
+<tr><td>v0.11</td><td>Bilan en direct contre les bookmakers sur la page Bilan (les deux probabilités enregistrées avant chaque match, résultat vérifié après)</td></tr>
 <tr><td>v0.10</td><td>Probabilités des bookmakers affichées à côté des nôtres pour les gros tournois (comparateur), jamais utilisées par le modèle</td></tr>
 <tr><td>v0.9</td><td>Notes mises à jour après chaque match pendant un tournoi (avec leur évolution depuis le début du tournoi)</td></tr>
 <tr><td>v0.8</td><td>Calendrier 2027, résultats de la saison, Challengers compris (avec notre favori d'avant-tournoi), et pages par surface · site adapté au téléphone</td></tr>

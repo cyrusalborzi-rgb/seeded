@@ -252,6 +252,7 @@ __TCSS__
     <div class="box"><h2 data-i="rec_t2"></h2><div class="boxin"><table id="calib"></table>
     <div class="meta" style="margin-top:6px" data-i="rec_calib_note"></div></div></div>
   </div></div>
+  <div class="box" style="max-width:1000px"><h2 id="orec-h"></h2><div class="boxin" id="orec"></div></div>
 </div>
 
 <!-- ================= METHODOLOGY ================= -->
@@ -297,6 +298,12 @@ const T = {
   odds_resp: '18+ · Information, not betting advice. Gambling involves risks: debt, isolation, addiction. Help (France): 09 74 75 13 13.',
   pred_mkt: (who, p, k, d, tr) => `📊 <b>Bookmakers</b> (${tr}): ${who} <b>${p}</b> — average of ${k} bookmakers, margin removed. Gap with Seeded: <b>${d}</b>.`,
   pts: d => `${d > 0 ? '+' : ''}${d} pts`,
+  orec_h: d => `Seeded vs bookmakers · live record${d ? ' (since ' + d + ')' : ''}`,
+  orec_none: n => `No finished match yet${n ? ` — ${n} match${n > 1 ? 'es' : ''} waiting for a result` : ''}. Our probability and the market's are saved at the same time, before each match covered (Grand Slams, Masters 1000, ATP 500); the result is checked afterwards.`,
+  orec_small: n => `⚠ Small sample (${n} match${n > 1 ? 'es' : ''}): too early to conclude — it takes several hundred matches.`,
+  orec_fav: 'Right favourite', orec_ll: 'Log-loss (lower = better)', orec_dis: (n, k) => `Disagreements on the favourite: <b>${n}</b> — Seeded was right <b>${k}</b> time${k > 1 ? 's' : ''}, the bookmakers <b>${n - k}</b>.`,
+  orec_last: 'Latest matches', h_winner2: 'Winner', h_closer: 'Closer',
+  orec_note: 'Both probabilities are recorded at the same moment, before the match. Retirements and walkovers excluded. The model never uses odds.',
   pl_search: 'Find a player (top 300)…',
   nav_cal: 'Calendar', cal_h: y => `ATP calendar ${y}`, cal_res_h: y => `ATP ${y} — results`, cal_next: y => `${y} season`, cal_past: y => `${y} results`,
   cal_meta: 'Date = start of the tournament week (official ATP calendar, January 2026). Seeded favourites = our top 3 on the surface today, updated every night.',
@@ -365,6 +372,12 @@ const T = {
   odds_resp: '18+ · Information, pas un conseil de pari. Jouer comporte des risques : endettement, isolement, dépendance. Pour être aidé : 09 74 75 13 13 (appel non surtaxé).',
   pred_mkt: (who, p, k, d, tr) => `📊 <b>Bookmakers</b> (${tr}) : ${who} <b>${p}</b> — moyenne de ${k} bookmakers, marge retirée. Écart avec Seeded : <b>${d}</b>.`,
   pts: d => `${d > 0 ? '+' : ''}${d} pts`,
+  orec_h: d => `Seeded contre les bookmakers · bilan en direct${d ? ' (depuis le ' + d + ')' : ''}`,
+  orec_none: n => `Pas encore de match terminé${n ? ` — ${n} match${n > 1 ? 's' : ''} en attente du résultat` : ''}. Notre proba et celle du marché sont enregistrées au même moment, avant chaque match couvert (Grands Chelems, Masters 1000, ATP 500) ; le résultat est vérifié ensuite.`,
+  orec_small: n => `⚠ Échantillon encore petit (${n} match${n > 1 ? 's' : ''}) : trop tôt pour conclure — il faut plusieurs centaines de matchs.`,
+  orec_fav: 'Bon favori', orec_ll: 'Log-loss (plus bas = mieux)', orec_dis: (n, k) => `Désaccords sur le favori : <b>${n}</b> — Seeded avait raison <b>${k}</b> fois, les bookmakers <b>${n - k}</b>.`,
+  orec_last: 'Derniers matchs', h_winner2: 'Vainqueur', h_closer: 'Plus proche',
+  orec_note: 'Les deux probabilités sont enregistrées au même moment, avant le match. Abandons et forfaits exclus. Le modèle n\'utilise jamais les cotes.',
   pl_search: 'Chercher un joueur (top 300)…',
   nav_cal: 'Calendrier', cal_h: y => `Calendrier ATP ${y}`, cal_res_h: y => `ATP ${y} — résultats`, cal_next: y => `Saison ${y}`, cal_past: y => `Résultats ${y}`,
   cal_meta: 'Date = début de la semaine du tournoi (calendrier officiel ATP, janvier 2026). Favoris Seeded = notre top 3 actuel sur la surface, mis à jour chaque nuit.',
@@ -758,6 +771,22 @@ function renderMethod() {
   const lab = {'moins de 5 %': '< 5', '5-15 %': '5–15', '15-30 %': '15–30', '30-50 %': '30–50', '50 % et +': '50+'};
   blk.querySelector('.calib-tbl').innerHTML = `<tr><th>${t('h_said')}</th><th>${t('h_exp')}</th><th>${t('h_act')}</th></tr>` +
     D.calib.map(r => `<tr><td>${lab[r.tranche] === '50+' ? (L === 'fr' ? '50 % et +' : '50%+') : (lab[r.tranche] || r.tranche) + (L === 'fr' ? ' %' : '%')}</td><td class="n">${fmt(r.titres_attendus)}</td><td class="n b">${r.titres_reels}</td></tr>`).join('');
+  // ---- bilan maison contre les bookmakers (21b)
+  const O = D.odds_record || {n: 0}, dd = iso => iso ? new Date(iso).toLocaleDateString(L === 'fr' ? 'fr-FR' : 'en-GB', {day: 'numeric', month: 'long', year: 'numeric'}) : '';
+  $('#orec-h').textContent = t('orec_h', dd(O.since));
+  if (!O.n) { $('#orec').innerHTML = `<p class="meta" style="margin:0">${t('orec_none', O.pending || 0)}</p>`; return; }
+  const ll = v => v == null ? '–' : (L === 'fr' ? v.toFixed(4).replace('.', ',') : v.toFixed(4));
+  let h = (O.n < 100 ? `<div class="note" style="margin-top:0">${t('orec_small', O.n)}</div>` : '') +
+    `<table style="max-width:520px"><tr><th></th><th>Seeded</th><th>${t('h_book')}</th></tr>
+     <tr><td>${t('orec_fav')}</td><td class="n b">${pct(100 * O.acc_s, 1)}</td><td class="n">${pct(100 * O.acc_m, 1)}</td></tr>
+     <tr><td>${t('orec_ll')}</td><td class="n b">${ll(O.ll_s)}</td><td class="n">${ll(O.ll_m)}</td></tr></table>
+     <p style="margin:8px 0">${t('orec_dis', O.n_dis, O.dis_s)}</p><h4 style="margin:10px 0 4px">${t('orec_last')}</h4>
+     <table><tr><th>${t('h_date')}</th><th>${t('h_tourn')}</th><th>${t('h_match')}</th><th>Seeded</th><th>${t('h_book')}</th><th>${t('h_winner2')}</th><th>${t('h_closer')}</th></tr>` +
+    O.recent.map(r => { const wa = r.w === 'a', es = Math.abs((wa ? 1 : 0) - r.ps), em = Math.abs((wa ? 1 : 0) - r.pm);
+      return `<tr><td>${new Date(r.time).toLocaleDateString(L === 'fr' ? 'fr-FR' : 'en-GB', {day: 'numeric', month: 'short'})}</td><td>${oTour(r.t)}</td>
+        <td>${oName(r.ai, r.a)} – ${oName(r.bi, r.b)}</td><td class="n">${pct(100 * r.ps, 0)}</td><td class="n">${pct(100 * r.pm, 0)}</td>
+        <td><b>${wa ? oName(r.ai, r.a) : oName(r.bi, r.b)}</b></td><td>${Math.abs(es - em) < 0.005 ? '=' : es < em ? '<b class="up">Seeded</b>' : t('h_book')}</td></tr>`; }).join('') + '</table>';
+  $('#orec').innerHTML = h + `<div class="meta" style="margin-top:6px">${t('orec_note')}<br>${t('odds_resp')}</div>`;
 }
 
 function renderRecord() {
@@ -769,6 +798,22 @@ function renderRecord() {
   const lab = {'moins de 5 %': '< 5', '5-15 %': '5–15', '15-30 %': '15–30', '30-50 %': '30–50', '50 % et +': '50+'};
   $('#calib').innerHTML = `<tr><th>${t('h_said')}</th><th>${t('h_exp')}</th><th>${t('h_act')}</th></tr>` +
     D.calib.map(r => `<tr><td>${lab[r.tranche] === '50+' ? (L === 'fr' ? '50 % et +' : '50%+') : (lab[r.tranche] || r.tranche) + (L === 'fr' ? ' %' : '%')}</td><td class="n">${fmt(r.titres_attendus)}</td><td class="n b">${r.titres_reels}</td></tr>`).join('');
+  // ---- bilan maison contre les bookmakers (21b)
+  const O = D.odds_record || {n: 0}, dd = iso => iso ? new Date(iso).toLocaleDateString(L === 'fr' ? 'fr-FR' : 'en-GB', {day: 'numeric', month: 'long', year: 'numeric'}) : '';
+  $('#orec-h').textContent = t('orec_h', dd(O.since));
+  if (!O.n) { $('#orec').innerHTML = `<p class="meta" style="margin:0">${t('orec_none', O.pending || 0)}</p>`; return; }
+  const ll = v => v == null ? '–' : (L === 'fr' ? v.toFixed(4).replace('.', ',') : v.toFixed(4));
+  let h = (O.n < 100 ? `<div class="note" style="margin-top:0">${t('orec_small', O.n)}</div>` : '') +
+    `<table style="max-width:520px"><tr><th></th><th>Seeded</th><th>${t('h_book')}</th></tr>
+     <tr><td>${t('orec_fav')}</td><td class="n b">${pct(100 * O.acc_s, 1)}</td><td class="n">${pct(100 * O.acc_m, 1)}</td></tr>
+     <tr><td>${t('orec_ll')}</td><td class="n b">${ll(O.ll_s)}</td><td class="n">${ll(O.ll_m)}</td></tr></table>
+     <p style="margin:8px 0">${t('orec_dis', O.n_dis, O.dis_s)}</p><h4 style="margin:10px 0 4px">${t('orec_last')}</h4>
+     <table><tr><th>${t('h_date')}</th><th>${t('h_tourn')}</th><th>${t('h_match')}</th><th>Seeded</th><th>${t('h_book')}</th><th>${t('h_winner2')}</th><th>${t('h_closer')}</th></tr>` +
+    O.recent.map(r => { const wa = r.w === 'a', es = Math.abs((wa ? 1 : 0) - r.ps), em = Math.abs((wa ? 1 : 0) - r.pm);
+      return `<tr><td>${new Date(r.time).toLocaleDateString(L === 'fr' ? 'fr-FR' : 'en-GB', {day: 'numeric', month: 'short'})}</td><td>${oTour(r.t)}</td>
+        <td>${oName(r.ai, r.a)} – ${oName(r.bi, r.b)}</td><td class="n">${pct(100 * r.ps, 0)}</td><td class="n">${pct(100 * r.pm, 0)}</td>
+        <td><b>${wa ? oName(r.ai, r.a) : oName(r.bi, r.b)}</b></td><td>${Math.abs(es - em) < 0.005 ? '=' : es < em ? '<b class="up">Seeded</b>' : t('h_book')}</td></tr>`; }).join('') + '</table>';
+  $('#orec').innerHTML = h + `<div class="meta" style="margin-top:6px">${t('orec_note')}<br>${t('odds_resp')}</div>`;
 }
 
 let TOUR = null;

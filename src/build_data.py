@@ -218,6 +218,53 @@ for e in odds_raw.get("events", []):
     odds_ev.append({"t": e["t"], "time": e["time"], "a": e["a"], "b": e["b"], "ai": idx.get(ia), "bi": idx.get(ib),
                     "ps": None if ps is None else round(ps, 4), "pm": e["pa"], "n": e["n"], "surf": surf.lower(), "bo": bo})
 odds_out = {"updated": odds_raw.get("updated"), "demo": bool(odds_raw.get("demo")), "events": odds_ev}
+
+# ---- bilan maison Seeded contre les bookmakers (point 21b)
+# Notre proba est enregistrée au même moment que celle du marché, AVANT le match ; le résultat est retrouvé ensuite
+# dans les données. Matchs abandonnés / forfaits exclus (ils ne sont pas dans nos matchs terminés).
+from datetime import datetime, timezone
+now_utc = datetime.now(timezone.utc).isoformat()[:19]
+arch_path = STATE / "odds_archive.json"
+arch = json.loads(arch_path.read_text()) if arch_path.exists() else {}
+if not odds_out["demo"]:
+    for raw_e, e in zip(odds_raw.get("events", []), odds_ev):
+        k = raw_e.get("id")
+        if k in arch and e["ps"] is not None and raw_e["time"][:19] > now_utc:
+            arch[k]["ps"], arch[k]["ps_at"] = e["ps"], odds_raw.get("updated")
+pairs = {}
+for r in m[m.day >= today - 60].itertuples(index=False):
+    pairs.setdefault(frozenset((_nrm(r.winner_name), _nrm(r.loser_name))), []).append((int(r.day), _nrm(r.winner_name)))
+for k, a in arch.items():
+    if "w" in a or a.get("void") or a["time"][:19] > now_utc:
+        continue
+    d0 = date.fromisoformat(a["time"][:10]).toordinal()
+    hit = [w for d, w in pairs.get(frozenset((_nrm(a["a"]), _nrm(a["b"]))), []) if -14 <= d - d0 <= 3]
+    if hit:
+        a["w"] = "a" if hit[-1] == _nrm(a["a"]) else "b"
+    elif date.fromordinal(today) > date.fromisoformat(a["time"][:10]) and today - d0 > 10:
+        a["void"] = True                                   # abandon, forfait ou match introuvable : exclu du bilan
+if not odds_out["demo"] and arch:
+    arch_path.write_text(json.dumps(arch, ensure_ascii=False, indent=0))
+done = sorted([a for a in arch.values() if "w" in a and a.get("ps") is not None], key=lambda a: a["time"])
+def _ll(ps):
+    return float(-np.mean(np.log(np.clip(ps, 1e-6, 1)))) if len(ps) else None
+y = np.array([a["w"] == "a" for a in done], dtype=float)
+P_s = np.array([a["ps"] for a in done]); P_m = np.array([a["pa"] for a in done])
+ps_w = np.where(y == 1, P_s, 1 - P_s); pm_w = np.where(y == 1, P_m, 1 - P_m)
+dis = [(a, yy) for a, yy in zip(done, y) if (a["ps"] > .5) != (a["pa"] > .5)]
+odds_record = {
+    "since": min((a.get("seen", a["time"]) for a in arch.values()), default=None),
+    "n": len(done), "pending": sum(1 for a in arch.values() if "w" not in a and not a.get("void") and a.get("ps") is not None),
+    "acc_s": float(np.mean(ps_w > .5)) if len(done) else None, "acc_m": float(np.mean(pm_w > .5)) if len(done) else None,
+    "ll_s": _ll(ps_w), "ll_m": _ll(pm_w),
+    "n_dis": len(dis), "dis_s": sum(1 for a, yy in dis if (a["ps"] > .5) == (yy == 1)),
+    "recent": [{"time": a["time"], "t": a["t"], "a": a["a"], "b": a["b"], "ps": a["ps"], "pm": a["pa"], "w": a["w"],
+                "ai": idx.get(by_norm.get(_nrm(a["a"]))), "bi": idx.get(by_norm.get(_nrm(a["b"])))} for a in done[::-1][:25]],
+}
+pin = [a for a in done if a.get("pin") is not None]                # Pinnacle seul : interne, jamais affiché
+print(f"bilan maison : {odds_record['n']} matchs terminés, {odds_record['pending']} en attente"
+      + (f" | Seeded {100*odds_record['acc_s']:.1f} % / ll {odds_record['ll_s']:.4f} · marché {100*odds_record['acc_m']:.1f} % / ll {odds_record['ll_m']:.4f}" if done else "")
+      + (f" | Pinnacle (interne) ll {_ll(np.array([a['pin'] if a['w']=='a' else 1-a['pin'] for a in pin])):.4f} sur {len(pin)}" if pin else ""))
 print("cotes du marché :", len(odds_ev), "matchs" + (" (EXEMPLE)" if odds_out["demo"] else ""),
       "| sans proba Seeded :", sum(x["ps"] is None for x in odds_ev))
 
@@ -230,7 +277,7 @@ nxt = next((t for t in CONFIG if t.get("next")), None)
 out = {"date": date.fromordinal(today).strftime("%d %b %Y"), "live": live,
        "next": {"en": nxt["next"]["en"], "fr": nxt["next"]["fr"]} if nxt else None,
        "ranking": json.loads(top.to_json(orient="records")),
-       "players": players, "season": season, "season_year": YEAR, "cal": CAL, "odds": odds_out,
+       "players": players, "season": season, "season_year": YEAR, "cal": CAL, "odds": odds_out, "odds_record": odds_record,
        "ao": json.loads(ao.to_json(orient="records")),
        "bilan": json.loads(bilan.to_json(orient="records")),
        "calib": json.loads(calib.to_json(orient="records")),
