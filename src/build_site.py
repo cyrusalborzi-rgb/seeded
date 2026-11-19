@@ -376,7 +376,7 @@ let surf = 'note';
 function renderRating() {
   const q = $('#rq').value.toLowerCase();
   const rows = [...R].sort((a, b) => b[surf] - a[surf]).map((r, i) => ({...r, srank: i + 1}))
-    .filter(r => r.name.toLowerCase().includes(q)).slice(0, 100);
+    .filter(r => r.name.toLowerCase().includes(q));
   $('#r-full').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th><th>${t('h_rating')}</th><th>${t('h_trend')}</th><th>${t('hard')}</th><th>${t('clay')}</th><th>${t('grass')}</th><th>ATP</th><th>${t('h_gap')}</th><th>${t('h_30')}</th></tr>` +
     rows.map(r => `<tr><td class="n">${r.srank}</td><td><b>${plink(r.rank - 1)}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td>
     <td class="n ${surf === 'note' ? 'b' : ''}">${fmt(r.note)}</td><td class="sp">${spark(r.spark)}</td><td class="n ${surf === 'hard' ? 'b' : ''}">${fmt(r.hard)}</td>
