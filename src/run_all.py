@@ -1,6 +1,6 @@
 """
 Mise à jour complète du site Seeded (lancée chaque nuit par GitHub Actions) :
-  1. téléchargement des données (option --download)
+  1. téléchargement des données (option --download) + cotes du marché si la clé ODDS_API_KEY existe
   2. backtest  -> facts.json (précision, calibration…) = source de vérité des chiffres
   3. pages tournoi (tournaments/tournaments.json)
   4. données du site (classement, joueurs, comparateur…)
@@ -20,6 +20,7 @@ def step(title, args):
 
 if "--download" in sys.argv:
     step("1. Téléchargement des données", ["fetch_data.py"])
+    step("1b. Cotes du marché (affichage seulement, jamais utilisées par le modèle)", ["fetch_odds.py"])
 step("2. Backtest (chiffres de précision)", ["backtest.py"])
 for t in json.loads((TOURNAMENTS / "tournaments.json").read_text()):
     args = ["tournoi.py", "--tableau", t["draw"], "--nom", t["nom"], "--surface", t["surface"], "--bo", str(t["bo"])]

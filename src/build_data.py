@@ -7,7 +7,7 @@ import pandas as pd
 from seeded_model import load_matches
 from seeded_rating import SeededRating, to_100, RELIABLE_MIN, PROVISIONAL_MIN
 
-from paths import DATA, OUT, YEAR, TOURNAMENTS
+from paths import STATE, DATA, OUT, YEAR, TOURNAMENTS
 CONFIG = json.loads((TOURNAMENTS / "tournaments.json").read_text())
 FEATURED = next(t for t in CONFIG if t.get("featured"))
 
@@ -181,6 +181,46 @@ for c in ("ATP", "C"):
     ss = [x for x in season if (x["cat"] == "C") == (c == "C") and "win" in x]
     print(f"saison {c} :", len(ss), "terminés ; favori vainqueur :", sum(x.get("win_rk") == 1 for x in ss), "; top 3 :", sum((x.get("win_rk") or 99) <= 3 for x in ss))
 
+# ---- cotes du marché (point 21c) : affichées À CÔTÉ de nos probas, jamais utilisées par le modèle
+import unicodedata
+from seeded_model import expected, bo3_to_bo5
+def _nrm(x):
+    return "".join(c for c in unicodedata.normalize("NFKD", str(x)).lower() if c.isalnum())
+by_norm = {}
+for pid, nm in names.items():
+    by_norm.setdefault(_nrm(nm), pid)
+for pid in names:                                    # en cas d'homonymes, le joueur le plus actif récemment gagne
+    if sr.n_recent(pid, today) >= 5:
+        by_norm[_nrm(names[pid])] = pid
+SLAMS = {"australianopen": ("Hard", 5), "frenchopen": ("Clay", 5), "rolandgarros": ("Clay", 5), "wimbledon": ("Grass", 5), "usopen": ("Hard", 5)}
+SURF_OF = {"H": "Hard", "IH": "Hard", "CL": "Clay", "G": "Grass"}
+def odds_context(title):
+    tn = _nrm(title)
+    for k, v in SLAMS.items():
+        if k in tn:
+            return v
+    for e in CAL["events"]:
+        key = _nrm(e["name"].replace(" Masters", ""))
+        if key and key in tn:
+            return SURF_OF[e["surf"]], 3
+    return "Hard", 3
+odds_raw = json.loads((STATE / "odds_current.json").read_text()) if (STATE / "odds_current.json").exists() else {"events": []}
+odds_ev = []
+for e in odds_raw.get("events", []):
+    surf, bo = odds_context(e["t"])
+    ia, ib = by_norm.get(_nrm(e["a"])), by_norm.get(_nrm(e["b"]))
+    ps = None
+    if ia and ib:
+        d = max(today, date.fromisoformat(e["time"][:10]).toordinal())
+        ps = float(expected(sr.level_match(ia, d, surf), sr.level_match(ib, d, surf)))
+        if bo == 5:
+            ps = float(bo3_to_bo5(np.array([ps]))[0])
+    odds_ev.append({"t": e["t"], "time": e["time"], "a": e["a"], "b": e["b"], "ai": idx.get(ia), "bi": idx.get(ib),
+                    "ps": None if ps is None else round(ps, 4), "pm": e["pa"], "n": e["n"], "surf": surf.lower(), "bo": bo})
+odds_out = {"updated": odds_raw.get("updated"), "demo": bool(odds_raw.get("demo")), "events": odds_ev}
+print("cotes du marché :", len(odds_ev), "matchs" + (" (EXEMPLE)" if odds_out["demo"] else ""),
+      "| sans proba Seeded :", sum(x["ps"] is None for x in odds_ev))
+
 live = []
 f_on = DATA / "ongoing_tourneys.csv"
 if f_on.exists():
@@ -190,7 +230,7 @@ nxt = next((t for t in CONFIG if t.get("next")), None)
 out = {"date": date.fromordinal(today).strftime("%d %b %Y"), "live": live,
        "next": {"en": nxt["next"]["en"], "fr": nxt["next"]["fr"]} if nxt else None,
        "ranking": json.loads(top.to_json(orient="records")),
-       "players": players, "season": season, "season_year": YEAR, "cal": CAL,
+       "players": players, "season": season, "season_year": YEAR, "cal": CAL, "odds": odds_out,
        "ao": json.loads(ao.to_json(orient="records")),
        "bilan": json.loads(bilan.to_json(orient="records")),
        "calib": json.loads(calib.to_json(orient="records")),

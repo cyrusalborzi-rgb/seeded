@@ -77,6 +77,9 @@ select,input{font:inherit;padding:4px 6px;border:1px solid #bbb}
 .fb-head button{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;line-height:1}
 .fb-panel iframe{flex:1;border:0;width:100%} .fb-alt{font-size:11px;color:#777;padding:5px 10px;border-top:1px solid #eee}
 a.pl{color:#1d3557}
+.mkt{margin-top:8px;font-size:12.5px} .mkt b{color:#1d3557}
+.tag.dis{background:#fde2c4;color:#8a4b00;border-color:#f0c08a} .tag.demo{background:#c0392b;color:#fff;border-color:#c0392b}
+tr.click{cursor:pointer} tr.click:hover td{background:#eef4fb!important}
 .sf{display:inline-block;color:#fff;font-size:10.5px;padding:1px 6px;border-radius:2px;white-space:nowrap} .sf:hover{text-decoration:none;opacity:.85}
 .sf.H{background:#2f6db5} .sf.IH{background:#4a5f7a} .sf.CL{background:#c4622d} .sf.G{background:#3f8f2f}
 .ct{font-size:10.5px;font-weight:bold;padding:1px 5px;border:1px solid #bbb;background:#f6f6f6;white-space:nowrap}
@@ -86,7 +89,7 @@ tr.nx td{background:#fffbe6!important} td.tbc{color:#999} a.pl:hover{color:#1d4f
 .plnav{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:12px} .plnav input{width:240px}
 td.sp{padding:1px 4px;text-align:center}
 .tw{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%} svg{max-width:100%} #pl-chart{height:auto}
-.grid>div,.cmp>div,.box,.boxin,.page{min-width:0}
+.grid>div,.cmp>div,.box,.boxin,.page{min-width:0} .cmp .boxin{overflow-x:auto}
 /* ---------------- téléphone ---------------- */
 @media (max-width:760px){
   body{font-size:12.5px}
@@ -228,12 +231,15 @@ __TCSS__
     <select id="pbo"><option value="3" data-i="bo3"></option><option value="5" data-i="bo5"></option></select>
     <div class="pbar"><div id="ba" style="background:#1d3557"></div><div id="bb" style="background:#7a8ea8"></div></div>
     <div id="pexp" class="meta"></div>
+    <div id="pmkt" class="mkt"></div>
   </div>
   <div class="cmp">
     <div class="box"><h2 id="ca-h"></h2><div class="boxin" id="ca"></div></div>
     <div class="box"><h2 data-i="h2h_t"></h2><div class="boxin" id="ch"></div></div>
     <div class="box"><h2 id="cb-h"></h2><div class="boxin" id="cb"></div></div>
   </div>
+  <div class="box" style="max-width:1000px;margin-top:4px"><h2 data-i="odds_t"></h2><div class="boxin"><table id="odds-t"></table>
+    <div class="meta" id="odds-note" style="margin-top:6px"></div></div></div>
   <div class="box" style="max-width:1000px;margin-top:4px"><h2 id="grid-t"></h2><div class="boxin"><table id="grid"></table></div></div>
 </div>
 
@@ -283,6 +289,14 @@ const T = {
   t_title: 'Australian Open 2026 — title &amp; round probabilities', t_meta: 'Replay demo · state after the round of 16 · 50,000 simulated draws',
   t_note: 'On the real site this page has two tabs (<b>Title odds</b> | <b>Draw · What if?</b>): click any player in the draw to make him win and the whole tournament is replayed instantly — open <a href="australian-open-2026.html">australian-open-2026.html</a> to try it.',
   atp_rk: 'ATP ranking', by_surf: 'By surface', chart_t: 'Seeded Rating — last 24 months', recent_t: 'Last matches (12 months)',
+  odds_t: 'Upcoming matches · Seeded vs bookmakers', odds_home_t: 'Seeded vs bookmakers · biggest disagreements',
+  h_match: 'Match', h_seeded: 'Seeded', h_book: 'Bookmakers', h_gap: 'Gap', odds_dis: 'Disagreement', odds_demo: 'EXAMPLE — fake odds for this preview',
+  odds_first: 'chance of the first-named player', odds_more: 'All upcoming matches →',
+  odds_none: 'No odds right now. We collect bookmaker odds for Grand Slams, Masters 1000 and ATP 500 events.',
+  odds_note: u => `Bookmakers = average of about 15 European bookmakers (offshore sites excluded), margin removed. <b>Seeded never uses odds</b>: our model only looks at match results, so disagreeing with the market is normal — that is the point. ${u ? 'Odds updated ' + u + '. ' : ''}Click a match to open it in the comparator.`,
+  odds_resp: '18+ · Information, not betting advice. Gambling involves risks: debt, isolation, addiction. Help (France): 09 74 75 13 13.',
+  pred_mkt: (who, p, k, d, tr) => `📊 <b>Bookmakers</b> (${tr}): ${who} <b>${p}</b> — average of ${k} bookmakers, margin removed. Gap with Seeded: <b>${d}</b>.`,
+  pts: d => `${d > 0 ? '+' : ''}${d} pts`,
   pl_search: 'Find a player (top 300)…',
   nav_cal: 'Calendar', cal_h: y => `ATP calendar ${y}`, cal_res_h: y => `ATP ${y} — results`, cal_next: y => `${y} season`, cal_past: y => `${y} results`,
   cal_meta: 'Date = start of the tournament week (official ATP calendar, January 2026). Seeded favourites = our top 3 on the surface today, updated every night.',
@@ -343,6 +357,14 @@ const T = {
   t_title: 'Open d\'Australie 2026 — probabilités par tour et de titre', t_meta: 'Démo rejouée · état après les huitièmes de finale · 50 000 tableaux simulés',
   t_note: 'Sur le vrai site, cette page a deux onglets (<b>Chances de titre</b> | <b>Tableau · Et si ?</b>) : clique sur n\'importe quel joueur du tableau pour le faire gagner, et tout le tournoi est rejoué instantanément — ouvre <a href="australian-open-2026.html">australian-open-2026.html</a> pour l\'essayer (en anglais pour l\'instant).',
   atp_rk: 'Classement ATP', by_surf: 'Par surface', chart_t: 'Seeded Rating — 24 derniers mois', recent_t: 'Derniers matchs (12 mois)',
+  odds_t: 'Matchs à venir · Seeded contre les bookmakers', odds_home_t: 'Seeded contre les bookmakers · plus gros désaccords',
+  h_match: 'Match', h_seeded: 'Seeded', h_book: 'Bookmakers', h_gap: 'Écart', odds_dis: 'Désaccord', odds_demo: 'EXEMPLE — fausses cotes pour l\'aperçu',
+  odds_first: 'chances du 1er joueur cité', odds_more: 'Tous les matchs à venir →',
+  odds_none: 'Pas de cotes pour l\'instant. On relève les cotes des bookmakers pour les Grands Chelems, Masters 1000 et ATP 500.',
+  odds_note: u => `Bookmakers = moyenne d'une quinzaine de bookmakers européens (sites offshore exclus), marge retirée. <b>Seeded n'utilise jamais les cotes</b> : notre modèle ne regarde que les résultats des matchs, donc être en désaccord avec le marché est normal — c'est tout l'intérêt. ${u ? 'Cotes relevées le ' + u + '. ' : ''}Clique sur un match pour l'ouvrir dans le comparateur.`,
+  odds_resp: '18+ · Information, pas un conseil de pari. Jouer comporte des risques : endettement, isolement, dépendance. Pour être aidé : 09 74 75 13 13 (appel non surtaxé).',
+  pred_mkt: (who, p, k, d, tr) => `📊 <b>Bookmakers</b> (${tr}) : ${who} <b>${p}</b> — moyenne de ${k} bookmakers, marge retirée. Écart avec Seeded : <b>${d}</b>.`,
+  pts: d => `${d > 0 ? '+' : ''}${d} pts`,
   pl_search: 'Chercher un joueur (top 300)…',
   nav_cal: 'Calendrier', cal_h: y => `Calendrier ATP ${y}`, cal_res_h: y => `ATP ${y} — résultats`, cal_next: y => `Saison ${y}`, cal_past: y => `Résultats ${y}`,
   cal_meta: 'Date = début de la semaine du tournoi (calendrier officiel ATP, janvier 2026). Favoris Seeded = notre top 3 actuel sur la surface, mis à jour chaque nuit.',
@@ -548,6 +570,42 @@ function wrapTables() {
 }
 wrapTables();
 
+// ------------------------------------------------------------ Seeded contre les bookmakers (affichage seulement)
+const OD = (D.odds && D.odds.events) || [];
+const oName = (i, n) => i == null ? n : plink(i, n);
+const oTour = x => t('tour', /^ATP Finals/i.test(x) ? 'ATP Finals' : x.replace(/^ATP\s+/, '').replace(/\s+-\s+.*$/, ''));
+const oWhen = iso => new Date(iso).toLocaleString(L === 'fr' ? 'fr-FR' : 'en-GB', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'});
+const oGap = e => e.ps == null ? null : Math.round(100 * (e.ps - e.pm));
+function oddsRows(list, withTour) {
+  return `<tr><th>${t('h_date')}</th>${withTour ? `<th>${t('h_tourn')}</th>` : ''}<th>${t('h_match')}</th><th>${t('h_seeded')}</th><th>${t('h_book')}</th><th>${t('h_gap')}</th></tr>` +
+    list.map(e => { const g = oGap(e), k = OD.indexOf(e);
+      return `<tr class="${e.ai != null && e.bi != null ? 'click' : ''}" data-od="${k}"><td>${oWhen(e.time)}</td>${withTour ? `<td>${oTour(e.t)}</td>` : ''}
+        <td><b>${oName(e.ai, e.a)}</b> – ${oName(e.bi, e.b)}</td><td class="n b">${e.ps == null ? '–' : pct(100 * e.ps, 0)}</td><td class="n">${pct(100 * e.pm, 0)}</td>
+        <td class="n">${g == null ? '–' : t('pts', g)}${g != null && Math.abs(g) >= 10 ? ` <span class="tag dis">${t('odds_dis')}</span>` : ''}</td></tr>`; }).join('');
+}
+function renderOdds() {
+  const demo = D.odds && D.odds.demo ? `<span class="tag demo">${t('odds_demo')}</span><br>` : '';
+  const upd = D.odds && D.odds.updated ? oWhen(D.odds.updated) : '';
+  if (!OD.length) {
+    $('#odds-t').innerHTML = `<tr><td>${t('odds_none')}</td></tr>`; $('#odds-note').innerHTML = '';
+    return;
+  }
+  $('#odds-t').innerHTML = oddsRows(OD.slice(0, 40), true);
+  $('#odds-note').innerHTML = demo + `<i>${t('odds_first')}</i>. ` + t('odds_note', upd) + '<br>' + t('odds_resp');
+}
+document.addEventListener('click', ev => {                 // clic sur un match coté -> comparateur
+  const tr = ev.target.closest('tr[data-od]'); if (!tr || ev.target.closest('a')) return;
+  const e = OD[+tr.dataset.od]; if (!e || e.ai == null || e.bi == null) return;
+  $('#pa').value = e.ai; $('#pb').value = e.bi; $('#ps').value = e.surf; $('#pbo').value = String(e.bo);
+  if (location.hash !== '#predictor') location.hash = '#predictor'; renderPredictor(); window.scrollTo(0, 0);
+});
+function marketLine(ia, ib, pSeeded) {
+  const e = OD.find(x => (x.ai === ia && x.bi === ib) || (x.ai === ib && x.bi === ia));
+  if (!e) return '';
+  const pm = e.ai === ia ? e.pm : 1 - e.pm, d = Math.round(100 * (pSeeded - pm));
+  return t('pred_mkt', R[ia].name, pct(100 * pm, 0), e.n, t('pts', d), `${oTour(e.t)}, ${oWhen(e.time)}`) + `<br><span class="meta">${t('odds_resp')}</span>`;
+}
+
 let PL = 0;                                         // joueur affiché (index dans le classement)
 const PCACHE = {};
 function playerData(i, cb) {                       // site publié : un petit fichier par joueur, chargé à la demande
@@ -629,6 +687,7 @@ function renderPredictor() {
   const rhythm = (a.n14 || 0) === (b.n14 || 0) ? '' : '<br>' + t('rhythm_line', Math.abs(dr) < 0.5 ? null : (dr > 0 ? a.name : b.name), pct(Math.abs(dr), 1), a.name, a.n14 || 0, b.name, b.n14 || 0);
   $('#pexp').innerHTML = t('pred_exp', t(sf), a.name, fmt(a[sf]), b.name, fmt(b[sf]), fmt(Math.abs(a[sf] - b[sf]))) + rhythm +
     `<br><span style="color:#888">ⓘ ${t('pred_lock')}</span>`;
+  $('#pmkt').innerHTML = marketLine(+$('#pa').value, +$('#pb').value, p);
   renderCompare(+$('#pa').value, +$('#pb').value, sf);
   const T8 = R.slice(0, 8);
   $('#grid-t').textContent = t('grid_t', t(sf).toLowerCase());
@@ -726,7 +785,7 @@ function fbToggle(force) {
 }
 function renderFeedback() { $('#fb-btn').textContent = t('fb_btn'); $('#fb-title').textContent = t('fb_title'); }
 
-function renderAll() { renderFeedback(); renderStatic(); renderHome(); renderHomeNext(); renderRating(); renderCalendar(); renderSurface(); renderPlayer(); renderPredictor(); renderRecord(); renderMethod();
+function renderAll() { renderFeedback(); renderStatic(); renderHome(); renderHomeNext(); renderOdds(); renderRating(); renderCalendar(); renderSurface(); renderPlayer(); renderPredictor(); renderRecord(); renderMethod();
   if (TOUR) TOUR.setLang(L); else TOUR = SeededTournament($('#tour-app'), DT, L); }
 
 // ------------------------------------------------------------ interactions
