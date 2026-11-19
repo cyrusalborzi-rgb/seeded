@@ -2,7 +2,9 @@ name: Nightly update
 
 on:
   schedule:
-    - cron: "0 3 * * *"        # tous les jours à 3h UTC (4h à Paris en hiver)
+    # Minutes « bizarres » exprès : à l'heure pile, GitHub est saturé et saute parfois les tâches.
+    - cron: "17 3 * * *"       # passage principal : 4h17 à Paris (hiver)
+    - cron: "43 6 * * *"       # passage de secours : 7h43 à Paris (ne change rien si déjà à jour)
   workflow_dispatch: {}         # bouton "Run workflow" pour lancer à la main
   push:
     branches: [main]
