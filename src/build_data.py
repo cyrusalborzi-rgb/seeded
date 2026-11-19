@@ -10,43 +10,47 @@ from seeded_rating import SeededRating, to_100, RELIABLE_MIN, PROVISIONAL_MIN
 from paths import DATA, OUT, YEAR, TOURNAMENTS
 CONFIG = json.loads((TOURNAMENTS / "tournaments.json").read_text())
 FEATURED = next(t for t in CONFIG if t.get("featured"))
-WATCH = "Arthur Fils"
 
 m = load_matches(DATA, 1995, YEAR)
 sr = SeededRating()
 today = int(m.day.max())
-watch_id = m.loc[m.winner_name == WATCH, "winner_id"].iloc[0]
 
-month_marks = sorted({int(pd.Timestamp(y, mo, 1).toordinal()) for y in (YEAR - 1, YEAR) for mo in range(1, 13)
-                      if pd.Timestamp(y, mo, 1).toordinal() <= today})
-hist_watch, recent, snap30 = [], [], None
+# relevés mensuels de la note (24 derniers mois) pour la courbe des pages joueurs
+t0 = date.fromordinal(today)
+month_marks = []
+for k in range(24, 0, -1):
+    y, mo = t0.year, t0.month - k + 1
+    while mo <= 0:
+        y, mo = y - 1, mo + 12
+    month_marks.append(date(y, mo, 1).toordinal())
+monthly, mi = [], 0
+pmatches = {}          # joueur -> ses matchs des 12 derniers mois (pour les pages joueurs)
+snap30 = None
 # relevés hebdomadaires de la note (26 semaines) pour les mini-courbes de tendance
 week_marks = [today - 7 * k for k in range(26, 0, -1)]
 weekly, wi = [], 0
-mi = 0
 for r in m.itertuples(index=False):
     while wi < len(week_marks) and r.day >= week_marks[wi]:
         d0 = week_marks[wi]
         weekly.append({pid: sr.note(pid, d0) for pid in sr.hist if sr.n_recent(pid, d0) >= 5})
         wi += 1
     while mi < len(month_marks) and r.day >= month_marks[mi]:
-        hist_watch.append((date.fromordinal(month_marks[mi]).strftime("%b %y"), round(sr.note(watch_id, month_marks[mi]), 1)))
+        d0 = month_marks[mi]
+        monthly.append({pid: round(sr.note(pid, d0), 1) for pid in sr.hist if sr.n_recent(pid, d0) >= 5})
         mi += 1
     if snap30 is None and r.day >= today - 30:
         snap30 = {pid: sr.note(pid, r.day) for pid in sr.hist if sr.n_recent(pid, r.day) >= RELIABLE_MIN}
-    if watch_id in (r.winner_id, r.loser_id) and r.day >= today - 365:
-        me_w = r.winner_id == watch_id
-        opp = r.loser_id if me_w else r.winner_id
-        opp_level = sr.level(opp, r.day)
-        dom = r.dom if me_w else 1 - r.dom
-        from seeded_rating import C_SLOPE, K_EQUIV, BLEND
-        perf = sr.rating(opp, r.day) + np.log(dom / (1 - dom)) / C_SLOPE      # note de performance (échelle domination)
-        recent.append({"date": date.fromordinal(int(r.day)).strftime("%d %b"), "t": r.tourney_name, "rd": r.round,
-                       "surf": r.surface, "opp": r.loser_name if me_w else r.winner_name,
-                       "opp_note": round(float(to_100(opp_level)), 1), "res": "W" if me_w else "L",
-                       "score": r.score, "dom": round(100 * dom, 1)})
+    if r.day >= today - 365:
+        for me, opp, won, opp_name, opp_rank in ((r.winner_id, r.loser_id, True, r.loser_name, r.loser_rank),
+                                                  (r.loser_id, r.winner_id, False, r.winner_name, r.winner_rank)):
+            pmatches.setdefault(me, []).append({
+                "day": int(r.day), "t": r.tourney_name, "lvl": r.tourney_level, "rd": r.round, "surf": r.surface,
+                "opp_id": opp, "opp": opp_name, "opp_note": round(float(to_100(sr.level(opp, r.day))), 1),
+                "opp_atp": None if pd.isna(opp_rank) else int(opp_rank),
+                "res": "W" if won else "L", "score": r.score, "src": r.source, "dom": round(100 * (r.dom if won else 1 - r.dom), 1)})
     sr.update(r)
-hist_watch.append(("Now", round(sr.note(watch_id, today), 1)))
+while len(monthly) < len(month_marks):          # mois pas encore atteints (sécurité)
+    monthly.append({})
 
 both = pd.concat([
     m[["winner_id", "winner_rank", "winner_ioc", "day"]].set_axis(["id", "rank", "ioc", "day"], axis=1),
@@ -71,23 +75,22 @@ df["rank"] = df.index + 1
 df["gap"] = df.atp - df["rank"]
 top = df.head(300)
 
-fils = top[top.name == WATCH].iloc[0].to_dict()
 ao = pd.read_csv(OUT / f"{FEATURED['slug']}.csv").head(16)
 bilan = pd.read_csv(OUT / "bilan_grands_chelems.csv")
 calib = pd.read_csv(OUT / "calibration_titres.csv")
 
 # ---- comparateur : face-à-face (tous niveaux, abandons compris, forfaits exclus) + forme récente
 idx = {pid: i for i, pid in enumerate(top.id)}
+RAWCOLS = {"tourney_name", "tourney_level", "surface", "tourney_date", "round", "winner_id", "loser_id", "score",
+           "winner_age", "winner_hand", "winner_ht", "loser_age", "loser_hand", "loser_ht"}
 frames = []
 for y in range(1990, YEAR + 1):
     for f in [DATA / f"{y}.csv", DATA / f"{y}_challenger.csv", DATA / "atp_quali" / f"{y}_atp_quali.csv"]:
         if f.exists():
-            frames.append(pd.read_csv(f, usecols=["tourney_name", "tourney_level", "surface", "tourney_date", "round",
-                                                 "winner_id", "loser_id", "score"], dtype={"winner_id": str, "loser_id": str}))
+            frames.append(pd.read_csv(f, usecols=lambda c: c in RAWCOLS, dtype={"winner_id": str, "loser_id": str}))
 for f in [DATA / "ongoing_tourneys.csv", DATA / "challenger_ongoing_tourneys.csv"]:
     if f.exists():
-        frames.append(pd.read_csv(f, usecols=["tourney_name", "tourney_level", "surface", "tourney_date", "round",
-                                             "winner_id", "loser_id", "score"], dtype={"winner_id": str, "loser_id": str}))
+        frames.append(pd.read_csv(f, usecols=lambda c: c in RAWCOLS, dtype={"winner_id": str, "loser_id": str}))
 allm = pd.concat(frames).drop_duplicates(["tourney_date", "tourney_name", "round", "winner_id", "loser_id"])
 allm = allm[~allm.score.fillna("W/O").str.contains("W/O|unfinished")]
 both_top = allm[allm.winner_id.isin(idx) & allm.loser_id.isin(idx)].sort_values("tourney_date")
@@ -108,6 +111,45 @@ for pid, i in idx.items():
                 "W" if r.winner_id == pid else "L", str(r.score)] for r in g.itertuples(index=False)]
 print("face-à-face :", len(h2h), "paires,", sum(len(v) for v in h2h.values()), "matchs")
 
+# ---- pages joueurs (tout le top 300)
+bio_rows = pd.concat([
+    allm[["tourney_date", "winner_id", "winner_age", "winner_hand", "winner_ht"]].set_axis(["d", "id", "age", "hand", "ht"], axis=1),
+    allm[["tourney_date", "loser_id", "loser_age", "loser_hand", "loser_ht"]].set_axis(["d", "id", "age", "hand", "ht"], axis=1)])
+bio_rows = bio_rows[bio_rows.id.isin(idx)].sort_values("d")
+bio = {}
+for pid, g in bio_rows.groupby("id"):
+    ag = g.dropna(subset=["age"])
+    age = None
+    if len(ag):
+        d = str(int(ag.d.iloc[-1]))
+        age = float(ag.age.iloc[-1]) + (today - date(int(d[:4]), int(d[4:6]), int(d[6:])).toordinal()) / 365.25
+    hand = g.hand.dropna()
+    ht = g.ht.dropna()
+    bio[pid] = {"age": None if age is None else int(age), "hand": hand.iloc[-1] if len(hand) and hand.iloc[-1] in ("R", "L") else None,
+                "ht": int(ht.iloc[-1]) if len(ht) else None}
+mlabels = [date.fromordinal(d).strftime("%b %y") for d in month_marks]
+SURFS = ["Hard", "Clay", "Grass"]
+players = []
+for r in top.itertuples(index=False):
+    pm = pmatches.get(r.id, [])
+    wl = lambda ms: [sum(x["res"] == "W" for x in ms), sum(x["res"] == "L" for x in ms)]
+    wins = [x for x in pm if x["res"] == "W"]
+    best = max(wins, key=lambda x: x["opp_note"]) if wins else None
+    rec = sorted(pm, key=lambda x: x["day"], reverse=True)[:15]
+    fmt_m = lambda x: {**{k: v for k, v in x.items() if k not in ("day", "opp_id", "lvl", "src")}, "date": date.fromordinal(x["day"]).strftime("%d %b %y"),
+                       "opp_i": idx.get(x["opp_id"])}
+    players.append({
+        "id": r.id, "bio": bio.get(r.id, {}),
+        "history": [[lb, mm.get(r.id)] for lb, mm in zip(mlabels, monthly)] + [["Now", r.note]],
+        "record": {"all": wl(pm), **{s.lower(): wl([x for x in pm if x["surf"] == s]) for s in SURFS},
+                   "top10": wl([x for x in pm if x["opp_atp"] and x["opp_atp"] <= 10]),
+                   "main": wl([x for x in pm if x["src"] == "main" and x["lvl"] != "D"])},
+        "titles": sum(1 for x in pm if x["res"] == "W" and x["rd"] == "F"),
+        "best": None if best is None else fmt_m(best),
+        "last_day": date.fromordinal(max(x["day"] for x in pm)).strftime("%d %b %Y") if pm else None,
+        "recent": [fmt_m(x) for x in rec]})
+print("pages joueurs :", len(players), "| ex.", top.iloc[0]["name"], players[0]["record"], "titres", players[0]["titles"])
+
 live = []
 f_on = DATA / "ongoing_tourneys.csv"
 if f_on.exists():
@@ -117,11 +159,11 @@ nxt = next((t for t in CONFIG if t.get("next")), None)
 out = {"date": date.fromordinal(today).strftime("%d %b %Y"), "live": live,
        "next": {"en": nxt["next"]["en"], "fr": nxt["next"]["fr"]} if nxt else None,
        "ranking": json.loads(top.to_json(orient="records")),
-       "player": {"info": json.loads(pd.Series(fils).to_json()), "history": hist_watch, "recent": recent[::-1][:12]},
+       "players": players,
        "ao": json.loads(ao.to_json(orient="records")),
        "bilan": json.loads(bilan.to_json(orient="records")),
        "calib": json.loads(calib.to_json(orient="records")),
        "h2h": h2h, "form": form}
 (OUT / "site_data.json").write_text(json.dumps(out))
-print("ok", len(top), "joueurs ; Fils:", fils["rank"], fils["note"], "; historique", hist_watch[-4:], "; matchs", len(recent))
+print("ok", len(top), "joueurs")
 print(top.sort_values("d30", ascending=False).head(5)[["name", "note", "d30"]].to_string(index=False))

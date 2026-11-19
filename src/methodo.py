@@ -84,6 +84,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 <b>Why is a player rated above his ATP ranking?</b>The ATP ranking adds up points from tournaments over 52 weeks: it rewards playing (and winning) a lot. The Seeded Rating measures how well you play, whatever your schedule. A player back from injury, or who plays few events, can be much better than his ranking.
 <b>Why is a player still #1 if he hasn't played for months?</b>His matches from the last 12 months still count. The "inactive" badge flags it, and his rating updates as soon as he plays again.
 <b>Is Seeded a betting tool?</b>No. Seeded publishes probabilities to understand and enjoy tennis. It does not give tips or odds.
+<b>Which players have a page?</b>Every player in the Seeded top 300 (15+ matches in the last 12 months). Each page shows his rating over the last 24 months, his rating and rank on each surface, his record over the last 12 months and his recent matches. Click any name on the site to open it.
 <b>How often is it updated?</b>Every day, and after each day of play during tournaments.
 </div>
 
@@ -92,6 +93,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 
 <h2>10. Version history</h2>
 <table class="ver">
+<tr><td>v0.7</td><td>A page for every player in the top 300 · clickable player names everywhere</td></tr>
 <tr><td>v0.6</td><td>Match context tested: rhythm over 14 days kept (fatigue, indoor rejected) · 6-month trend lines</td></tr>
 <tr><td>v0.5</td><td>"What if?" draw simulator, enriched match predictor, site in English &amp; French</td></tr>
 <tr><td>v0.4</td><td>Seeded Rating (point-by-point dominance + Elo) becomes the engine of the simulations</td></tr>
@@ -170,6 +172,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <b>Pourquoi un joueur est-il mieux noté que son classement ATP ?</b>Le classement ATP additionne les points des tournois sur 52 semaines : il récompense le fait de jouer (et gagner) beaucoup. Le Seeded Rating mesure ton niveau de jeu, quel que soit ton calendrier. Un joueur qui revient de blessure, ou qui joue peu, peut valoir bien mieux que son classement.
 <b>Pourquoi un joueur reste-t-il n°1 alors qu'il n'a pas joué depuis des mois ?</b>Ses matchs des 12 derniers mois comptent toujours. Le badge « inactif » le signale, et sa note se met à jour dès qu'il rejoue.
 <b>Seeded est-il un outil de paris ?</b>Non. Seeded publie des probabilités pour comprendre et apprécier le tennis. Il ne donne ni pronostics à jouer ni cotes.
+<b>Quels joueurs ont une page ?</b>Tous les joueurs du top 300 Seeded (15 matchs ou plus sur 12 mois). Chaque page montre l'évolution de sa note sur 24 mois, sa note et son rang sur chaque surface, son bilan sur 12 mois et ses derniers matchs. Clique sur n'importe quel nom du site pour l'ouvrir.
 <b>À quelle fréquence c'est mis à jour ?</b>Chaque jour, et après chaque journée de jeu pendant les tournois.
 </div>
 
@@ -178,6 +181,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 
 <h2>10. Historique des versions</h2>
 <table class="ver">
+<tr><td>v0.7</td><td>Une page pour chaque joueur du top 300 · noms des joueurs cliquables partout</td></tr>
 <tr><td>v0.6</td><td>Contexte du match testé : rythme sur 14 jours retenu (fatigue, salle rejetées) · courbes de tendance sur 6 mois</td></tr>
 <tr><td>v0.5</td><td>Simulateur « Et si ? », comparateur de match enrichi, site en anglais et en français</td></tr>
 <tr><td>v0.4</td><td>Le Seeded Rating (domination aux points + Elo) devient le moteur des simulations</td></tr>

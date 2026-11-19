@@ -1,6 +1,6 @@
 """
 Génère le site Seeded (bilingue EN/FR) :
-  site/index.html        -> la version publiée (face-à-face dans site/data/h2h.json, chargé à la demande)
+  site/index.html        -> la version publiée (face-à-face dans site/data/h2h.json et pages joueurs dans site/data/p/<id>.json, chargés à la demande)
   outputs/seeded-standalone.html -> version tout-en-un (un seul fichier, à ouvrir directement)
 Tous les chiffres viennent des sorties du calcul (source de vérité) : outputs/facts.json, site_data.json…
 """
@@ -76,6 +76,8 @@ select,input{font:inherit;padding:4px 6px;border:1px solid #bbb}
 .fb-panel.on{display:flex} .fb-head{background:#1d3557;color:#fff;padding:6px 10px;font-weight:bold;display:flex;justify-content:space-between;align-items:center}
 .fb-head button{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;line-height:1}
 .fb-panel iframe{flex:1;border:0;width:100%} .fb-alt{font-size:11px;color:#777;padding:5px 10px;border-top:1px solid #eee}
+a.pl{color:#1d3557} a.pl:hover{color:#1d4f91;text-decoration:underline}
+.plnav{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:12px} .plnav input{width:240px}
 td.sp{padding:1px 4px;text-align:center} td.sp svg{display:block;margin:auto}
 __M_CSS__
 .cmp{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:14px;margin-top:14px}
@@ -139,20 +141,26 @@ __TCSS__
 <!-- ================= TOURNAMENT (page tournoi complète + What if) ================= -->
 <div class="page" id="p-tournament"><div id="tour-app"></div></div>
 
-<!-- ================= PLAYER ================= -->
+<!-- ================= PLAYER (une page par joueur du top 300 : #player/<nom>) ================= -->
 <div class="page" id="p-player">
-  <div style="margin:10px 0"><h1 id="pl-name" style="margin:0"></h1><div class="meta" id="pl-meta"></div></div>
+  <div class="plnav"><span id="pl-prev"></span><span class="sp"></span>
+    <input id="pq" list="pl-list" autocomplete="off"><datalist id="pl-list"></datalist><span class="sp"></span><span id="pl-next"></span></div>
+  <div style="margin:6px 0 10px"><h1 id="pl-name" style="margin:0"></h1><div class="meta" id="pl-meta" style="margin:2px 0 0"></div></div>
   <div class="hero">
-    <div class="card"><div class="k">Seeded Rating</div><div class="big" id="pl-note"></div><div id="pl-rank"></div></div>
+    <div class="card"><div class="k">Seeded Rating</div><div class="big" id="pl-note"></div><div id="pl-rank" style="margin-top:4px"></div></div>
     <div class="card"><div class="k" data-i="atp_rk"></div><div class="v" id="pl-atp"></div><div id="pl-gap"></div></div>
     <div class="card"><div class="k" data-i="by_surf"></div><table id="pl-surf" style="margin-top:4px"></table></div>
+    <div class="card"><div class="k" data-i="pl_12m"></div><div class="v" id="pl-wl"></div><div id="pl-wls"></div></div>
   </div>
   <div class="grid"><div>
     <div class="box"><h2 data-i="chart_t"></h2><div class="boxin"><svg id="pl-chart" width="100%" height="190" viewBox="0 0 820 190"></svg></div></div>
     <div class="box"><h2 data-i="recent_t"></h2><div class="boxin"><table id="pl-recent"></table>
       <div class="meta" style="margin-top:6px" data-i="recent_note"></div></div></div>
   </div><div>
-    <div class="ad mr" style="margin-top:0" data-i="ad_mr"></div>
+    <div class="box"><div class="boxin" style="text-align:center"><a id="pl-cmp" class="btn" style="display:inline-block"></a></div></div>
+    <div class="box"><h2 data-i="pl_surf_t"></h2><div class="boxin"><table id="pl-rec"></table></div></div>
+    <div class="box"><h2 data-i="pl_best"></h2><div class="boxin" id="pl-best" style="line-height:1.6"></div></div>
+    <div class="ad mr" data-i="ad_mr"></div>
     <div class="box"><h2 data-i="pl_plus_t"></h2><div class="boxin lock" data-i="pl_plus"></div></div>
   </div></div>
 </div>
@@ -220,9 +228,15 @@ const T = {
   all_surf: 'All surfaces', hard: 'Hard', clay: 'Clay', grass: 'Grass', search: 'Search a player…',
   t_title: 'Australian Open 2026 — title &amp; round probabilities', t_meta: 'Replay demo · state after the round of 16 · 50,000 simulated draws',
   t_note: 'On the real site this page has two tabs (<b>Title odds</b> | <b>Draw · What if?</b>): click any player in the draw to make him win and the whole tournament is replayed instantly — open <a href="australian-open-2026.html">australian-open-2026.html</a> to try it.',
-  atp_rk: 'ATP ranking', by_surf: 'By surface', chart_t: 'Seeded Rating over time', recent_t: 'Recent matches',
+  atp_rk: 'ATP ranking', by_surf: 'By surface', chart_t: 'Seeded Rating — last 24 months', recent_t: 'Last matches (12 months)',
+  pl_search: 'Find a player (top 300)…', pl_cmp: 'Compare with another player →', pl_12m: 'Last 12 months',
+  pl_titles: n => `${n} title${n === 1 ? '' : 's'}`, pl_vs10: (w, l) => `${w}–${l} vs top 10`, pl_age: a => `${a} years old`,
+  pl_hand: h => h === 'L' ? 'left-handed' : 'right-handed', pl_rhythm: n => `${n} match${n > 1 ? 'es' : ''} in the last 14 days`,
+  pl_surf_t: 'Record — last 12 months', h_wl: 'W–L', h_wpct: 'Win %', pl_all: 'All matches', pl_main: 'Tour level (no Challengers/qualifying)',
+  pl_top10: 'vs top 10 (ATP rank at the time)', pl_best: 'Best win — last 12 months', pl_nobest: 'No win in the last 12 months.',
+  pl_best_txt: (o, n, tr, rd, d) => `${o} <span class="meta">(rated ${n})</span><br>${tr} · ${rd} · ${d}`, pl_d30: d => `30 days: ${d}`,
   recent_note: 'Points won = share of all points won in the match (the core of the Seeded Rating).',
-  pl_plus_t: 'Seeded+ · player stats', pl_plus: '🔒 Serve &amp; return profile, clutch stats, form by surface',
+  pl_plus_t: 'Seeded+ · player stats', pl_plus: '🔒 Serve &amp; return profile, clutch stats',
   pred_meta: 'Pick two players and a surface — powered by the Seeded Rating (real data)', bo3: 'Best of 3', bo5: 'Best of 5',
   rec_meta: 'Every number published before the tournament, checked after it. No hiding.',
   rec_t1: 'Grand Slams 2024–2026: our pre-tournament odds', rec_t2: () => `Calibration (${F.n_slams_calib} Grand Slams)`, rec_calib_note: 'When we say X%, it happens about X% of the time.',
@@ -260,9 +274,15 @@ const T = {
   all_surf: 'Toutes surfaces', hard: 'Dur', clay: 'Terre battue', grass: 'Gazon', search: 'Chercher un joueur…',
   t_title: 'Open d\'Australie 2026 — probabilités par tour et de titre', t_meta: 'Démo rejouée · état après les huitièmes de finale · 50 000 tableaux simulés',
   t_note: 'Sur le vrai site, cette page a deux onglets (<b>Chances de titre</b> | <b>Tableau · Et si ?</b>) : clique sur n\'importe quel joueur du tableau pour le faire gagner, et tout le tournoi est rejoué instantanément — ouvre <a href="australian-open-2026.html">australian-open-2026.html</a> pour l\'essayer (en anglais pour l\'instant).',
-  atp_rk: 'Classement ATP', by_surf: 'Par surface', chart_t: 'Évolution du Seeded Rating', recent_t: 'Derniers matchs',
+  atp_rk: 'Classement ATP', by_surf: 'Par surface', chart_t: 'Seeded Rating — 24 derniers mois', recent_t: 'Derniers matchs (12 mois)',
+  pl_search: 'Chercher un joueur (top 300)…', pl_cmp: 'Comparer avec un autre joueur →', pl_12m: '12 derniers mois',
+  pl_titles: n => `${n} titre${n > 1 ? 's' : ''}`, pl_vs10: (w, l) => `${w}-${l} contre le top 10`, pl_age: a => `${a} ans`,
+  pl_hand: h => h === 'L' ? 'gaucher' : 'droitier', pl_rhythm: n => `${n} match${n > 1 ? 's' : ''} sur les 14 derniers jours`,
+  pl_surf_t: 'Bilan — 12 derniers mois', h_wl: 'V-D', h_wpct: '% vict.', pl_all: 'Tous les matchs', pl_main: 'Circuit principal (hors Challengers et qualifs)',
+  pl_top10: 'Contre le top 10 (classement ATP du moment)', pl_best: 'Plus belle victoire — 12 derniers mois', pl_nobest: 'Aucune victoire sur les 12 derniers mois.',
+  pl_best_txt: (o, n, tr, rd, d) => `${o} <span class="meta">(noté ${n})</span><br>${tr} · ${rd} · ${d}`, pl_d30: d => `30 jours : ${d}`,
   recent_note: 'Points gagnés = part de tous les points du match remportés par le joueur (le cœur du Seeded Rating).',
-  pl_plus_t: 'Seeded+ · stats joueur', pl_plus: '🔒 Profil service / retour, stats sur les points importants, forme par surface',
+  pl_plus_t: 'Seeded+ · stats joueur', pl_plus: '🔒 Profil service / retour, stats sur les points importants',
   pred_meta: 'Choisis deux joueurs et une surface — calculé avec le Seeded Rating (vraies données)', bo3: '2 sets gagnants', bo5: '3 sets gagnants',
   rec_meta: 'Chaque chiffre publié avant le tournoi, vérifié après. Sans rien cacher.',
   rec_t1: 'Grands Chelems 2024-2026 : nos probabilités avant le tournoi', rec_t2: () => `Calibration (${F.n_slams_calib} Grands Chelems)`, rec_calib_note: 'Quand on annonce X %, ça arrive environ X % du temps.',
@@ -304,6 +324,12 @@ const pct = (v, d = 1) => v == null ? '' : fmt(v, d) + (L === 'fr' ? ' %' : '%')
 const gapCell = g => g == null ? '<td class="n z">–</td>' : Math.abs(g) < 3 ? '<td class="n z">=</td>' :
   `<td class="n ${g > 0 ? 'up' : 'down'}">${g > 0 ? '+' : ''}${g}</td>`;
 const R = D.ranking;
+// ---- un lien par joueur : #player/<nom-sans-accents>
+const slug = x => x.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const SLUG = {}, BYNAME = {};
+R.forEach((r, i) => { let s = slug(r.name); if (SLUG[s] != null) s += '-' + (i + 1); r.slug = s; SLUG[s] = i; BYNAME[r.name] = i; });
+const plink = (i, txt) => i == null || !R[i] ? (txt ?? '') : `<a class="pl" href="#player/${R[i].slug}">${txt ?? R[i].name}</a>`;
+const nlink = name => plink(BYNAME[name], name);
 
 // ------------------------------------------------------------ rendu
 function renderStatic() {
@@ -333,17 +359,17 @@ function spark(vals, w = 80, h = 20) {
 function renderHome() {
   $('#h1').textContent = R[0].name; $('#h1s').textContent = `${fmt(R[0].note)} / 100`;
   const und = R.filter(r => r.rank <= 50 && r.atp).sort((a, b) => b.gap - a.gap)[0];
-  $('#h4').textContent = und.name; const nr = L === 'fr' ? 'n°' : '#';
+  $('#h4').innerHTML = plink(und.rank - 1); const nr = L === 'fr' ? 'n°' : '#';
   $('#h4s').textContent = `Seeded ${nr}${und.rank} · ATP ${nr}${und.atp}`;
   $('#ao-mini').innerHTML = `<tr><th>${t('h_player')}</th><th>${t('h_qf')}</th><th>${t('h_sf')}</th><th>${t('h_f')}</th><th>${t('h_win')}</th></tr>` +
-    D.ao.slice(0, 5).map(r => `<tr><td><b>${r.player}</b></td><td class="n">${fmt(r.QF)}</td><td class="n">${fmt(r.SF)}</td><td class="n">${fmt(r.F)}</td><td class="n b">${pct(r.Titre)}</td></tr>`).join('');
+    D.ao.slice(0, 5).map(r => `<tr><td><b>${nlink(r.player)}</b></td><td class="n">${fmt(r.QF)}</td><td class="n">${fmt(r.SF)}</td><td class="n">${fmt(r.F)}</td><td class="n b">${pct(r.Titre)}</td></tr>`).join('');
   $('#r-mini').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th><th>${t('h_rating')}</th><th>${t('h_trend')}</th><th>ATP</th><th>${t('h_gap')}</th></tr>` +
-    R.slice(0, 10).map(r => `<tr><td class="n">${r.rank}</td><td><b>${r.name}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td><td class="n b">${fmt(r.note)}</td><td class="sp">${spark(r.spark)}</td><td class="n">${r.atp ?? ''}</td>${gapCell(r.gap)}</tr>`).join('');
+    R.slice(0, 10).map(r => `<tr><td class="n">${r.rank}</td><td><b>${plink(r.rank - 1)}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td><td class="n b">${fmt(r.note)}</td><td class="sp">${spark(r.spark)}</td><td class="n">${r.atp ?? ''}</td>${gapCell(r.gap)}</tr>`).join('');
   const mv = R.filter(r => r.rank <= 100 && r.d30 != null);
   const ups = [...mv].sort((a, b) => b.d30 - a.d30).slice(0, 5), downs = [...mv].sort((a, b) => a.d30 - b.d30).slice(0, 5);
   $('#movers').innerHTML = `<tr><th>${t('h_rising')}</th><th>${t('h_rating')}</th><th>${t('h_30s')}</th><th>${t('h_falling')}</th><th>${t('h_rating')}</th><th>${t('h_30s')}</th></tr>` +
-    ups.map((u, i) => `<tr><td><b>${u.name}</b></td><td class="n">${fmt(u.note)}</td><td class="n up">+${fmt(u.d30)}</td>
-    <td><b>${downs[i].name}</b></td><td class="n">${fmt(downs[i].note)}</td><td class="n down">${fmt(downs[i].d30)}</td></tr>`).join('');
+    ups.map((u, i) => `<tr><td><b>${plink(u.rank - 1)}</b></td><td class="n">${fmt(u.note)}</td><td class="n up">+${fmt(u.d30)}</td>
+    <td><b>${plink(downs[i].rank - 1)}</b></td><td class="n">${fmt(downs[i].note)}</td><td class="n down">${fmt(downs[i].d30)}</td></tr>`).join('');
 }
 
 let surf = 'note';
@@ -352,33 +378,73 @@ function renderRating() {
   const rows = [...R].sort((a, b) => b[surf] - a[surf]).map((r, i) => ({...r, srank: i + 1}))
     .filter(r => r.name.toLowerCase().includes(q)).slice(0, 100);
   $('#r-full').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th><th>${t('h_rating')}</th><th>${t('h_trend')}</th><th>${t('hard')}</th><th>${t('clay')}</th><th>${t('grass')}</th><th>ATP</th><th>${t('h_gap')}</th><th>${t('h_30')}</th></tr>` +
-    rows.map(r => `<tr><td class="n">${r.srank}</td><td><b>${r.name}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td>
+    rows.map(r => `<tr><td class="n">${r.srank}</td><td><b>${plink(r.rank - 1)}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td>
     <td class="n ${surf === 'note' ? 'b' : ''}">${fmt(r.note)}</td><td class="sp">${spark(r.spark)}</td><td class="n ${surf === 'hard' ? 'b' : ''}">${fmt(r.hard)}</td>
     <td class="n ${surf === 'clay' ? 'b' : ''}">${fmt(r.clay)}</td><td class="n ${surf === 'grass' ? 'b' : ''}">${fmt(r.grass)}</td>
     <td class="n">${r.atp ?? ''}</td>${gapCell(r.gap)}<td class="n ${r.d30 > 0 ? 'up' : r.d30 < 0 ? 'down' : 'z'}">${r.d30 == null ? '–' : (r.d30 > 0 ? '+' : '') + fmt(r.d30)}</td></tr>`).join('');
 }
 
+let PL = 0;                                         // joueur affiché (index dans le classement)
+const PCACHE = {};
+function playerData(i, cb) {                       // site publié : un petit fichier par joueur, chargé à la demande
+  if (D.players) return cb(D.players[i]);
+  if (PCACHE[i]) return cb(PCACHE[i]);
+  fetch(`data/p/${R[i].id}.json`).then(r => r.json()).then(j => { PCACHE[i] = j; if (PL === i) cb(j); }).catch(() => {});
+}
 function renderPlayer() {
-  const P = D.player, I = P.info;
-  $('#pl-name').textContent = I.name; $('#pl-meta').textContent = `${I.ioc} · ${P.recent.length ? t('last_match') + ' ' + dt(P.recent[0].date) : ''}`;
-  $('#pl-note').textContent = fmt(I.note); const nr = L === 'fr' ? 'n°' : '#';
-  $('#pl-rank').innerHTML = `Seeded <b>${nr}${I.rank}</b>`;
-  $('#pl-atp').textContent = nr + I.atp;
-  $('#pl-gap').innerHTML = I.gap > 0 ? `<span class="up">${t('under', I.gap)}</span>` : I.gap < 0 ? `<span class="down">${t('over', -I.gap)}</span>` : t('inline');
-  $('#pl-surf').innerHTML = [['hard', I.hard], ['clay', I.clay], ['grass', I.grass]].map(([s, v]) => `<tr><td>${t(s)}</td><td class="n b">${fmt(v)}</td></tr>`).join('');
+  const i = PL, I = R[i], nr = L === 'fr' ? 'n°' : '#';
+  $('#pq').placeholder = t('pl_search');
+  if (!$('#pl-list').children.length) $('#pl-list').innerHTML = R.map(r => `<option value="${r.name}">`).join('');
+  $('#pl-prev').innerHTML = i > 0 ? `◀ ${nr}${i} ${plink(i - 1)}` : '';
+  $('#pl-next').innerHTML = i < R.length - 1 ? `${plink(i + 1)} ${nr}${i + 2} ▶` : '';
+  $('#pl-name').textContent = I.name;
+  $('#pl-note').textContent = fmt(I.note);
+  const d30 = I.d30 == null ? '' : `<br><span class="meta">${t('pl_d30', `<b class="${I.d30 > 0 ? 'up' : I.d30 < 0 ? 'down' : ''}">${(I.d30 > 0 ? '+' : '') + fmt(I.d30)}</b>`)}</span>`;
+  $('#pl-rank').innerHTML = `Seeded <b>${nr}${I.rank}</b>` + (I.inactive ? `<span class="tag">${t('inactive')}</span>` : '') + d30;
+  $('#pl-atp').textContent = I.atp ? nr + I.atp : '–';
+  $('#pl-gap').innerHTML = I.gap == null ? '' : I.gap >= 3 ? `<span class="up">${t('under', I.gap)}</span>` : I.gap <= -3 ? `<span class="down">${t('over', -I.gap)}</span>` : t('inline');
+  $('#pl-surf').innerHTML = ['hard', 'clay', 'grass'].map(s => { const rk = R.filter(r => r[s] > I[s]).length + 1;
+    return `<tr><td>${t(s)}</td><td class="n b">${fmt(I[s])}</td><td class="n meta" style="margin:0">${nr}${rk}</td></tr>`; }).join('');
+  $('#pl-cmp').textContent = t('pl_cmp'); $('#pl-cmp').href = `#predictor/${I.slug}`;
+  ['#pl-wl', '#pl-wls', '#pl-recent', '#pl-rec', '#pl-best', '#pl-chart'].forEach(s => $(s).innerHTML = '');
+  $('#pl-meta').textContent = I.ioc;
+  playerData(i, P => fillPlayer(I, P));
+}
+function fillPlayer(I, P) {
+  const nr = L === 'fr' ? 'n°' : '#', b = P.bio || {}, sep = ' · ';
+  $('#pl-meta').innerHTML = [I.ioc, b.age && t('pl_age', b.age), b.ht && num((b.ht / 100).toFixed(2)) + ' m', b.hand && t('pl_hand', b.hand),
+    P.last_day && `${t('last_match')} ${dt(P.last_day)}`, I.n14 ? t('pl_rhythm', I.n14) : ''].filter(Boolean).join(sep);
+  const rc = P.record, wl = x => `${x[0]}${L === 'fr' ? '-' : '–'}${x[1]}`;
+  $('#pl-wl').textContent = wl(rc.all);
+  $('#pl-wls').innerHTML = [t('pl_titles', P.titles), t('pl_vs10', ...rc.top10)].join(sep);
+  const wp = x => x[0] + x[1] ? pct(100 * x[0] / (x[0] + x[1]), 0) : '–';
+  $('#pl-rec').innerHTML = `<tr><th></th><th>${t('h_wl')}</th><th>${t('h_wpct')}</th></tr>` +
+    [['pl_all', rc.all], ['hard', rc.hard], ['clay', rc.clay], ['grass', rc.grass], ['pl_main', rc.main], ['pl_top10', rc.top10]]
+      .map(([k, x], j) => `<tr><td style="white-space:normal">${j === 0 ? '<b>' + t(k) + '</b>' : t(k)}</td><td class="n">${wl(x)}</td><td class="n${j === 0 ? ' b' : ''}">${wp(x)}</td></tr>`).join('');
+  const bw = P.best;
+  $('#pl-best').innerHTML = bw ? t('pl_best_txt', `<b>${plink(bw.opp_i, bw.opp)}</b>`, fmt(bw.opp_note), t('tour', bw.t), t('round', bw.rd), dt(bw.date)) + ` · <b>${bw.score}</b>` : t('pl_nobest');
   $('#pl-recent').innerHTML = `<tr><th>${t('h_date')}</th><th>${t('h_tourn')}</th><th>${t('h_rd')}</th><th>${t('h_opp')}</th><th>${t('h_opprt')}</th><th></th><th>${t('h_score')}</th><th>${t('h_pts')}</th></tr>` +
-    P.recent.map(m => `<tr><td>${dt(m.date)}</td><td>${t('tour', m.t)}</td><td>${t('round', m.rd)}</td><td>${m.opp}</td><td class="n">${fmt(m.opp_note)}</td>
+    P.recent.map(m => `<tr><td>${dt(m.date)}</td><td>${t('tour', m.t)}</td><td>${t('round', m.rd)}</td><td>${plink(m.opp_i, m.opp)}</td><td class="n">${fmt(m.opp_note)}</td>
     <td class="${m.res === 'W' ? 'up' : 'down'}">${m.res === 'W' ? t('win') : t('loss')}</td><td>${m.score}</td><td class="n">${pct(m.dom)}</td></tr>`).join('');
-  const h = P.history, W = 820, H = 190, Lm = 40, B = 25, Tm = 10;
-  const vals = h.map(x => x[1]), lo = Math.floor(Math.min(...vals) - 2), hi = Math.ceil(Math.max(...vals) + 2);
-  const x = i => Lm + i * (W - Lm - 10) / (h.length - 1), y = v => Tm + (hi - v) * (H - Tm - B) / (hi - lo);
+  // courbe 24 mois (les mois sans note fiable sont laissés vides)
+  const h = P.history, W = 820, H = 190, Lm = 40, B = 25, Tm = 14;
+  const vals = h.map(x => x[1]).filter(v => v != null);
+  if (vals.length < 2) return;
+  const lo = Math.floor(Math.min(...vals) - 2), hi = Math.min(100, Math.ceil(Math.max(...vals) + 2));
+  const x = k => Lm + k * (W - Lm - 10) / (h.length - 1), y = v => Tm + (hi - v) * (H - Tm - B) / (hi - lo);
   let s = '';
   for (let g = lo; g <= hi; g += Math.max(1, Math.round((hi - lo) / 4))) s += `<line x1="${Lm}" x2="${W - 10}" y1="${y(g)}" y2="${y(g)}" stroke="#eee"/><text x="${Lm - 6}" y="${y(g) + 4}" font-size="11" text-anchor="end" fill="#888">${g}</text>`;
-  h.forEach((p, i) => { if (i % 3 === 0 || i === h.length - 1) s += `<text x="${x(i)}" y="${H - 6}" font-size="11" text-anchor="middle" fill="#888">${dt(p[0])}</text>`; });
-  s += `<polyline fill="none" stroke="#1d3557" stroke-width="2" points="${h.map((p, i) => x(i) + ',' + y(p[1])).join(' ')}"/>`;
-  s += `<circle cx="${x(h.length - 1)}" cy="${y(vals.at(-1))}" r="4" fill="#1d3557"/><text x="${x(h.length - 1) - 6}" y="${y(vals.at(-1)) - 8}" font-size="12" font-weight="bold" text-anchor="end">${fmt(vals.at(-1))}</text>`;
+  h.forEach((p, k) => { if (k % 3 === 0 || k === h.length - 1) s += `<text x="${x(k)}" y="${H - 6}" font-size="11" text-anchor="middle" fill="#888">${dt(p[0])}</text>`; });
+  let seg = [];
+  const flush = () => { if (seg.length > 1) s += `<polyline fill="none" stroke="#1d3557" stroke-width="2" points="${seg.join(' ')}"/>`;
+                        else if (seg.length === 1) s += `<circle cx="${seg[0].split(',')[0]}" cy="${seg[0].split(',')[1]}" r="2" fill="#1d3557"/>`; seg = []; };
+  h.forEach((p, k) => { if (p[1] == null) flush(); else seg.push(x(k) + ',' + y(p[1])); }); flush();
+  const lv = h.at(-1)[1];
+  s += `<circle cx="${x(h.length - 1)}" cy="${y(lv)}" r="4" fill="#1d3557"/><text x="${x(h.length - 1) - 6}" y="${y(lv) - 8}" font-size="12" font-weight="bold" text-anchor="end">${fmt(lv)}</text>`;
   $('#pl-chart').innerHTML = s;
 }
+$('#pq').onchange = () => { const k = BYNAME[$('#pq').value] ?? R.findIndex(r => r.name.toLowerCase().includes($('#pq').value.toLowerCase()));
+  if (k != null && k >= 0) { $('#pq').value = ''; location.hash = '#player/' + R[k].slug; } };
 
 function bo5(p) { let lo = 0, hi = 1, s; for (let k = 0; k < 40; k++) { s = (lo + hi) / 2; if (s * s * (3 - 2 * s) > p) hi = s; else lo = s; }
   s = (lo + hi) / 2; const q = 1 - s; return s ** 3 * (1 + 3 * q + 6 * q * q); }
@@ -402,7 +468,7 @@ function renderPredictor() {
   const T8 = R.slice(0, 8);
   $('#grid-t').textContent = t('grid_t', t(sf).toLowerCase());
   $('#grid').innerHTML = '<tr><th></th>' + T8.map(r => `<th>${r.name.split(' ').slice(-1)[0]}</th>`).join('') + '</tr>' +
-    T8.map(ra => `<tr><td><b>${ra.name}</b></td>` + T8.map(rb => {
+    T8.map(ra => `<tr><td><b>${plink(ra.rank - 1)}</b></td>` + T8.map(rb => {
       if (ra === rb) return '<td class="z" style="text-align:center">–</td>';
       const q = 100 / (1 + Math.pow(10, -(ra[sf] - rb[sf]) * 15 / 400));
       return `<td class="n" style="background:rgba(70,140,40,${(Math.max(q - 50, 0) / 50 * 0.6).toFixed(2)})">${pct(q, 0)}</td>`;
@@ -424,7 +490,7 @@ function card(i, sf) {
     <div style="margin-top:8px"><b>${t('form_t')}</b> <span class="meta">(${t('rec', w, f.length - w)})</span></div><div style="margin-top:4px">${sq}</div>`;
 }
 function renderCompare(a, b, sf) {
-  $('#ca-h').textContent = R[a].name; $('#cb-h').textContent = R[b].name;
+  $('#ca-h').innerHTML = plink(a); $('#cb-h').innerHTML = plink(b);
   $('#ca').innerHTML = card(a, sf); $('#cb').innerHTML = card(b, sf);
   if (a === b) { $('#ch').innerHTML = ''; return; }
   if (!D.h2h) {                                   // face-à-face chargé à la demande (fichier séparé)
@@ -508,7 +574,11 @@ $('#rq').oninput = renderRating;
 $('#ps').value = 'clay';
 
 function route() {
-  const id = (location.hash || '#home').slice(1);
+  let [id, arg] = (location.hash || '#home').slice(1).split('/');
+  if (!document.getElementById('p-' + id)) id = 'home';
+  if (id === 'player') { if (arg && SLUG[arg] != null) PL = SLUG[arg]; renderPlayer(); }
+  if (id === 'predictor' && arg && SLUG[arg] != null) {           // « Comparer » depuis une page joueur
+    const k = SLUG[arg]; $('#pa').value = k; if (+$('#pb').value === k) $('#pb').value = k === 0 ? 1 : 0; renderPredictor(); }
   document.querySelectorAll('.page').forEach(p => p.style.display = p.id === 'p-' + id ? 'block' : 'none');
   document.querySelectorAll('.nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + id));
   window.scrollTo(0, 0);
@@ -527,7 +597,12 @@ def page(data_obj):
 # 1) version publiée : face-à-face à part (plus léger au chargement)
 (SITE / "data").mkdir(exist_ok=True)
 (SITE / "data" / "h2h.json").write_text(json.dumps(site_data["h2h"]))
-light = {k: v for k, v in site_data.items() if k != "h2h"}
+(SITE / "data" / "p").mkdir(exist_ok=True)
+for f in (SITE / "data" / "p").glob("*.json"):
+    f.unlink()
+for p in site_data["players"]:
+    (SITE / "data" / "p" / f"{p['id']}.json").write_text(json.dumps(p))
+light = {k: v for k, v in site_data.items() if k not in ("h2h", "players")}
 (SITE / "index.html").write_text(page(light), encoding="utf-8")
 (SITE / ".nojekyll").write_text("")
 # 2) version tout-en-un (fichier unique, pour l'ouvrir sans serveur)
