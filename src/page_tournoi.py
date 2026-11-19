@@ -26,7 +26,9 @@ CSS = r"""
 .st-tab.on{background:#1d3557;color:#fff;border-color:#1d3557}
 .st-vbar{margin:4px 0 8px} .st-vb{font:inherit;font-size:12px;padding:3px 9px;border:1px solid #bbb;background:#f6f6f6;cursor:pointer;margin:0 3px 3px 0}
 .st-vb.on{background:#d9e4f1;border-color:#1d3557;font-weight:bold}
-.st-bwrap{overflow-x:auto} .st-bv{display:flex;gap:10px;min-width:max-content}
+.st-bwrap{overflow-x:auto;-webkit-overflow-scrolling:touch} .st-tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media (max-width:760px){.st-wrap input.st-q{width:100%} .st-tab{padding:6px 10px;font-size:12px} .st-wrap td,.st-wrap th{padding:3px 4px;font-size:12px}
+  .st-rd{width:200px} .st-sc{font-size:12px} .st-sc button{width:100%;margin-top:4px}} .st-bv{display:flex;gap:10px;min-width:max-content}
 .st-rd{display:flex;flex-direction:column;width:245px}
 .st-rh{background:#e6e6e6;border:1px solid #ccc;text-align:center;font-weight:bold;padding:3px;margin-bottom:6px}
 .st-rb{display:flex;flex-direction:column;justify-content:space-around;flex:1;gap:6px}
@@ -153,7 +155,7 @@ function SeededTournament(root, D, lang) {
     <h1 data-r="title"></h1><div class="st-meta" data-r="meta"></div>
     <div class="st-sc" data-r="sc"></div>
     <div class="st-tabs"><button class="st-tab on" data-tab="0"></button><button class="st-tab" data-tab="1"></button></div>
-    <div data-r="p0"><div class="st-note" data-r="note0"></div><input class="st-q" data-r="q"><table data-r="t"></table></div>
+    <div data-r="p0"><div class="st-note" data-r="note0"></div><input class="st-q" data-r="q"><div class="st-tw"><table data-r="t"></table></div></div>
     <div data-r="p1" style="display:none"><div class="st-how" data-r="how"></div><div class="st-meta" data-r="how2"></div>
       <div class="st-vbar" data-r="vbar"></div><div class="st-bwrap" data-r="bwrap"></div></div></div>`;
   const R = k => root.querySelector(`[data-r="${k}"]`);

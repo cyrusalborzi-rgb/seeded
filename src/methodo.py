@@ -13,6 +13,7 @@ CSS = r"""
 .mt td{white-space:normal;vertical-align:top} .mt .ver td:first-child{font-weight:bold;white-space:nowrap}
 .kpi{display:flex;gap:10px;margin:8px 0} .kpi div{border:1px solid #ccc;padding:8px 12px;background:#fbfcfe;flex:1}
 .kpi b{display:block;font-size:20px;color:#1d3557}
+@media (max-width:760px){.flow{flex-direction:column} .flow .ar{justify-content:center;transform:rotate(90deg);padding:2px 0} .kpi{flex-direction:column}}
 """
 
 EN = r"""
@@ -77,6 +78,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 <li>Fatigue is not modelled: our tests found no reliable effect.</li>
 <li>Results arrive with about one day of delay.</li>
 <li>The ATP rank shown is the player's rank at his last match.</li>
+<li>2027 calendar: dates come from the official ATP calendar (January 2026). If the ATP moves a tournament, we update it by hand.</li>
 <li>Young players and comebacks have little data: their rating moves fast and is less certain.</li></ul>
 
 <h2>8. FAQ</h2>
@@ -93,6 +95,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 
 <h2>10. Version history</h2>
 <table class="ver">
+<tr><td>v0.8</td><td>2027 calendar, season results incl. Challengers (with our pre-tournament favourite) and pages by surface · site adapted to phones</td></tr>
 <tr><td>v0.7</td><td>A page for every player in the top 300 · clickable player names everywhere</td></tr>
 <tr><td>v0.6</td><td>Match context tested: rhythm over 14 days kept (fatigue, indoor rejected) · 6-month trend lines</td></tr>
 <tr><td>v0.5</td><td>"What if?" draw simulator, enriched match predictor, site in English &amp; French</td></tr>
@@ -165,6 +168,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <li>La fatigue n'est pas prise en compte : nos tests n'ont trouvé aucun effet fiable.</li>
 <li>Les résultats arrivent avec environ un jour de décalage.</li>
 <li>Le classement ATP affiché est celui du joueur à son dernier match.</li>
+<li>Calendrier 2027 : dates issues du calendrier officiel ATP (janvier 2026). Si l'ATP déplace un tournoi, on le met à jour à la main.</li>
 <li>Les jeunes joueurs et les retours de blessure ont peu de données : leur note bouge vite et est moins sûre.</li></ul>
 
 <h2>8. FAQ</h2>
@@ -181,6 +185,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 
 <h2>10. Historique des versions</h2>
 <table class="ver">
+<tr><td>v0.8</td><td>Calendrier 2027, résultats de la saison, Challengers compris (avec notre favori d'avant-tournoi), et pages par surface · site adapté au téléphone</td></tr>
 <tr><td>v0.7</td><td>Une page pour chaque joueur du top 300 · noms des joueurs cliquables partout</td></tr>
 <tr><td>v0.6</td><td>Contexte du match testé : rythme sur 14 jours retenu (fatigue, salle rejetées) · courbes de tendance sur 6 mois</td></tr>
 <tr><td>v0.5</td><td>Simulateur « Et si ? », comparateur de match enrichi, site en anglais et en français</td></tr>

@@ -76,9 +76,38 @@ select,input{font:inherit;padding:4px 6px;border:1px solid #bbb}
 .fb-panel.on{display:flex} .fb-head{background:#1d3557;color:#fff;padding:6px 10px;font-weight:bold;display:flex;justify-content:space-between;align-items:center}
 .fb-head button{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;line-height:1}
 .fb-panel iframe{flex:1;border:0;width:100%} .fb-alt{font-size:11px;color:#777;padding:5px 10px;border-top:1px solid #eee}
-a.pl{color:#1d3557} a.pl:hover{color:#1d4f91;text-decoration:underline}
+a.pl{color:#1d3557}
+.sf{display:inline-block;color:#fff;font-size:10.5px;padding:1px 6px;border-radius:2px;white-space:nowrap} .sf:hover{text-decoration:none;opacity:.85}
+.sf.H{background:#2f6db5} .sf.IH{background:#4a5f7a} .sf.CL{background:#c4622d} .sf.G{background:#3f8f2f}
+.ct{font-size:10.5px;font-weight:bold;padding:1px 5px;border:1px solid #bbb;background:#f6f6f6;white-space:nowrap}
+.ct.G{background:#1d3557;color:#fff;border-color:#1d3557} .ct.M{background:#d9e4f1;border-color:#9fb3cc;color:#1d3557} .ct.F{background:#9fd36b;border-color:#7fb34b;color:#1d3557} .ct.C{background:#fff;color:#777;border-color:#ddd;font-weight:normal}
+tr.mo td{background:#eef2f7!important;font-weight:bold;color:#1d3557;font-size:12px}
+tr.nx td{background:#fffbe6!important} td.tbc{color:#999} a.pl:hover{color:#1d4f91;text-decoration:underline}
 .plnav{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:12px} .plnav input{width:240px}
-td.sp{padding:1px 4px;text-align:center} td.sp svg{display:block;margin:auto}
+td.sp{padding:1px 4px;text-align:center}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%} svg{max-width:100%} #pl-chart{height:auto}
+.grid>div,.cmp>div,.box,.boxin,.page{min-width:0}
+/* ---------------- téléphone ---------------- */
+@media (max-width:760px){
+  body{font-size:12.5px}
+  .topin{flex-wrap:wrap;height:auto;padding:6px 8px 0;gap:6px 10px}
+  .nav{order:3;width:100%;display:flex;overflow-x:auto;white-space:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .nav::-webkit-scrollbar{display:none} .nav a{padding:9px 9px;flex:0 0 auto}
+  .subin{font-size:11px;padding:4px 8px} .wrap{padding:8px}
+  .ad.lb{width:100%;height:60px;font-size:0} .ad.lb::after{content:'320×50';font-size:11px} .ad.mr{width:100%;max-width:300px;height:250px}
+  .grid{grid-template-columns:1fr!important;gap:0} .cmp{grid-template-columns:1fr!important;gap:0}
+  .hero{flex-wrap:wrap;gap:8px} .card{flex:1 1 calc(50% - 8px);min-width:150px;padding:8px}
+  .big{font-size:32px} .card .v{font-size:19px} h1{font-size:17px}
+  th,td{padding:3px 4px} th{font-size:11.5px}
+  .btn{margin-bottom:4px;padding:5px 9px}
+  #rq,#pq{width:100%!important;margin:6px 0 0!important}
+  .plnav{flex-wrap:wrap} .plnav #pq{order:-1} .plnav .sp{display:none} #pl-next{margin-left:auto}
+  #pa,#pb,#ps,#pbo{width:100%;margin:2px 0} .pbar div{font-size:12px;padding:0 5px}
+  .fb-btn{right:8px;bottom:8px;font-size:11.5px;padding:4px 9px}
+  .fb-panel{right:6px;left:6px;width:auto;bottom:44px;height:75vh}
+  .note{font-size:12px} .boxin{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .nav{margin:0;padding:0;width:100%}
+} td.sp svg{display:block;margin:auto}
 __M_CSS__
 .cmp{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:14px;margin-top:14px}
 .cmp .big{font-size:34px} .cmp .kv{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #eee}
@@ -93,7 +122,7 @@ __TCSS__
 <div class="top"><div class="topin">
   <span class="logo">SEED<i>ED</i></span>
   <span class="nav">
-    <a href="#home" data-i="nav_home"></a><a href="#tournament" data-i="nav_draws"></a><a href="#rating" data-i="nav_rating"></a>
+    <a href="#home" data-i="nav_home"></a><a href="#tournament" data-i="nav_draws"></a><a href="#calendar" data-i="nav_cal"></a><a href="#rating" data-i="nav_rating"></a>
     <a href="#player" data-i="nav_players"></a><a href="#predictor" data-i="nav_predictor"></a><a href="#record" data-i="nav_record"></a><a href="#method" data-i="nav_method"></a>
   </span>
   <span class="sp"></span>
@@ -122,6 +151,8 @@ __TCSS__
     <div class="box"><h2 data-i="movers_t"></h2><div class="boxin"><table id="movers"></table></div></div>
   </div><div>
     <div class="ad mr" style="margin-top:0" data-i="ad_mr"></div>
+    <div class="box"><h2 data-i="home_next_t"></h2><div class="boxin"><table id="home-next"></table>
+      <div style="margin-top:6px"><a href="#calendar" data-i="cal_more"></a></div></div></div>
     <div class="box"><h2 data-i="nl_t"></h2><div class="boxin nl"><span data-i="nl_txt"></span>
       <input placeholder="your@email.com"><button data-i="nl_btn"></button></div></div>
     <div class="box"><h2>Seeded+</h2><div class="boxin" style="line-height:1.6" data-i="plus_txt"></div></div>
@@ -134,7 +165,7 @@ __TCSS__
   <h1 data-i="rating_t"></h1><div class="meta" data-i="rating_meta"></div>
   <div style="margin:6px 0"><button class="btn on" data-s="note" data-i="all_surf"></button><button class="btn" data-s="hard" data-i="hard"></button>
   <button class="btn" data-s="clay" data-i="clay"></button><button class="btn" data-s="grass" data-i="grass"></button>
-  <input id="rq" style="margin-left:10px"></div>
+  <input id="rq" style="margin-left:10px"> <span class="meta" id="r-sflinks" style="margin-left:10px"></span></div>
   <table id="r-full"></table>
 </div>
 
@@ -162,6 +193,29 @@ __TCSS__
     <div class="box"><h2 data-i="pl_best"></h2><div class="boxin" id="pl-best" style="line-height:1.6"></div></div>
     <div class="ad mr" data-i="ad_mr"></div>
     <div class="box"><h2 data-i="pl_plus_t"></h2><div class="boxin lock" data-i="pl_plus"></div></div>
+  </div></div>
+</div>
+
+<!-- ================= CALENDAR ================= -->
+<div class="page" id="p-calendar">
+  <h1 id="cal-h"></h1><div class="meta" id="cal-meta"></div>
+  <div style="margin:6px 0"><button class="btn" data-cv="next"></button><button class="btn" data-cv="past"></button>
+    <span style="margin-left:14px"></span>
+    <button class="btn" data-cc="all"></button><button class="btn" data-cc="big"></button><button class="btn" data-cc="500"></button><button class="btn" data-cc="250"></button><button class="btn" data-cc="C"></button></div>
+  <div class="note" id="cal-sum" style="max-width:1000px"></div>
+  <table id="cal-t" style="max-width:1000px"></table>
+</div>
+
+<!-- ================= SURFACE (#surface/hard|clay|grass) ================= -->
+<div class="page" id="p-surface">
+  <h1 id="sf-h"></h1><div class="meta" id="sf-meta"></div>
+  <div style="margin:6px 0" id="sf-tabs"></div>
+  <div class="grid"><div>
+    <div class="box"><h2 id="sf-top-t"></h2><div class="boxin"><table id="sf-top"></table></div></div>
+  </div><div>
+    <div class="box"><h2 data-i="sf_spec_t"></h2><div class="boxin"><table id="sf-spec"></table><div class="meta" style="margin:6px 0 0" data-i="sf_spec_note"></div></div></div>
+    <div class="box"><h2 data-i="sf_next_t"></h2><div class="boxin"><table id="sf-next"></table></div></div>
+    <div class="box"><h2 id="sf-titles-t"></h2><div class="boxin"><table id="sf-titles"></table></div></div>
   </div></div>
 </div>
 
@@ -229,7 +283,21 @@ const T = {
   t_title: 'Australian Open 2026 — title &amp; round probabilities', t_meta: 'Replay demo · state after the round of 16 · 50,000 simulated draws',
   t_note: 'On the real site this page has two tabs (<b>Title odds</b> | <b>Draw · What if?</b>): click any player in the draw to make him win and the whole tournament is replayed instantly — open <a href="australian-open-2026.html">australian-open-2026.html</a> to try it.',
   atp_rk: 'ATP ranking', by_surf: 'By surface', chart_t: 'Seeded Rating — last 24 months', recent_t: 'Last matches (12 months)',
-  pl_search: 'Find a player (top 300)…', pl_cmp: 'Compare with another player →', pl_12m: 'Last 12 months',
+  pl_search: 'Find a player (top 300)…',
+  nav_cal: 'Calendar', cal_h: y => `ATP calendar ${y}`, cal_res_h: y => `ATP ${y} — results`, cal_next: y => `${y} season`, cal_past: y => `${y} results`,
+  cal_meta: 'Date = start of the tournament week (official ATP calendar, January 2026). Seeded favourites = our top 3 on the surface today, updated every night.',
+  cal_res_meta: 'Every tournament of the season: champion, final, and where the champion stood among our pre-tournament favourites (rating + 14-day rhythm, exactly as in our predictions).',
+  cc_all: 'All', cc_big: 'Slams &amp; Masters', h_cat: 'Category', h_surf2: 'Surface', h_favs: 'Seeded favourites (surface)', h_final: 'Final',
+  h_ourfav: 'Our favourite', h_winrk: 'Champion\'s Seeded rank', tbc: 'TBC', cat: c => ({G: 'Grand Slam', M: 'Masters 1000', F: 'ATP Finals', '500': 'ATP 500', '250': 'ATP 250', C: 'Challenger'})[c] || c,
+  cal_noC: 'The 2027 Challenger calendar is released by the ATP in several parts: coming soon. Switch to “2026 results” to see this season\'s Challengers.',
+  surf2: c => ({H: 'Hard', IH: 'Hard (indoor)', CL: 'Clay', G: 'Grass'})[c], cal_more: 'Full calendar →', home_next_t: 'Next tournaments',
+  cal_sum_next: (n, b, nx) => `<b>${n}</b> tournaments, including <b>${b}</b> Grand Slams &amp; Masters 1000.` + (nx ? `<br>Next: <b>${nx}</b>.` : '') + '<br>Seeded title odds are published as soon as each draw is out.',
+  cal_sum_past: (n, f, t3) => `<b>${n}</b> tournaments completed.<br>Our pre-tournament favourite won <b>${f}</b> of them; the champion was in our top 3 in <b>${t3}</b>.<br><span class="meta">A 250 or 500 favourite usually has only a 20–35% title chance: a few wins out of many is expected.</span>`,
+  wrk: (k, n) => k == null ? '–' : k === 1 ? '<b class="up">favourite</b>' : `#${k} / ${n}`, live_t: 'in progress',
+  sf_h: s => `${s} — Seeded Rating`, sf_meta: 'Ratings on this surface (recent matches on it count double). Specialty = places gained (or lost) compared with the overall Seeded ranking.', h_allrk: 'Overall rank',
+  sf_top_t: s => `Top 50 on ${s.toLowerCase()}`, h_srt: 'Surface', h_all: 'Overall', h_spec: 'Specialty',
+  sf_spec_t: 'Specialists (Seeded top 100)', sf_spec_note: 'Most places gained on this surface compared with the overall ranking.',
+  sf_next_t: 'Next tournaments on this surface', sf_titles_t: y => `${y} ATP titles on this surface`, sf_links: 'Surface pages:', sf_none: 'No tournament on this surface for now.', pl_cmp: 'Compare with another player →', pl_12m: 'Last 12 months',
   pl_titles: n => `${n} title${n === 1 ? '' : 's'}`, pl_vs10: (w, l) => `${w}–${l} vs top 10`, pl_age: a => `${a} years old`,
   pl_hand: h => h === 'L' ? 'left-handed' : 'right-handed', pl_rhythm: n => `${n} match${n > 1 ? 'es' : ''} in the last 14 days`,
   pl_surf_t: 'Record — last 12 months', h_wl: 'W–L', h_wpct: 'Win %', pl_all: 'All matches', pl_main: 'Tour level (no Challengers/qualifying)',
@@ -275,7 +343,21 @@ const T = {
   t_title: 'Open d\'Australie 2026 — probabilités par tour et de titre', t_meta: 'Démo rejouée · état après les huitièmes de finale · 50 000 tableaux simulés',
   t_note: 'Sur le vrai site, cette page a deux onglets (<b>Chances de titre</b> | <b>Tableau · Et si ?</b>) : clique sur n\'importe quel joueur du tableau pour le faire gagner, et tout le tournoi est rejoué instantanément — ouvre <a href="australian-open-2026.html">australian-open-2026.html</a> pour l\'essayer (en anglais pour l\'instant).',
   atp_rk: 'Classement ATP', by_surf: 'Par surface', chart_t: 'Seeded Rating — 24 derniers mois', recent_t: 'Derniers matchs (12 mois)',
-  pl_search: 'Chercher un joueur (top 300)…', pl_cmp: 'Comparer avec un autre joueur →', pl_12m: '12 derniers mois',
+  pl_search: 'Chercher un joueur (top 300)…',
+  nav_cal: 'Calendrier', cal_h: y => `Calendrier ATP ${y}`, cal_res_h: y => `ATP ${y} — résultats`, cal_next: y => `Saison ${y}`, cal_past: y => `Résultats ${y}`,
+  cal_meta: 'Date = début de la semaine du tournoi (calendrier officiel ATP, janvier 2026). Favoris Seeded = notre top 3 actuel sur la surface, mis à jour chaque nuit.',
+  cal_res_meta: 'Tous les tournois de la saison : vainqueur, finale, et la place du vainqueur parmi nos favoris d\'avant-tournoi (note + rythme sur 14 jours, exactement comme dans nos prédictions).',
+  cc_all: 'Tous', cc_big: 'Grands Chelems et Masters', h_cat: 'Catégorie', h_surf2: 'Surface', h_favs: 'Favoris Seeded (surface)', h_final: 'Finale',
+  h_ourfav: 'Notre favori', h_winrk: 'Rang Seeded du vainqueur', tbc: 'à confirmer', cat: c => ({G: 'Grand Chelem', M: 'Masters 1000', F: 'ATP Finals', '500': 'ATP 500', '250': 'ATP 250', C: 'Challenger'})[c] || c,
+  cal_noC: 'Le calendrier Challenger 2027 est publié par l\'ATP en plusieurs fois : bientôt ici. Passe sur « Résultats 2026 » pour voir les Challengers de cette saison.',
+  surf2: c => ({H: 'Dur', IH: 'Dur (salle)', CL: 'Terre battue', G: 'Gazon'})[c], cal_more: 'Tout le calendrier →', home_next_t: 'Prochains tournois',
+  cal_sum_next: (n, b, nx) => `<b>${n}</b> tournois, dont <b>${b}</b> Grands Chelems et Masters 1000.` + (nx ? `<br>Prochain : <b>${nx}</b>.` : '') + '<br>Les chances de titre Seeded sont publiées dès la sortie de chaque tableau.',
+  cal_sum_past: (n, f, t3) => `<b>${n}</b> tournois terminés.<br>Notre favori d\'avant-tournoi en a gagné <b>${f}</b> ; le vainqueur était dans notre top 3 pour <b>${t3}</b> d\'entre eux.<br><span class="meta">Le favori d\'un 250 ou d\'un 500 n\'a souvent que 20 à 35 % de chances de titre : quelques victoires sur beaucoup de tournois, c\'est normal.</span>`,
+  wrk: (k, n) => k == null ? '–' : k === 1 ? '<b class="up">favori</b>' : `n°${k} / ${n}`, live_t: 'en cours',
+  sf_h: s => `${s} — Seeded Rating`, sf_meta: 'Notes sur cette surface (les matchs récents joués dessus comptent double). Spécialité = places gagnées (ou perdues) par rapport au classement Seeded général.', h_allrk: 'Rang général',
+  sf_top_t: s => `Top 50 sur ${s.toLowerCase()}`, h_srt: 'Surface', h_all: 'Générale', h_spec: 'Spécialité',
+  sf_spec_t: 'Spécialistes (top 100 Seeded)', sf_spec_note: 'Ceux qui gagnent le plus de places sur cette surface par rapport au classement général.',
+  sf_next_t: 'Prochains tournois sur cette surface', sf_titles_t: y => `Titres ATP ${y} sur cette surface`, sf_links: 'Pages surface :', sf_none: 'Aucun tournoi sur cette surface pour l\'instant.', pl_cmp: 'Comparer avec un autre joueur →', pl_12m: '12 derniers mois',
   pl_titles: n => `${n} titre${n > 1 ? 's' : ''}`, pl_vs10: (w, l) => `${w}-${l} contre le top 10`, pl_age: a => `${a} ans`,
   pl_hand: h => h === 'L' ? 'gaucher' : 'droitier', pl_rhythm: n => `${n} match${n > 1 ? 's' : ''} sur les 14 derniers jours`,
   pl_surf_t: 'Bilan — 12 derniers mois', h_wl: 'V-D', h_wpct: '% vict.', pl_all: 'Tous les matchs', pl_main: 'Circuit principal (hors Challengers et qualifs)',
@@ -305,7 +387,9 @@ const T = {
   tour: x => ({'Australian Open': 'Open d\'Australie', 'Roland Garros': 'Roland-Garros', 'Paris Masters': 'Masters de Paris',
                'Indian Wells Masters': 'Indian Wells', 'Miami Masters': 'Miami', 'Monte Carlo Masters': 'Monte-Carlo',
                'Madrid Masters': 'Madrid', 'Rome Masters': 'Rome', 'Canada Masters': 'Canada', 'Cincinnati Masters': 'Cincinnati',
-               'Shanghai Masters': 'Shanghai'})[x] || x,
+               'Shanghai Masters': 'Shanghai', 'Monte Carlo': 'Monte-Carlo', 'Bucharest': 'Bucarest', 'Geneva': 'Genève', 'Hamburg': 'Hambourg', 'Barcelona': 'Barcelone',
+               'Vienna': 'Vienne', 'Brussels': 'Bruxelles', 'Basel': 'Bâle', 'Beijing': 'Pékin', 'Kitzbuhel': 'Kitzbühel', 'Bastad': 'Båstad',
+               'Mallorca': 'Majorque', "'s-Hertogenbosch": 'Bois-le-Duc', 'Queen\'s Club': 'Queen\'s', 'Washington': 'Washington'})[x] || x,
   round: x => ({R128: '64es', R64: '32es', R32: '16es', R16: '8es', QF: 'QF', SF: 'DF', F: 'F', RR: 'Poules', BR: '3e place'})[x] || x
  }
 };
@@ -384,6 +468,86 @@ function renderRating() {
     <td class="n">${r.atp ?? ''}</td>${gapCell(r.gap)}<td class="n ${r.d30 > 0 ? 'up' : r.d30 < 0 ? 'down' : 'z'}">${r.d30 == null ? '–' : (r.d30 > 0 ? '+' : '') + fmt(r.d30)}</td></tr>`).join('');
 }
 
+// ------------------------------------------------------------ calendrier et pages surface
+const SFKEY = {H: 'hard', IH: 'hard', CL: 'clay', G: 'grass'}, SFCODE = {hard: 'H', clay: 'CL', grass: 'G'};
+const sfChip = c => `<a class="sf ${c}" href="#surface/${SFKEY[c]}">${t('surf2', c)}</a>`;
+const catChip = c => `<span class="ct ${c}">${t('cat', c)}</span>`;
+const dfmt = (iso, sure = true) => { const d = new Date(iso + 'T12:00:00');
+  return sure ? d.toLocaleDateString(L === 'fr' ? 'fr-FR' : 'en-GB', {day: 'numeric', month: 'short'}) : t('tbc'); };
+const monthName = iso => { const s = new Date(iso + 'T12:00:00').toLocaleDateString(L === 'fr' ? 'fr-FR' : 'en-GB', {month: 'long', year: 'numeric'}); return s[0].toUpperCase() + s.slice(1); };
+const last = n => n.split(' ').slice(-1)[0];
+const topOn = (sk, k) => [...R].sort((a, b) => b[sk] - a[sk]).slice(0, k);
+const CALY = +D.cal.events[0].d.slice(0, 4), today = new Date().toISOString().slice(0, 10);
+const nextEv = () => D.cal.events.find(e => e.d >= today);
+let calView = 'next', calCat = 'all';
+const catOk = c => calCat === 'all' ? c !== 'C' : calCat === 'big' ? ['G', 'M', 'F'].includes(c) : c === calCat;
+function renderCalendar() {
+  document.querySelectorAll('[data-cv]').forEach(b => { b.classList.toggle('on', b.dataset.cv === calView); b.innerHTML = t(b.dataset.cv === 'next' ? 'cal_next' : 'cal_past', b.dataset.cv === 'next' ? CALY : D.season_year); });
+  document.querySelectorAll('[data-cc]').forEach(b => { b.classList.toggle('on', b.dataset.cc === calCat); b.innerHTML = /^\d+$/.test(b.dataset.cc) ? 'ATP ' + b.dataset.cc : b.dataset.cc === 'C' ? 'Challenger' : t('cc_' + b.dataset.cc); });
+  const nx = nextEv();
+  if (calView === 'next') {
+    $('#cal-h').textContent = t('cal_h', CALY); $('#cal-meta').textContent = t('cal_meta');
+    let mo = '', h = `<tr><th>${t('h_date')}</th><th>${t('h_tourn')}</th><th>${t('h_cat')}</th><th>${t('h_surf2')}</th><th>${t('h_favs')}</th></tr>`;
+    D.cal.events.filter(e => catOk(e.cat)).forEach(e => {
+      if (e.d.slice(0, 7) !== mo) { mo = e.d.slice(0, 7); h += `<tr class="mo"><td colspan="5">${monthName(e.d)}</td></tr>`; }
+      const favs = ['G', 'M', 'F'].includes(e.cat) ? topOn(SFKEY[e.surf], 3).map(r => plink(r.rank - 1, last(r.name)) + (r.inactive ? `<span class="tag">${t('inactive')}</span>` : '')).join(' · ') : '';
+      h += `<tr class="${nx && e === nx ? 'nx' : ''}"><td class="${e.sure ? '' : 'tbc'}">${dfmt(e.d, e.sure)}</td><td>${['G', 'M', 'F'].includes(e.cat) ? '<b>' + t('tour', e.name) + '</b>' : t('tour', e.name)}</td>
+        <td>${catChip(e.cat)}</td><td>${sfChip(e.surf)}</td><td>${favs}</td></tr>`;
+    });
+    if (calCat === 'C') h += `<tr><td colspan="5" class="z">${t('cal_noC')}</td></tr>`;
+    $('#cal-t').innerHTML = h;
+    const ev = D.cal.events;
+    $('#cal-sum').innerHTML = t('cal_sum_next', ev.length, ev.filter(e => ['G', 'M'].includes(e.cat)).length, nx ? `${t('tour', nx.name)} (${nx.sure ? dfmt(nx.d) : monthName(nx.d)})` : '');
+  } else {
+    $('#cal-h').textContent = t('cal_res_h', D.season_year); $('#cal-meta').textContent = t('cal_res_meta');
+    let mo = '', h = `<tr><th>${t('h_date')}</th><th>${t('h_tourn')}</th><th>${t('h_cat')}</th><th>${t('h_surf2')}</th><th>${t('h_champ')}</th><th>${t('h_final')}</th><th>${t('h_ourfav')}</th><th>${t('h_winrk')}</th></tr>`;
+    [...D.season].reverse().filter(e => catOk(e.cat)).forEach(e => {
+      if (e.d.slice(0, 7) !== mo) { mo = e.d.slice(0, 7); h += `<tr class="mo"><td colspan="8">${monthName(e.d)}</td></tr>`; }
+      h += `<tr><td>${dfmt(e.d)}</td><td>${['G', 'M', 'F'].includes(e.cat) ? '<b>' + t('tour', e.name) + '</b>' : t('tour', e.name)}</td><td>${catChip(e.cat)}</td><td>${sfChip(e.surf)}</td>` +
+        (e.win ? `<td><b>${plink(e.win_i, e.win)}</b></td><td>${plink(e.fin_i, last(e.fin))} <span class="meta">${e.score}</span></td>` : `<td colspan="2" class="z">${t('live_t')}</td>`) +
+        `<td>${e.fav ? plink(e.fav_i, last(e.fav)) : ''}</td><td>${e.win ? t('wrk', e.win_rk, e.n) : ''}</td></tr>`;
+    });
+    $('#cal-t').innerHTML = h;
+    const done = D.season.filter(e => e.win && e.cat !== 'F' && (calCat === 'C') === (e.cat === 'C'));
+    $('#cal-sum').innerHTML = t('cal_sum_past', done.length, done.filter(e => e.win_rk === 1).length, done.filter(e => e.win_rk && e.win_rk <= 3).length);
+  }
+}
+let SF = 'hard';
+function renderSurface() {
+  const nm = t(SF), code = SFCODE[SF], nr = L === 'fr' ? 'n°' : '#';
+  $('#sf-h').textContent = t('sf_h', nm); $('#sf-meta').textContent = t('sf_meta');
+  $('#sf-tabs').innerHTML = ['hard', 'clay', 'grass'].map(k => `<a class="btn ${k === SF ? 'on' : ''}" href="#surface/${k}" style="display:inline-block">${t(k)}</a>`).join('');
+  $('#sf-top-t').textContent = t('sf_top_t', nm);
+  const srk = {}; topOn(SF, R.length).forEach((r, k) => srk[r.id] = k + 1);
+  const gain = r => r.rank - srk[r.id];                 // places gagnées (ou perdues) sur cette surface
+  const sp = r => { const d = gain(r); return `<td class="n ${d >= 3 ? 'up' : d <= -3 ? 'down' : 'z'}">${d > 0 ? '+' : ''}${d}</td>`; };
+  $('#sf-top').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th><th>${t('h_srt')}</th><th>${t('h_all')}</th><th>${t('h_allrk')}</th><th>${t('h_spec')}</th><th>ATP</th></tr>` +
+    topOn(SF, 50).map((r, k) => `<tr><td class="n">${k + 1}</td><td><b>${plink(r.rank - 1)}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td>
+      <td class="n b">${fmt(r[SF])}</td><td class="n">${fmt(r.note)}</td><td class="n">${r.rank}</td>${sp(r)}<td class="n">${r.atp ?? ''}</td></tr>`).join('');
+  $('#sf-spec').innerHTML = [...R.slice(0, 100)].sort((a, b) => gain(b) - gain(a)).slice(0, 8)
+    .map(r => `<tr><td><b>${plink(r.rank - 1)}</b></td><td class="n">${nr}${r.rank} → ${nr}${srk[r.id]}</td>${sp(r)}</tr>`).join('');
+  const up = D.cal.events.filter(e => SFKEY[e.surf] === SF && e.d >= today).slice(0, 6);
+  $('#sf-next').innerHTML = up.length ? up.map(e => `<tr><td class="${e.sure ? '' : 'tbc'}">${e.sure ? dfmt(e.d) : monthName(e.d)}</td><td>${t('tour', e.name)}</td><td>${catChip(e.cat)}</td></tr>`).join('') : `<tr><td>${t('sf_none')}</td></tr>`;
+  $('#sf-titles-t').textContent = t('sf_titles_t', D.season_year);
+  const cnt = {}; D.season.filter(e => e.win && e.cat !== 'C' && SFKEY[e.surf] === SF).forEach(e => { (cnt[e.win] = cnt[e.win] || {n: 0, i: e.win_i, big: 0}).n++; if (['G', 'M', 'F'].includes(e.cat)) cnt[e.win].big++; });
+  const tl = Object.entries(cnt).sort((a, b) => b[1].n - a[1].n || b[1].big - a[1].big).slice(0, 8);
+  $('#sf-titles').innerHTML = tl.length ? tl.map(([n, v]) => `<tr><td><b>${plink(v.i, n)}</b></td><td class="n b">${v.n}</td></tr>`).join('') : `<tr><td>${t('sf_none')}</td></tr>`;
+}
+function renderHomeNext() {
+  $('#home-next').innerHTML = D.cal.events.filter(e => e.d >= today).slice(0, 5).map(e =>
+    `<tr><td class="${e.sure ? '' : 'tbc'}">${e.sure ? dfmt(e.d) : monthName(e.d)}</td><td>${t('tour', e.name)}</td><td>${sfChip(e.surf)}</td></tr>`).join('');
+  $('#r-sflinks').innerHTML = t('sf_links') + ' ' + ['hard', 'clay', 'grass'].map(k => `<a href="#surface/${k}">${t(k)}</a>`).join(' · ');
+}
+document.querySelectorAll('[data-cv]').forEach(b => b.onclick = () => { calView = b.dataset.cv; renderCalendar(); });
+document.querySelectorAll('[data-cc]').forEach(b => b.onclick = () => { calCat = b.dataset.cc; renderCalendar(); });
+
+function wrapTables() {
+  document.querySelectorAll('table').forEach(tb => {
+    if (tb.closest('.card') || tb.closest('.st-wrap') || tb.parentElement.classList.contains('tw')) return;
+    const w = document.createElement('div'); w.className = 'tw'; tb.parentNode.insertBefore(w, tb); w.appendChild(tb); });
+}
+wrapTables();
+
 let PL = 0;                                         // joueur affiché (index dans le classement)
 const PCACHE = {};
 function playerData(i, cb) {                       // site publié : un petit fichier par joueur, chargé à la demande
@@ -427,14 +591,15 @@ function fillPlayer(I, P) {
     P.recent.map(m => `<tr><td>${dt(m.date)}</td><td>${t('tour', m.t)}</td><td>${t('round', m.rd)}</td><td>${plink(m.opp_i, m.opp)}</td><td class="n">${fmt(m.opp_note)}</td>
     <td class="${m.res === 'W' ? 'up' : 'down'}">${m.res === 'W' ? t('win') : t('loss')}</td><td>${m.score}</td><td class="n">${pct(m.dom)}</td></tr>`).join('');
   // courbe 24 mois (les mois sans note fiable sont laissés vides)
-  const h = P.history, W = 820, H = 190, Lm = 40, B = 25, Tm = 14;
+  const mob = window.innerWidth < 760, h = P.history, W = mob ? 400 : 820, H = mob ? 210 : 190, Lm = 34, B = 25, Tm = 14;
+  $('#pl-chart').setAttribute('viewBox', `0 0 ${W} ${H}`);
   const vals = h.map(x => x[1]).filter(v => v != null);
   if (vals.length < 2) return;
   const lo = Math.floor(Math.min(...vals) - 2), hi = Math.min(100, Math.ceil(Math.max(...vals) + 2));
   const x = k => Lm + k * (W - Lm - 10) / (h.length - 1), y = v => Tm + (hi - v) * (H - Tm - B) / (hi - lo);
   let s = '';
   for (let g = lo; g <= hi; g += Math.max(1, Math.round((hi - lo) / 4))) s += `<line x1="${Lm}" x2="${W - 10}" y1="${y(g)}" y2="${y(g)}" stroke="#eee"/><text x="${Lm - 6}" y="${y(g) + 4}" font-size="11" text-anchor="end" fill="#888">${g}</text>`;
-  h.forEach((p, k) => { if (k % 3 === 0 || k === h.length - 1) s += `<text x="${x(k)}" y="${H - 6}" font-size="11" text-anchor="middle" fill="#888">${dt(p[0])}</text>`; });
+  h.forEach((p, k) => { if (k % (mob ? 6 : 3) === 0 || k === h.length - 1) s += `<text x="${x(k)}" y="${H - 6}" font-size="11" text-anchor="middle" fill="#888">${dt(p[0])}</text>`; });
   let seg = [];
   const flush = () => { if (seg.length > 1) s += `<polyline fill="none" stroke="#1d3557" stroke-width="2" points="${seg.join(' ')}"/>`;
                         else if (seg.length === 1) s += `<circle cx="${seg[0].split(',')[0]}" cy="${seg[0].split(',')[1]}" r="2" fill="#1d3557"/>`; seg = []; };
@@ -561,7 +726,7 @@ function fbToggle(force) {
 }
 function renderFeedback() { $('#fb-btn').textContent = t('fb_btn'); $('#fb-title').textContent = t('fb_title'); }
 
-function renderAll() { renderFeedback(); renderStatic(); renderHome(); renderRating(); renderPlayer(); renderPredictor(); renderRecord(); renderMethod();
+function renderAll() { renderFeedback(); renderStatic(); renderHome(); renderHomeNext(); renderRating(); renderCalendar(); renderSurface(); renderPlayer(); renderPredictor(); renderRecord(); renderMethod();
   if (TOUR) TOUR.setLang(L); else TOUR = SeededTournament($('#tour-app'), DT, L); }
 
 // ------------------------------------------------------------ interactions
@@ -577,10 +742,11 @@ function route() {
   let [id, arg] = (location.hash || '#home').slice(1).split('/');
   if (!document.getElementById('p-' + id)) id = 'home';
   if (id === 'player') { if (arg && SLUG[arg] != null) PL = SLUG[arg]; renderPlayer(); }
+  if (id === 'surface') { if (['hard', 'clay', 'grass'].includes(arg)) SF = arg; renderSurface(); }
   if (id === 'predictor' && arg && SLUG[arg] != null) {           // « Comparer » depuis une page joueur
     const k = SLUG[arg]; $('#pa').value = k; if (+$('#pb').value === k) $('#pb').value = k === 0 ? 1 : 0; renderPredictor(); }
   document.querySelectorAll('.page').forEach(p => p.style.display = p.id === 'p-' + id ? 'block' : 'none');
-  document.querySelectorAll('.nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + id));
+  document.querySelectorAll('.nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + (id === 'surface' ? 'calendar' : id)));
   window.scrollTo(0, 0);
 }
 window.onhashchange = route;

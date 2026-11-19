@@ -1,0 +1,418 @@
+{
+ "source": "Calendrier officiel ATP 2027 (PDF « 2027 ATP Tour calendar », version mise à jour, publiée le 14 janvier 2026). Date = début de la semaine du tournoi. Un 2e ATP 250 de la semaine du 7 novembre reste à définir (non affiché). Mettre ce fichier à jour à la main si l'ATP change une date ; mettre sure=false pour une date incertaine.",
+ "events": [
+  {
+   "d": "2027-01-04",
+   "name": "Brisbane",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-01-04",
+   "name": "Hong Kong",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-01-11",
+   "name": "Adelaide",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-01-11",
+   "name": "Auckland",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-01-17",
+   "name": "Australian Open",
+   "cat": "G",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-02-01",
+   "name": "Montpellier",
+   "cat": "250",
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-02-08",
+   "name": "Dallas",
+   "cat": "500",
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-02-08",
+   "name": "Rotterdam",
+   "cat": "500",
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-02-08",
+   "name": "Buenos Aires",
+   "cat": "250",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-02-15",
+   "name": "Doha",
+   "cat": "500",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-02-15",
+   "name": "Rio de Janeiro",
+   "cat": "500",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-02-15",
+   "name": "Delray Beach",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-02-22",
+   "name": "Acapulco",
+   "cat": "500",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-02-22",
+   "name": "Dubai",
+   "cat": "500",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-02-22",
+   "name": "Santiago",
+   "cat": "250",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-03-03",
+   "name": "Indian Wells Masters",
+   "cat": "M",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-03-17",
+   "name": "Miami Masters",
+   "cat": "M",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-03-29",
+   "name": "Bucharest",
+   "cat": "250",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-03-29",
+   "name": "Houston",
+   "cat": "250",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-03-29",
+   "name": "Marrakech",
+   "cat": "250",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-04-04",
+   "name": "Monte Carlo Masters",
+   "cat": "M",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-04-12",
+   "name": "Barcelona",
+   "cat": "500",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-04-12",
+   "name": "Munich",
+   "cat": "500",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-04-21",
+   "name": "Madrid Masters",
+   "cat": "M",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-05-05",
+   "name": "Rome Masters",
+   "cat": "M",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-05-16",
+   "name": "Hamburg",
+   "cat": "500",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-05-16",
+   "name": "Geneva",
+   "cat": "250",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-05-23",
+   "name": "Roland Garros",
+   "cat": "G",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-06-07",
+   "name": "'s-Hertogenbosch",
+   "cat": "250",
+   "surf": "G",
+   "sure": true
+  },
+  {
+   "d": "2027-06-07",
+   "name": "Stuttgart",
+   "cat": "250",
+   "surf": "G",
+   "sure": true
+  },
+  {
+   "d": "2027-06-14",
+   "name": "Halle",
+   "cat": "500",
+   "surf": "G",
+   "sure": true
+  },
+  {
+   "d": "2027-06-14",
+   "name": "Queen's Club",
+   "cat": "500",
+   "surf": "G",
+   "sure": true
+  },
+  {
+   "d": "2027-06-20",
+   "name": "Mallorca",
+   "cat": "250",
+   "surf": "G",
+   "sure": true
+  },
+  {
+   "d": "2027-06-21",
+   "name": "Eastbourne",
+   "cat": "250",
+   "surf": "G",
+   "sure": true
+  },
+  {
+   "d": "2027-06-28",
+   "name": "Wimbledon",
+   "cat": "G",
+   "surf": "G",
+   "sure": true
+  },
+  {
+   "d": "2027-07-12",
+   "name": "Bastad",
+   "cat": "250",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-07-12",
+   "name": "Gstaad",
+   "cat": "250",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-07-12",
+   "name": "Umag",
+   "cat": "250",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-07-19",
+   "name": "Kitzbuhel",
+   "cat": "250",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-07-19",
+   "name": "Estoril",
+   "cat": "250",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-07-26",
+   "name": "Washington",
+   "cat": "500",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-07-26",
+   "name": "Los Cabos",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-08-01",
+   "name": "Canada Masters",
+   "cat": "M",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-08-12",
+   "name": "Cincinnati Masters",
+   "cat": "M",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-08-22",
+   "name": "Winston-Salem",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-08-29",
+   "name": "US Open",
+   "cat": "G",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-09-22",
+   "name": "Chengdu",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-09-22",
+   "name": "Hangzhou",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-09-29",
+   "name": "Tokyo",
+   "cat": "500",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-09-29",
+   "name": "Beijing",
+   "cat": "500",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-10-06",
+   "name": "Shanghai Masters",
+   "cat": "M",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-10-18",
+   "name": "Almaty",
+   "cat": "250",
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-10-18",
+   "name": "Stockholm",
+   "cat": "250",
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-10-18",
+   "name": "Lyon",
+   "cat": "250",
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-10-25",
+   "name": "Basel",
+   "cat": "500",
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-10-25",
+   "name": "Vienna",
+   "cat": "500",
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-11-01",
+   "name": "Paris Masters",
+   "cat": "M",
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-11-07",
+   "name": "Brussels",
+   "cat": "250",
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-11-14",
+   "name": "ATP Finals",
+   "cat": "F",
+   "surf": "IH",
+   "sure": true
+  }
+ ]
+}

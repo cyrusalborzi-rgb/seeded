@@ -24,6 +24,11 @@ for k in range(24, 0, -1):
         y, mo = y - 1, mo + 12
     month_marks.append(date(y, mo, 1).toordinal())
 monthly, mi = [], 0
+# saison en cours : pour chaque tournoi du circuit principal, niveaux des inscrits juste avant le 1er match
+SEASON_LV = ("G", "M", "500", "250", "F")
+cur = m[(m.tourney_date // 10000 == YEAR) & (((m.source == "main") & m.tourney_level.isin(SEASON_LV)) | (m.source == "challenger"))]
+entrants = {tid: set(g.winner_id) | set(g.loser_id) for tid, g in cur.groupby("tourney_id")}
+season_snap = {}
 pmatches = {}          # joueur -> ses matchs des 12 derniers mois (pour les pages joueurs)
 snap30 = None
 # relevés hebdomadaires de la note (26 semaines) pour les mini-courbes de tendance
@@ -38,6 +43,9 @@ for r in m.itertuples(index=False):
         d0 = month_marks[mi]
         monthly.append({pid: round(sr.note(pid, d0), 1) for pid in sr.hist if sr.n_recent(pid, d0) >= 5})
         mi += 1
+    if r.tourney_id in entrants and r.tourney_id not in season_snap and r.source != "quali":
+        # même niveau que pour nos prédictions : note + bonus de rythme (matchs des 14 derniers jours)
+        season_snap[r.tourney_id] = {pid: sr.level_match(pid, r.day, r.surface) for pid in entrants[r.tourney_id]}
     if snap30 is None and r.day >= today - 30:
         snap30 = {pid: sr.note(pid, r.day) for pid in sr.hist if sr.n_recent(pid, r.day) >= RELIABLE_MIN}
     if r.day >= today - 365:
@@ -81,7 +89,7 @@ calib = pd.read_csv(OUT / "calibration_titres.csv")
 
 # ---- comparateur : face-à-face (tous niveaux, abandons compris, forfaits exclus) + forme récente
 idx = {pid: i for i, pid in enumerate(top.id)}
-RAWCOLS = {"tourney_name", "tourney_level", "surface", "tourney_date", "round", "winner_id", "loser_id", "score",
+RAWCOLS = {"tourney_id", "tourney_name", "tourney_level", "surface", "tourney_date", "round", "winner_id", "loser_id", "score",
            "winner_age", "winner_hand", "winner_ht", "loser_age", "loser_hand", "loser_ht"}
 frames = []
 for y in range(1990, YEAR + 1):
@@ -92,6 +100,7 @@ for f in [DATA / "ongoing_tourneys.csv", DATA / "challenger_ongoing_tourneys.csv
     if f.exists():
         frames.append(pd.read_csv(f, usecols=lambda c: c in RAWCOLS, dtype={"winner_id": str, "loser_id": str}))
 allm = pd.concat(frames).drop_duplicates(["tourney_date", "tourney_name", "round", "winner_id", "loser_id"])
+allm_all = allm.copy()                          # finales gagnées par abandon ou forfait comprises
 allm = allm[~allm.score.fillna("W/O").str.contains("W/O|unfinished")]
 both_top = allm[allm.winner_id.isin(idx) & allm.loser_id.isin(idx)].sort_values("tourney_date")
 h2h = {}
@@ -150,6 +159,28 @@ for r in top.itertuples(index=False):
         "recent": [fmt_m(x) for x in rec]})
 print("pages joueurs :", len(players), "| ex.", top.iloc[0]["name"], players[0]["record"], "titres", players[0]["titles"])
 
+# ---- saison en cours : vainqueurs et place du vainqueur dans nos favoris d'avant-tournoi
+season = []
+for tid, g in cur.groupby("tourney_id"):
+    g = g.sort_values("day")
+    fin = allm_all[(allm_all.tourney_id == tid) & (allm_all["round"] == "F")]
+    sn = season_snap.get(tid, {})
+    order = sorted(sn, key=sn.get, reverse=True)
+    row = {"d": date.fromordinal(int(g.day.min())).strftime("%Y-%m-%d"), "name": g.tourney_name.iloc[0],
+           "cat": "C" if g.source.iloc[0] == "challenger" else g.tourney_level.iloc[0],
+           "surf": "IH" if (g.surface.iloc[0] == "Hard" and str(g.indoor.iloc[0]) == "I") else {"Hard": "H", "Clay": "CL", "Grass": "G"}.get(g.surface.iloc[0], "H"),
+           "fav": names.get(order[0]) if order else None, "fav_i": idx.get(order[0]) if order else None}
+    if len(fin):
+        f = fin.iloc[-1]
+        row.update({"win": names.get(f.winner_id, "?"), "win_i": idx.get(f.winner_id), "fin": names.get(f.loser_id, "?"), "fin_i": idx.get(f.loser_id), "score": f.score,
+                    "win_rk": order.index(f.winner_id) + 1 if f.winner_id in order else None, "n": len(order)})
+    season.append(row)
+season.sort(key=lambda x: x["d"])
+CAL = json.loads((TOURNAMENTS / "calendar_2027.json").read_text())
+for c in ("ATP", "C"):
+    ss = [x for x in season if (x["cat"] == "C") == (c == "C") and "win" in x]
+    print(f"saison {c} :", len(ss), "terminés ; favori vainqueur :", sum(x.get("win_rk") == 1 for x in ss), "; top 3 :", sum((x.get("win_rk") or 99) <= 3 for x in ss))
+
 live = []
 f_on = DATA / "ongoing_tourneys.csv"
 if f_on.exists():
@@ -159,7 +190,7 @@ nxt = next((t for t in CONFIG if t.get("next")), None)
 out = {"date": date.fromordinal(today).strftime("%d %b %Y"), "live": live,
        "next": {"en": nxt["next"]["en"], "fr": nxt["next"]["fr"]} if nxt else None,
        "ranking": json.loads(top.to_json(orient="records")),
-       "players": players,
+       "players": players, "season": season, "season_year": YEAR, "cal": CAL,
        "ao": json.loads(ao.to_json(orient="records")),
        "bilan": json.loads(bilan.to_json(orient="records")),
        "calib": json.loads(calib.to_json(orient="records")),
