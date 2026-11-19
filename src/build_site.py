@@ -6,10 +6,10 @@ Tous les chiffres viennent des sorties du calcul (source de vérité) : outputs/
 """
 from pathlib import Path
 from page_tournoi import CSS as T_CSS, JS as T_JS
-import methodo
+import methodo, logo, shutil
 
 import json
-from paths import OUT, SITE, TOURNAMENTS
+from paths import OUT, SITE, TOURNAMENTS, ROOT
 
 FEEDBACK_FORM = "o9RgDP"        # formulaire Tally « Seeded — Feedback » (réponses : tally.so)
 CONFIG = json.loads((TOURNAMENTS / "tournaments.json").read_text())
@@ -22,13 +22,15 @@ HTML = r"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Seeded — tennis by the numbers</title>
+__FAV__
 <style>
 *{box-sizing:border-box}
 body{font-family:Verdana,Arial,sans-serif;font-size:13px;color:#222;background:#fff;margin:0}
 a{color:#1d4f91;text-decoration:none} a:hover{text-decoration:underline}
 .top{background:#1d3557;color:#fff}
 .topin{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:18px;padding:0 10px;height:40px}
-.logo{font-weight:bold;font-size:17px;letter-spacing:1px;color:#fff}
+.logo{font-weight:bold;font-size:17px;letter-spacing:1px;color:#fff;display:inline-flex;align-items:center;gap:7px;flex:0 0 auto}
+.logo:hover{text-decoration:none;color:#fff} .logo:hover svg circle{fill:#c5ef93} .logo svg{width:22px;height:22px;display:block}
 .logo i{font-style:normal;color:#9fd36b}
 .nav a{color:#dfe7f2;padding:12px 8px;display:inline-block;font-size:12.5px}
 .nav a.on{background:#2c4a73;color:#fff;font-weight:bold}
@@ -123,9 +125,9 @@ td.wa{font-weight:bold;color:#1d3557}
 __TCSS__
 </style></head><body>
 <div class="top"><div class="topin">
-  <span class="logo">SEED<i>ED</i></span>
+  <a class="logo" href="#home" data-i-title="nav_home">__LOGO__<span>SEED<i>ED</i></span></a>
   <span class="nav">
-    <a href="#home" data-i="nav_home"></a><a href="#tournament" data-i="nav_draws"></a><a href="#calendar" data-i="nav_cal"></a><a href="#rating" data-i="nav_rating"></a>
+    <a href="#tournament" data-i="nav_draws"></a><a href="#calendar" data-i="nav_cal"></a><a href="#rating" data-i="nav_rating"></a>
     <a href="#player" data-i="nav_players"></a><a href="#predictor" data-i="nav_predictor"></a><a href="#record" data-i="nav_record"></a><a href="#method" data-i="nav_method"></a>
   </span>
   <span class="sp"></span>
@@ -460,6 +462,7 @@ const nlink = name => plink(BYNAME[name], name);
 function renderStatic() {
   document.documentElement.lang = L;
   document.querySelectorAll('[data-i]').forEach(el => el.innerHTML = t(el.dataset.i));
+  document.querySelectorAll('[data-i-title]').forEach(el => { el.title = t(el.dataset.iTitle); el.setAttribute('aria-label', 'Seeded — ' + t(el.dataset.iTitle)); });
   document.querySelectorAll('[data-lang]').forEach(a => a.classList.toggle('on', a.dataset.lang === L));
   let bw = '';
   try { if (D.built) bw = new Date(D.built).toLocaleString(L === 'fr' ? 'fr-FR' : 'en-GB', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'}); } catch (e) {}
@@ -868,8 +871,9 @@ window.onhashchange = route;
 renderAll(); route();
 </script></body></html>"""
 
-def page(data_obj):
-    return (HTML.replace("__FB__", FEEDBACK_FORM).replace("__M_CSS__", methodo.CSS).replace("__M_EN__", methodo.render("en", facts))
+def page(data_obj, files=True):
+    return (HTML.replace("__FAV__", logo.favicon_links(files)).replace("__LOGO__", logo.icon(bg=None))
+                .replace("__FB__", FEEDBACK_FORM).replace("__M_CSS__", methodo.CSS).replace("__M_EN__", methodo.render("en", facts))
                 .replace("__M_FR__", methodo.render("fr", facts))
                 .replace("__TCSS__", T_CSS).replace("__TJS__", T_JS).replace("__FACTS__", json.dumps(facts))
                 .replace("__TOUR__", tour).replace("__DATA__", json.dumps(data_obj)))
@@ -887,5 +891,7 @@ light = {k: v for k, v in site_data.items() if k not in ("h2h", "players")}
 (SITE / "index.html").write_text(page(light), encoding="utf-8")
 (SITE / ".nojekyll").write_text("")
 # 2) version tout-en-un (fichier unique, pour l'ouvrir sans serveur)
-(OUT / "seeded-standalone.html").write_text(page(site_data), encoding="utf-8")
+(OUT / "seeded-standalone.html").write_text(page(site_data, files=False), encoding="utf-8")
+for f in ("favicon-32.png", "apple-touch-icon.png", "favicon.svg"):       # icônes d'onglet / d'écran d'accueil
+    shutil.copy(ROOT / "assets" / f, SITE / f)
 print("Site écrit :", SITE / "index.html", "| version autonome :", OUT / "seeded-standalone.html")

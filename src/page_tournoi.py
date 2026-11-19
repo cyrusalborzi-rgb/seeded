@@ -292,16 +292,17 @@ PAGE = r"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>__TITLE__ – title odds | Seeded</title>
+__FAV__
 <style>
 *{box-sizing:border-box}
 body{font-family:Verdana,Arial,sans-serif;font-size:13px;color:#222;background:#fff;margin:0}
 .top{background:#1d3557;color:#fff;padding:6px 10px;font-weight:bold;display:flex;gap:8px}
-.top span{font-weight:normal;color:#c9d6e8} .top .sp{flex:1} .top a{color:#9fb3cc;cursor:pointer;font-weight:normal;font-size:11px} .top a.on{color:#fff;font-weight:bold}
+.top span{font-weight:normal;color:#c9d6e8} .top .tlogo{font-weight:bold;color:#fff;display:inline-flex;align-items:center;gap:6px} .tlogo svg{width:18px;height:18px} .top .sp{flex:1} .top a{color:#9fb3cc;cursor:pointer;font-weight:normal;font-size:11px} .top a.on{color:#fff;font-weight:bold}
 .wrap{max-width:1320px;margin:0 auto;padding:10px}
 .foot{color:#777;font-size:11px;margin:12px 0}
 __CSS__
 </style></head><body>
-<div class="top">SEEDED<span>tennis draw probabilities</span><span class="sp"></span><a data-l="en" class="on">EN</a><a data-l="fr">FR</a></div>
+<div class="top"><span class="tlogo">__LOGO__SEEDED</span><span>tennis draw probabilities</span><span class="sp"></span><a data-l="en" class="on">EN</a><a data-l="fr">FR</a></div>
 <div class="wrap"><div id="app"></div>
 <div class="foot">Model: Seeded Rating (surface Elo blended with point-by-point dominance over the last 12 months; ATP, Challenger &amp; qualifying matches), Monte Carlo draw simulation.
 Data: TennisMyLife (non-commercial use). Not betting advice.</div></div>
@@ -314,5 +315,7 @@ document.querySelectorAll('[data-l]').forEach(a => a.onclick = () => {
 
 
 def build_page(data, title):
-    return (PAGE.replace("__CSS__", CSS).replace("__JS__", JS)
+    import logo
+    return (PAGE.replace("__FAV__", logo.favicon_links(False)).replace("__LOGO__", logo.icon(bg=None))
+                .replace("__CSS__", CSS).replace("__JS__", JS)
                 .replace("__DATA__", json.dumps(data)).replace("__TITLE__", title))
