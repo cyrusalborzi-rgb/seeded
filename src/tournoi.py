@@ -166,14 +166,16 @@ def main():
     tid = a.id or find_tourney_id(a.nom)
 
     engine = SeededRating()
-    day0 = engine.fit(matches, stop_before_tourney=tid)   # niveaux figés au début du tournoi
-    model = engine.view(day0, tid)                        # niveaux à cette date (+ rythme 14 jours)
+    day0 = engine.fit(matches, stop_before_tourney=tid)   # niveaux au début du tableau principal
+    model = engine.view(day0, tid)
     bracket, unknown = match_players(draw, model, matches)
     if unknown:
         print("⚠ Joueurs inconnus de la base (note de départ 1500) :", ", ".join(unknown))
 
     q_rating = qualifier_rating(model, matches, a.surface)
     override = {p: q_rating for p in bracket if p and p.startswith("QUALIF-")}
+    real = [p for p in dict.fromkeys(bracket) if p and not p.startswith("QUALIF-")]
+    note0 = {p: float(to_100(model.display_level(p, a.surface))) for p in real}   # note au début du tournoi
 
     # Résultats déjà joués
     played, n_played, last_round = [], 0, None
@@ -192,6 +194,20 @@ def main():
                 print(f"   {names.get(w, w)} bat {names.get(l, l)}")
         if n_played:
             last_round = max(raw["round"], key=ROUNDS.index)
+        # Point 7 : les notes vivent pendant le tournoi. Chaque match déjà joué met à jour les niveaux
+        # (Elo + domination + rythme), exactement comme pour nos prédictions match par match.
+        # Backtest 2012-26 : neutre en Grand Chelem (-0,1 ‰ de log-loss), mieux ailleurs (+1,5 ‰, 12 années sur 15).
+        done = matches[(matches.tourney_id == tid) & (matches.source == "main")]
+        if a.tours_joues:
+            done = done[done["round"].isin(a.tours_joues.split(","))]
+        day_now = day0
+        for r in done.sort_values(["day", "round_order"]).itertuples(index=False):
+            engine.update(r)
+            day_now = max(day_now, r.day)
+        if len(done):
+            model = engine.view(day_now, tid)
+    else:
+        day_now = day0
 
     sim = simulate_draw(model, bracket, a.surface, best_of=a.bo, n_sims=a.sims,
                         played=played, ratings_override=override)
@@ -252,7 +268,8 @@ def main():
                 "atp": None if pd.isna(S.at[p, "atp"]) else int(S.at[p, "atp"]),
                 "level": round(float(S.at[p, "elo"]), 2), "delta": num(S.at[p, "delta"]),
                 "note": round(float(to_100(model.display_level(p, a.surface))), 1) if not p.startswith("QUALIF-") else round(float(to_100(S.at[p, "elo"])), 1),
-                "n14": engine.n_rhythm(p, day0, tid) if not p.startswith("QUALIF-") else 0,
+                "note0": round(note0[p], 1) if p in note0 else None,
+                "n14": engine.n_rhythm(p, day_now, tid) if not p.startswith("QUALIF-") else 0,
                 "reach": [100.0] + [round(float(S.at[p, count_label[size >> k]]), 3) for k in range(1, n_rounds + 1)]}
                for p in ids]
     played_js = []

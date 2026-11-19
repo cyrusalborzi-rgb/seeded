@@ -55,6 +55,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 <p>Beyond level, we tested whether the context of a match improves predictions (tuned on 2019–2022, checked on 2023–2026):</p>
 <table class="ver">
 <tr><td>✅ Rhythm</td><td><b>Kept.</b> Each match played in the last 14 days (including earlier rounds and qualifying) adds a small bonus — about +0.9 percentage point per match more than the opponent. Players on a run win a bit more often than their rating says. Positive in every test year.</td></tr>
+<tr><td>✅ Ratings that live during the tournament</td><td><b>Kept.</b> During a tournament, every match already played updates the players' ratings (Elo, dominance and rhythm) before the rest of the draw is simulated — the same engine as our match-by-match predictions. Tested on 2012–26: neutral in Grand Slams (−0.1‰ log-loss), better in other tournaments (+1.5‰, positive in 12 of 15 years), especially in the late rounds.</td></tr>
 <tr><td>❌ Fatigue</td><td>Rejected. The length of the previous match, a deciding set or the minutes played in the tournament do not help. Surprisingly, a player coming out of a marathon wins slightly <i>more</i> often than expected: if he is still there, he is in form.</td></tr>
 <tr><td>❌ Indoor / outdoor</td><td>Rejected: no measurable effect beyond the surface rating.</td></tr>
 <tr><td>❌ Head-to-head</td><td>Rejected (see below).</td></tr>
@@ -95,6 +96,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 
 <h2>10. Version history</h2>
 <table class="ver">
+<tr><td>v0.9</td><td>Ratings updated after every match during a tournament (shown with their change since the start of the tournament)</td></tr>
 <tr><td>v0.8</td><td>2027 calendar, season results incl. Challengers (with our pre-tournament favourite) and pages by surface · site adapted to phones</td></tr>
 <tr><td>v0.7</td><td>A page for every player in the top 300 · clickable player names everywhere</td></tr>
 <tr><td>v0.6</td><td>Match context tested: rhythm over 14 days kept (fatigue, indoor rejected) · 6-month trend lines</td></tr>
@@ -145,6 +147,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <p>Au-delà du niveau, on a testé si le contexte d'un match améliore les prédictions (réglage sur 2019-2022, vérification sur 2023-2026) :</p>
 <table class="ver">
 <tr><td>✅ Rythme</td><td><b>Retenu.</b> Chaque match joué sur les 14 derniers jours (tours précédents et qualifs compris) ajoute un petit bonus : environ +0,9 point de pourcentage par match de plus que l'adversaire. Un joueur lancé gagne un peu plus souvent que ce que dit sa note. Positif chaque année testée.</td></tr>
+<tr><td>✅ Notes qui vivent pendant le tournoi</td><td><b>Retenu.</b> Pendant un tournoi, chaque match déjà joué met à jour les notes des joueurs (Elo, domination et rythme) avant de simuler la suite du tableau — le même moteur que nos prédictions match par match. Testé sur 2012-26 : neutre en Grand Chelem (−0,1 ‰ de log-loss), mieux dans les autres tournois (+1,5 ‰, positif 12 années sur 15), surtout dans les derniers tours.</td></tr>
 <tr><td>❌ Fatigue</td><td>Rejetée. La durée du match précédent, un set décisif ou les minutes jouées dans le tournoi n'aident pas. Surprise : un joueur qui sort d'un marathon gagne même un peu <i>plus</i> souvent que prévu — s'il est encore là, c'est qu'il est en forme.</td></tr>
 <tr><td>❌ Salle / extérieur</td><td>Rejeté : aucun effet mesurable au-delà de la note par surface.</td></tr>
 <tr><td>❌ Face-à-face</td><td>Rejeté (voir plus bas).</td></tr>
@@ -185,6 +188,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 
 <h2>10. Historique des versions</h2>
 <table class="ver">
+<tr><td>v0.9</td><td>Notes mises à jour après chaque match pendant un tournoi (avec leur évolution depuis le début du tournoi)</td></tr>
 <tr><td>v0.8</td><td>Calendrier 2027, résultats de la saison, Challengers compris (avec notre favori d'avant-tournoi), et pages par surface · site adapté au téléphone</td></tr>
 <tr><td>v0.7</td><td>Une page pour chaque joueur du top 300 · noms des joueurs cliquables partout</td></tr>
 <tr><td>v0.6</td><td>Contexte du match testé : rythme sur 14 jours retenu (fatigue, salle rejetées) · courbes de tendance sur 6 mois</td></tr>

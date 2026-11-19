@@ -48,6 +48,7 @@ CSS = r"""
 .st-chip span{cursor:pointer;color:#b05a00;font-weight:bold;padding:0 4px} .st-chip span:hover{color:#c0392b}
 .st-sc .st-sp{flex:1}
 .st-sc button{font:inherit;font-weight:bold;background:#1d3557;color:#fff;border:none;padding:4px 12px;cursor:pointer}
+.st-nd{font-size:10.5px;margin-left:3px;font-weight:normal} .st-nd.up{color:#1a7f1a} .st-nd.down{color:#c0392b}
 .st-plus{background:#9fd36b;color:#1d3557;font-weight:bold;padding:1px 6px;font-size:11px}
 .st-how{font-size:12.5px;margin:6px 0 8px} .st-how b{color:#1d3557}
 """
@@ -60,7 +61,7 @@ function SeededTournament(root, D, lang) {
       meta: (maj, st, sims) => `Updated ${maj} · ${st} · ${sims} simulated draws`,
       st0: 'before the first ball', stN: (n, r) => `${n} matches played (through ${r})`,
       tab0: 'Title odds', tab1: 'Draw · What if?',
-      note0: 'Rating = Seeded Rating /100 at the start of the tournament (10 points ≈ 70% win chance). Each cell = chance (%) to <b>reach</b> that round. WIN = chance to win the title. +/- = change since the previous update. Click a column to sort.',
+      note0: 'Rating = current Seeded Rating /100, updated after every match of the tournament; the small number = change since the start of the tournament (10 points ≈ 70% win chance). Each cell = chance (%) to <b>reach</b> that round. WIN = chance to win the title. +/- = change since the previous update. Click a column to sort.',
       search: 'Search a player…', player: 'Player', ctry: 'Ctry', rating: 'Rating', delta: '+/-', change: 'Change',
       col: {64: 'R2', 32: 'R3', 16: 'R4', 8: 'QF', 4: 'SF', 2: 'F', 1: 'WIN'},
       rnd: {2: 'Final', 4: 'Semis', 8: 'Quarters', 16: 'R16'}, rndN: k => `Round ${k}`, champ: 'Champion',
@@ -77,7 +78,7 @@ function SeededTournament(root, D, lang) {
       meta: (maj, st, sims) => `Mis à jour le ${maj} · ${st} · ${sims} tableaux simulés`,
       st0: 'avant le premier match', stN: (n, r) => `${n} matchs joués (jusqu'au ${r})`,
       tab0: 'Chances de titre', tab1: 'Tableau · Et si ?',
-      note0: 'Note = Seeded Rating /100 au début du tournoi (10 points d\'écart ≈ 70 % de chances de gagner). Chaque case = chance (%) d\'<b>atteindre</b> ce tour. TITRE = chance de gagner le tournoi. +/- = évolution depuis la dernière mise à jour. Clique sur une colonne pour trier.',
+      note0: 'Note = Seeded Rating /100 actuel, mis à jour après chaque match du tournoi ; le petit chiffre = évolution depuis le début du tournoi (10 points d\'écart ≈ 70 % de chances de gagner). Chaque case = chance (%) d\'<b>atteindre</b> ce tour. TITRE = chance de gagner le tournoi. +/- = évolution depuis la dernière mise à jour. Clique sur une colonne pour trier.',
       search: 'Chercher un joueur…', player: 'Joueur', ctry: 'Pays', rating: 'Note', delta: '+/-', change: 'Écart',
       col: {64: '2e tour', 32: '3e tour', 16: '8es', 8: 'QF', 4: 'DF', 2: 'F', 1: 'TITRE'},
       rnd: {2: 'Finale', 4: 'Demies', 8: 'Quarts', 16: '8es de finale'}, rndN: k => k === 1 ? '1er tour' : `${k}e tour`, champ: 'Vainqueur',
@@ -189,6 +190,8 @@ function SeededTournament(root, D, lang) {
     const rows = D.players.map((p, i) => ({i, p, r: CUR.map(x => x[i]), out: !!LOST[i], wout: what && !LOST[i] && isOutWhatIf(i)}));
     rows.sort((a, b) => (a.out - b.out) || (a.wout - b.wout) || sortDir * (a.r[sortCol] - b.r[sortCol]) || (b.p.level - a.p.level));
     const cols = []; for (let k = 1; k <= NR; k++) if ((SIZE >> k) <= 64) cols.push(k);
+    const noteDelta = p => { if (p.note0 == null || p.note == null) return ''; const d = p.note - p.note0;
+      return Math.abs(d) < 0.1 ? '' : `<span class="st-nd ${d > 0 ? 'up' : 'down'}">${d > 0 ? '+' : ''}${nf(d)}</span>`; };
     const cell = v => v <= 0 ? '<td class="n z">–</td>' : v >= 99.95 ? '<td class="n" style="background:#cfe8b5">100</td>' :
       `<td class="n" style="background:rgba(70,140,40,${(Math.pow(v / 100, .6) * .55).toFixed(3)})">${v >= .1 ? nf(v) : '&lt;' + nf(.1)}</td>`;
     let h = `<tr><th>#</th><th>${t().player}</th><th>${t().ctry}</th><th>ATP</th><th>${t().rating}</th>` +
@@ -201,7 +204,7 @@ function SeededTournament(root, D, lang) {
         `<td class="n ${d > 0 ? 'up' : 'down'}">${d > 0 ? '+' : ''}${nf(d)}</td>`;
       const cls = o.out ? 'out' : o.wout ? 'wout' : FW[o.i] > RW[o.i] ? 'pick' : '';
       return `<tr class="${cls}"><td class="n">${n}</td><td class="pl">${o.p.name}${FW[o.i] > RW[o.i] ? ' 🔮' : ''}</td><td>${o.p.ioc || ''}</td>
-        <td class="n">${o.p.atp ?? ''}</td><td class="n">${nf(o.p.note ?? (o.p.level - 1000) / 15)}</td>` +
+        <td class="n">${o.p.atp ?? ''}</td><td class="n">${nf(o.p.note ?? (o.p.level - 1000) / 15)}${noteDelta(o.p)}</td>` +
         cols.map(k => o.out ? '<td class="n z">–</td>' : cell(o.r[k])).join('') + dc + '</tr>';
     }).join('');
     R('t').innerHTML = h;
