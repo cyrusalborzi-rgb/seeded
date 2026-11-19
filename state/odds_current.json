@@ -1,6 +1,6 @@
 {
-"updated": "2026-11-19T13:23+00:00",
-"remaining": 499,
+"updated": "2026-11-19T13:36+00:00",
+"remaining": 498,
 "events": [
 {
 "id": "66cc3b98e9e67560a34198715ee78d75",
@@ -9,7 +9,7 @@
 "time": "2026-11-19T19:30:00Z",
 "a": "Alexander Zverev",
 "b": "Arthur Fils",
-"pa": 0.6938,
+"pa": 0.6939,
 "n": 16,
 "pin": 0.6886
 },
@@ -20,9 +20,9 @@
 "time": "2026-11-20T13:00:00Z",
 "a": "Carlos Alcaraz",
 "b": "Flavio Cobolli",
-"pa": 0.8453,
+"pa": 0.828,
 "n": 17,
-"pin": 0.8589
+"pin": 0.8262
 },
 {
 "id": "1acdb2047defbe0439ef3b1961a60010",
@@ -31,9 +31,9 @@
 "time": "2026-11-20T19:30:00Z",
 "a": "Daniil Medvedev",
 "b": "Frances Tiafoe",
-"pa": 0.6832,
+"pa": 0.6807,
 "n": 17,
-"pin": 0.6881
+"pin": 0.6779
 }
 ]
 }
