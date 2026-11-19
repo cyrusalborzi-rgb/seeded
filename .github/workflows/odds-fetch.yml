@@ -1,0 +1,28 @@
+name: Cotes historiques (analyse ponctuelle)
+
+# Lancement à la main uniquement. Télécharge les résultats ATP avec cotes (tennis-data.co.uk)
+# pour l'analyse « Seeded contre les bookmakers ». Rien n'est commité : les fichiers sont
+# déposés en artefact temporaire (1 jour) puis supprimés après récupération.
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Téléchargement 2022-2026
+        run: |
+          mkdir odds
+          for y in 2022 2023 2024 2025 2026; do
+            curl -fsSL -A "Mozilla/5.0" -o odds/$y.xlsx "http://www.tennis-data.co.uk/$y/$y.xlsx" && echo "$y ok $(stat -c%s odds/$y.xlsx) octets" || echo "$y introuvable"
+          done
+          curl -fsSL -A "Mozilla/5.0" -o odds/notes.txt "http://www.tennis-data.co.uk/notes.txt" || true
+          ls -la odds
+      - uses: actions/upload-artifact@v4
+        with:
+          name: odds
+          path: odds
+          retention-days: 1
