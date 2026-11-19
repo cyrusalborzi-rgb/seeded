@@ -31,7 +31,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from seeded_model import load_matches, build_bracket, simulate_draw
+from seeded_model import load_matches, build_bracket, simulate_draw, clean_minutes
 from seeded_rating import SeededRating, to_100
 from page_tournoi import build_page
 
@@ -273,10 +273,17 @@ def main():
                 "reach": [100.0] + [round(float(S.at[p, count_label[size >> k]]), 3) for k in range(1, n_rounds + 1)]}
                for p in ids]
     played_js = []
+    court = {}       # point 23 : temps passé sur le court dans ce tournoi (info brute, abandons compris)
     if tid and n_played:
         for r in raw.itertuples(index=False):
             if r.winner_id in idx and r.loser_id in idx:
-                played_js.append([idx[r.winner_id], idx[r.loser_id], str(r.score)])
+                mn = clean_minutes(getattr(r, "minutes", None), a.bo)
+                played_js.append([idx[r.winner_id], idx[r.loser_id], str(r.score), mn])
+                if mn:
+                    for p_ in (r.winner_id, r.loser_id):
+                        court[p_] = court.get(p_, 0) + mn
+    for p_, pl in zip(ids, players):
+        pl["court"] = court.get(p_)
     data = {"meta": meta, "bo": a.bo, "wi_sims": 20000, "players": players,
             "bracket": [idx[p] if p is not None else -1 for p in bracket], "played": played_js}
     (OUT / f"{slug(a.nom)}.html").write_text(build_page(data, a.nom), encoding="utf-8")

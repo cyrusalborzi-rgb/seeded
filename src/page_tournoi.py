@@ -36,6 +36,7 @@ CSS = r"""
 .st-l{display:flex;justify-content:space-between;gap:6px;padding:2px 5px;border-bottom:1px solid #eee;white-space:nowrap;overflow:hidden}
 .st-l:last-child{border-bottom:none} .st-l>span{overflow:hidden;text-overflow:ellipsis}
 .st-l b{font-variant-numeric:tabular-nums;font-size:11px;flex-shrink:0}
+.st-dur{color:#8a8a8a;font-weight:normal} .st-ct{color:#555}
 .st-l.win{font-weight:bold;background:#e3f1d6} .st-l.lose{color:#999} .st-l.fav b{color:#1a7f1a}
 .st-l.tbd{color:#555} .st-l i{color:#999;font-style:normal;font-size:11px}
 .st-l.click{cursor:pointer} .st-l.click:hover{background:#fff1d6;outline:1px solid #f0b85a}
@@ -61,13 +62,13 @@ function SeededTournament(root, D, lang) {
       meta: (maj, st, sims) => `Updated ${maj} · ${st} · ${sims} simulated draws`,
       st0: 'before the first ball', stN: (n, r) => `${n} matches played (through ${r})`,
       tab0: 'Title odds', tab1: 'Draw · What if?',
-      note0: 'Rating = current Seeded Rating /100, updated after every match of the tournament; the small number = change since the start of the tournament (10 points ≈ 70% win chance). Each cell = chance (%) to <b>reach</b> that round. WIN = chance to win the title. +/- = change since the previous update. Click a column to sort.',
-      search: 'Search a player…', player: 'Player', ctry: 'Ctry', rating: 'Rating', delta: '+/-', change: 'Change',
+      note0: 'Rating = current Seeded Rating /100, updated after every match of the tournament; the small number = change since the start of the tournament (10 points ≈ 70% win chance). Each cell = chance (%) to <b>reach</b> that round. WIN = chance to win the title. +/- = change since the previous update. Court time = total time on court in this tournament. Click a column to sort.',
+      search: 'Search a player…', player: 'Player', ctry: 'Ctry', rating: 'Rating', delta: '+/-', change: 'Change', court: 'Court time', courtTip: 'Total time on court in this tournament (retirements included)', durTip: 'Match length',
       col: {64: 'R2', 32: 'R3', 16: 'R4', 8: 'QF', 4: 'SF', 2: 'F', 1: 'WIN'},
       rnd: {2: 'Final', 4: 'Semis', 8: 'Quarters', 16: 'R16'}, rndN: k => `Round ${k}`, champ: 'Champion',
       vQF: 'Quarters → Final', vS: q => `Section ${q}`, vAll: 'Draw',
       how: '<b>What if?</b> <span class="st-plus">Seeded+</span> &nbsp;Click a player to make him win his match — the whole tournament is replayed instantly. Click him again to cancel.',
-      how2: 'Played matches show the score · upcoming matches show each player\'s chance to win · undecided slots show the two most likely players (click a name to send him there).',
+      how2: 'Played matches show the score and the match length · upcoming matches show each player\'s chance to win · undecided slots show the two most likely players (click a name to send him there).',
       scen: 'Your scenario:', reset: 'Back to reality', replayed: n => `${n} draws replayed`,
       reach: (k, left) => left === 1 ? 'wins the title' : left === 2 ? 'into the final' : left === 4 ? 'into the semis' : left === 8 ? 'into the quarters' : left === 16 ? 'into the last 16' : `into round ${k + 1}`,
       pick: 'your pick', tipWin: n => `Click: ${n} wins this match`, tipSend: n => `Click: send ${n} here`, tipUndo: 'Click to cancel',
@@ -78,13 +79,13 @@ function SeededTournament(root, D, lang) {
       meta: (maj, st, sims) => `Mis à jour le ${maj} · ${st} · ${sims} tableaux simulés`,
       st0: 'avant le premier match', stN: (n, r) => `${n} matchs joués (jusqu'au ${r})`,
       tab0: 'Chances de titre', tab1: 'Tableau · Et si ?',
-      note0: 'Note = Seeded Rating /100 actuel, mis à jour après chaque match du tournoi ; le petit chiffre = évolution depuis le début du tournoi (10 points d\'écart ≈ 70 % de chances de gagner). Chaque case = chance (%) d\'<b>atteindre</b> ce tour. TITRE = chance de gagner le tournoi. +/- = évolution depuis la dernière mise à jour. Clique sur une colonne pour trier.',
-      search: 'Chercher un joueur…', player: 'Joueur', ctry: 'Pays', rating: 'Note', delta: '+/-', change: 'Écart',
+      note0: 'Note = Seeded Rating /100 actuel, mis à jour après chaque match du tournoi ; le petit chiffre = évolution depuis le début du tournoi (10 points d\'écart ≈ 70 % de chances de gagner). Chaque case = chance (%) d\'<b>atteindre</b> ce tour. TITRE = chance de gagner le tournoi. +/- = évolution depuis la dernière mise à jour. Temps de jeu = temps total passé sur le court dans ce tournoi. Clique sur une colonne pour trier.',
+      search: 'Chercher un joueur…', player: 'Joueur', ctry: 'Pays', rating: 'Note', delta: '+/-', change: 'Écart', court: 'Temps de jeu', courtTip: 'Temps total passé sur le court dans ce tournoi (abandons compris)', durTip: 'Durée du match',
       col: {64: '2e tour', 32: '3e tour', 16: '8es', 8: 'QF', 4: 'DF', 2: 'F', 1: 'TITRE'},
       rnd: {2: 'Finale', 4: 'Demies', 8: 'Quarts', 16: '8es de finale'}, rndN: k => k === 1 ? '1er tour' : `${k}e tour`, champ: 'Vainqueur',
       vQF: 'Quarts → Finale', vS: q => `Partie ${q}`, vAll: 'Tableau',
       how: '<b>Et si ?</b> <span class="st-plus">Seeded+</span> &nbsp;Clique sur un joueur pour le faire gagner son match — tout le tournoi est rejoué instantanément. Reclique dessus pour annuler.',
-      how2: 'Matchs joués : le score · matchs à venir : les chances de chaque joueur · cases pas encore connues : les deux joueurs les plus probables (clique sur un nom pour l\'y envoyer).',
+      how2: 'Matchs joués : le score et la durée du match · matchs à venir : les chances de chaque joueur · cases pas encore connues : les deux joueurs les plus probables (clique sur un nom pour l\'y envoyer).',
       scen: 'Ton scénario :', reset: 'Revenir à la réalité', replayed: n => `${n} tableaux rejoués`,
       reach: (k, left) => left === 1 ? 'remporte le titre' : left === 2 ? 'en finale' : left === 4 ? 'en demies' : left === 8 ? 'en quarts' : left === 16 ? 'en 8es' : `au ${k + 1}e tour`,
       pick: 'ton choix', tipWin: n => `Clic : ${n} gagne ce match`, tipSend: n => `Clic : envoyer ${n} ici`, tipUndo: 'Clic pour annuler',
@@ -108,7 +109,8 @@ function SeededTournament(root, D, lang) {
   for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
     const p = 1 / (1 + Math.pow(10, (D.players[j].level - D.players[i].level) / 400)); P[i * N + j] = D.bo === 5 ? bo5(p) : p; }
   const K = new Int8Array(N * N).fill(-1), SCORE = {}, LOST = new Uint8Array(N), RW = new Int8Array(N);
-  D.played.forEach(([w, l, sc]) => { K[w * N + l] = 1; K[l * N + w] = 0; SCORE[Math.min(w, l) + '-' + Math.max(w, l)] = [w, sc]; LOST[l] = 1; RW[w]++; });
+  const dur = m => m ? Math.floor(m / 60) + 'h' + String(m % 60).padStart(2, '0') : '';
+  D.played.forEach(([w, l, sc, mn]) => { K[w * N + l] = 1; K[l * N + w] = 0; SCORE[Math.min(w, l) + '-' + Math.max(w, l)] = [w, sc, mn]; LOST[l] = 1; RW[w]++; });
 
   // scénario : FW[i] = nb de victoires imposées au joueur i
   let FW = new Int8Array(N);
@@ -194,9 +196,11 @@ function SeededTournament(root, D, lang) {
       return Math.abs(d) < 0.1 ? '' : `<span class="st-nd ${d > 0 ? 'up' : 'down'}">${d > 0 ? '+' : ''}${nf(d)}</span>`; };
     const cell = v => v <= 0 ? '<td class="n z">–</td>' : v >= 99.95 ? '<td class="n" style="background:#cfe8b5">100</td>' :
       `<td class="n" style="background:rgba(70,140,40,${(Math.pow(v / 100, .6) * .55).toFixed(3)})">${v >= .1 ? nf(v) : '&lt;' + nf(.1)}</td>`;
+    const showCourt = D.players.some(p => p.court);
     let h = `<tr><th>#</th><th>${t().player}</th><th>${t().ctry}</th><th>ATP</th><th>${t().rating}</th>` +
       cols.map(k => `<th class="s" data-sort="${k}">${colLabel(k)}${sortCol === k ? (sortDir < 0 ? ' ▼' : ' ▲') : ''}</th>`).join('') +
-      `<th${what ? ` title="${t().changeTip}"` : ''}>${what ? t().change : t().delta}</th></tr>`;
+      `<th${what ? ` title="${t().changeTip}"` : ''}>${what ? t().change : t().delta}</th>` +
+      (showCourt ? `<th title="${t().courtTip}">${t().court}</th>` : '') + '</tr>';
     let n = 0;
     h += rows.filter(o => o.p.name.toLowerCase().includes(q)).map(o => {
       n++; const d = what ? o.r[NR] - BASE[NR][o.i] : o.p.delta;
@@ -205,7 +209,8 @@ function SeededTournament(root, D, lang) {
       const cls = o.out ? 'out' : o.wout ? 'wout' : FW[o.i] > RW[o.i] ? 'pick' : '';
       return `<tr class="${cls}"><td class="n">${n}</td><td class="pl">${o.p.name}${FW[o.i] > RW[o.i] ? ' 🔮' : ''}</td><td>${o.p.ioc || ''}</td>
         <td class="n">${o.p.atp ?? ''}</td><td class="n">${nf(o.p.note ?? (o.p.level - 1000) / 15)}${noteDelta(o.p)}</td>` +
-        cols.map(k => o.out ? '<td class="n z">–</td>' : cell(o.r[k])).join('') + dc + '</tr>';
+        cols.map(k => o.out ? '<td class="n z">–</td>' : cell(o.r[k])).join('') + dc +
+        (showCourt ? `<td class="n st-ct">${dur(o.p.court) || '–'}</td>` : '') + '</tr>';
     }).join('');
     R('t').innerHTML = h;
   }
@@ -224,8 +229,8 @@ function SeededTournament(root, D, lang) {
     const sa = side(B.slice(lo, lo + span / 2), k), sb = side(B.slice(lo + span / 2, lo + span), k), out = [];
     if (sa.t === 'known' && sb.t === 'known') {
       const a = sa.p, b = sb.p, res = SCORE[Math.min(a, b) + '-' + Math.max(a, b)];
-      if (res) { const [w, sc] = res;
-        out.push(ln(a, w === a ? sc : '', w === a ? 'win' : 'lose'), ln(b, w === b ? sc : '', w === b ? 'win' : 'lose')); }
+      if (res) { const [w, sc, mn] = res, d = mn ? `<span class="st-dur" title="${t().durTip}">⏱ ${dur(mn)}</span>` : '';
+        out.push(ln(a, w === a ? sc : d, w === a ? 'win' : 'lose'), ln(b, w === b ? sc : d, w === b ? 'win' : 'lose')); }
       else {
         const pa = reach(a, k + 1), ka = FW[a] > k, kb = FW[b] > k;
         [[a, pa, ka, kb], [b, 100 - pa, kb, ka]].forEach(([p, v, mine, other]) =>

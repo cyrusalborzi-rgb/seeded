@@ -16,7 +16,7 @@ Sorties (dans state/, sauvegardé par le robot) :
 """
 import json, os, sys, urllib.parse, urllib.request
 from datetime import datetime, timezone
-from paths import STATE
+from paths import STATE, OUT
 
 API = "https://api.the-odds-api.com/v4"
 MIN_REMAINING = 25                       # garde-fou : on ne descend pas sous 25 crédits
@@ -57,7 +57,15 @@ def consensus(ev):
 def main():
     STATE.mkdir(exist_ok=True)
     cur_path, arch_path = STATE / "odds_current.json", STATE / "odds_archive.json"
+    OUT.mkdir(exist_ok=True)
+    (OUT / "odds_changed.txt").write_text("0")
     key = os.environ.get("ODDS_API_KEY", "").strip()
+    # passages « live » : on ne relève les cotes que si les dernières ont plus de N heures (quota gratuit)
+    if "--if-older" in sys.argv and cur_path.exists():
+        hours = float(sys.argv[sys.argv.index("--if-older") + 1])
+        last = json.loads(cur_path.read_text()).get("updated")
+        if last and (datetime.now(timezone.utc) - datetime.fromisoformat(last)).total_seconds() < hours * 3600:
+            print(f"Cotes relevées il y a moins de {hours:g} h : pas d'appel cette fois (quota)."); return
     if not key:
         print("Pas de clé ODDS_API_KEY : pas de cotes cette fois (le site s'affiche sans).")
         return
@@ -92,6 +100,7 @@ def main():
     for e in events:                                                  # dernière proba relevée avant le match
         arch[e["id"]] = {k: e[k] for k in ("t", "time", "a", "b", "pa", "n", "pin")} | {"seen": now.isoformat(timespec="minutes")}
     arch_path.write_text(json.dumps(arch, ensure_ascii=False, indent=0))
+    (OUT / "odds_changed.txt").write_text("1")
     print(f"{len(events)} matchs cotés · {calls} appel(s) · crédits restants : {remaining}")
 
 

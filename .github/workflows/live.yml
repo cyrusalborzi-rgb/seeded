@@ -1,0 +1,69 @@
+name: Live update
+
+# Toutes les 30 min : on regarde si un tournoi en cours a bougé (2 petits fichiers TennisMyLife).
+# Rien de nouveau -> on s'arrête en ~1 min, le site ne bouge pas. Nouveau résultat -> on recalcule et on republie.
+on:
+  schedule:
+    - cron: "11,41 * * * *"    # minutes « bizarres » exprès (GitHub sature à l'heure pile)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: seeded-pages           # même file que la mise à jour de nuit : jamais deux publications en même temps
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      deploy: ${{ steps.live.outputs.deploy }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Reprendre les données de la nuit (cache privé)
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            data
+            outputs
+          key: tml-live-none
+          restore-keys: tml-
+      - name: Passage live (tournois en cours, cotes toutes les 6 h)
+        id: live
+        run: |
+          python src/run_all.py --live
+          echo "deploy=$(cat outputs/deploy.txt)" >> "$GITHUB_OUTPUT"
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+      - name: Sauvegarder l'historique
+        run: |
+          git config user.name "seeded-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state/
+          git diff --cached --quiet || (git commit -m "state: passage live $(date -u '+%F %H:%M')" && git pull --rebase -q && git push)
+      - uses: actions/configure-pages@v5
+        if: steps.live.outputs.deploy == '1'
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.live.outputs.deploy == '1'
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.deploy == '1'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

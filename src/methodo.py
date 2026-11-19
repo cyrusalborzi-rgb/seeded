@@ -30,7 +30,8 @@ to turn that level into probabilities. Every number on the site is measured and 
 <h2>1. The data</h2>
 <ul><li>Every ATP main-tour, Challenger and qualifying match since 1995: score, surface, and points won on serve and return.</li>
 <li>Walkovers and retirements are left out of the rating (they say nothing about the level of play).</li>
-<li>Source: TennisMyLife, updated daily.</li></ul>
+<li>Match length is shown as raw information (time on court in a tournament, length of each match, average length over 12 months). It is <b>not</b> used by the model: see Fatigue below. Obviously wrong durations in the source are left out.</li>
+<li>Source: TennisMyLife. Full refresh every night, plus a check of ongoing tournaments every 30 minutes.</li></ul>
 
 <h2>2. The Seeded Rating</h2>
 <ul>
@@ -48,7 +49,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 <h2>3. The draw simulation</h2>
 <ul><li>Each match probability comes from the two players' ratings on the tournament's surface, adjusted for best-of-5 at Grand Slams.</li>
 <li>The whole draw is played <b>50,000 times</b>. A player's chance to reach a round is the share of simulations where he gets there.</li>
-<li>Matches already played are locked in, and the odds are updated after each day of play.</li>
+<li>Matches already played are locked in, and the odds are updated as soon as a new result reaches our source (checked every 30 minutes).</li>
 <li><b>What if?</b> Your picks are locked in too, and 20,000 draws are replayed instantly in your browser.</li></ul>
 
 <h2>4. Match context: what we tested</h2>
@@ -89,7 +90,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 <b>Is Seeded a betting tool?</b>No. Seeded publishes its own probabilities to understand and enjoy tennis. It gives no tips.
 <b>Why show the bookmakers' probabilities?</b>For Grand Slams, Masters 1000 and ATP 500 events, we show next to ours the average probability of about 15 European bookmakers (margin removed; offshore sites not licensed in France are excluded). Our model never uses them: it only looks at match results, so it sometimes disagrees with the market — sometimes a lot. That is the point: it is an independent opinion. Since November 2026 we keep a live record of both, match after match, on the Track record page. Disagreeing with the market is not a reason to bet: bookmakers also know things our model cannot see (injuries, last-minute news). 18+ · Gambling involves risks.
 <b>Which players have a page?</b>Every player in the Seeded top 300 (15+ matches in the last 12 months). Each page shows his rating over the last 24 months, his rating and rank on each surface, his record over the last 12 months and his recent matches. Click any name on the site to open it.
-<b>How often is it updated?</b>Every day, and after each day of play during tournaments.
+<b>How often is it updated?</b>A full refresh every night. On top of that, a robot checks ongoing tournaments every 30 minutes: as soon as a new result appears in our source, ratings, draws and pages are recalculated and republished (usually within the hour). The limit is our source: when it publishes a result late, Seeded is late too.
 </div>
 
 <h2>9. Data &amp; credits</h2>
@@ -97,6 +98,8 @@ to turn that level into probabilities. Every number on the site is measured and 
 
 <h2>10. Version history</h2>
 <table class="ver">
+<tr><td>v0.13</td><td>Time on court as raw information: per tournament, per match and on average (tournament pages, player pages, comparator)</td></tr>
+<tr><td>v0.12</td><td>Live updates: ongoing tournaments checked every 30 minutes, site republished as soon as a new result arrives</td></tr>
 <tr><td>v0.11</td><td>Live record against the bookmakers on the Track record page (both probabilities saved before each match, result checked after)</td></tr>
 <tr><td>v0.10</td><td>Bookmakers' probabilities shown next to ours for big tournaments (comparator), never used by the model</td></tr>
 <tr><td>v0.9</td><td>Ratings updated after every match during a tournament (shown with their change since the start of the tournament)</td></tr>
@@ -125,7 +128,8 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <h2>1. Les données</h2>
 <ul><li>Tous les matchs ATP du circuit principal, des Challengers et des qualifications depuis 1995 : score, surface, et points gagnés au service et au retour.</li>
 <li>Les forfaits et les abandons ne comptent pas dans la note (ils ne disent rien du niveau de jeu).</li>
-<li>Source : TennisMyLife, mise à jour chaque jour.</li></ul>
+<li>La durée des matchs est affichée en info brute (temps passé sur le court dans un tournoi, durée de chaque match, durée moyenne sur 12 mois). Elle n'est <b>pas</b> utilisée par le modèle : voir Fatigue plus bas. Les durées visiblement fausses dans la source sont écartées.</li>
+<li>Source : TennisMyLife. Mise à jour complète chaque nuit, plus une vérification des tournois en cours toutes les 30 minutes.</li></ul>
 
 <h2>2. Le Seeded Rating</h2>
 <ul>
@@ -143,7 +147,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <h2>3. La simulation des tableaux</h2>
 <ul><li>La probabilité de chaque match vient des notes des deux joueurs sur la surface du tournoi, ajustée pour les matchs en 3 sets gagnants des Grands Chelems.</li>
 <li>Le tableau entier est joué <b>50 000 fois</b>. Les chances d'un joueur d'atteindre un tour = la part des simulations où il y arrive.</li>
-<li>Les matchs déjà joués sont figés, et les probabilités sont mises à jour après chaque journée.</li>
+<li>Les matchs déjà joués sont figés, et les probabilités sont mises à jour dès qu'un nouveau résultat arrive dans notre source (vérifié toutes les 30 minutes).</li>
 <li><b>Et si ?</b> Tes choix sont figés eux aussi, et 20 000 tableaux sont rejoués instantanément dans ton navigateur.</li></ul>
 
 <h2>4. Le contexte du match : ce qu'on a testé</h2>
@@ -184,7 +188,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <b>Seeded est-il un outil de paris ?</b>Non. Seeded publie ses propres probabilités pour comprendre et apprécier le tennis. Il ne donne aucun pronostic à jouer.
 <b>Pourquoi afficher les probabilités des bookmakers ?</b>Pour les Grands Chelems, Masters 1000 et ATP 500, on affiche à côté des nôtres la probabilité moyenne d'une quinzaine de bookmakers européens (marge retirée ; les sites offshore non agréés en France sont exclus). Notre modèle ne les utilise jamais : il ne regarde que les résultats des matchs, donc il n'est parfois pas d'accord avec le marché — parfois franchement. C'est tout l'intérêt : c'est un avis indépendant. Depuis novembre 2026, on tient un bilan en direct des deux, match après match, sur la page Bilan. Être en désaccord avec le marché n'est pas une raison de parier : les bookmakers savent aussi des choses que notre modèle ne voit pas (blessures, infos de dernière minute). 18+ · Jouer comporte des risques.
 <b>Quels joueurs ont une page ?</b>Tous les joueurs du top 300 Seeded (15 matchs ou plus sur 12 mois). Chaque page montre l'évolution de sa note sur 24 mois, sa note et son rang sur chaque surface, son bilan sur 12 mois et ses derniers matchs. Clique sur n'importe quel nom du site pour l'ouvrir.
-<b>À quelle fréquence c'est mis à jour ?</b>Chaque jour, et après chaque journée de jeu pendant les tournois.
+<b>À quelle fréquence c'est mis à jour ?</b>Une mise à jour complète chaque nuit. En plus, un robot vérifie les tournois en cours toutes les 30 minutes : dès qu'un nouveau résultat apparaît dans notre source, les notes, les tableaux et les pages sont recalculés et republiés (en général dans l'heure). La limite, c'est notre source : quand elle publie un résultat en retard, Seeded l'est aussi.
 </div>
 
 <h2>9. Données et crédits</h2>
@@ -192,6 +196,8 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 
 <h2>10. Historique des versions</h2>
 <table class="ver">
+<tr><td>v0.13</td><td>Temps passé sur le court en info brute : par tournoi, par match et en moyenne (pages tournoi, pages joueurs, comparateur)</td></tr>
+<tr><td>v0.12</td><td>Mises à jour en direct : tournois en cours vérifiés toutes les 30 minutes, site republié dès qu'un nouveau résultat arrive</td></tr>
 <tr><td>v0.11</td><td>Bilan en direct contre les bookmakers sur la page Bilan (les deux probabilités enregistrées avant chaque match, résultat vérifié après)</td></tr>
 <tr><td>v0.10</td><td>Probabilités des bookmakers affichées à côté des nôtres pour les gros tournois (comparateur), jamais utilisées par le modèle</td></tr>
 <tr><td>v0.9</td><td>Notes mises à jour après chaque match pendant un tournoi (avec leur évolution depuis le début du tournoi)</td></tr>

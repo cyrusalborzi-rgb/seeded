@@ -34,6 +34,13 @@ jobs:
         run: python src/run_all.py --download
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}   # secret GitHub (vide = pas de cotes, le site marche quand même)
+      - name: Garder les données au chaud pour les passages live (cache privé de GitHub, jamais publié)
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            data
+            outputs
+          key: tml-${{ github.run_id }}
       - name: Sauvegarder l'historique (évolutions d'un jour à l'autre)
         run: |
           git config user.name "seeded-bot"

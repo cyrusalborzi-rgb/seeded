@@ -192,7 +192,7 @@ __TCSS__
       <div class="meta" style="margin-top:6px" data-i="recent_note"></div></div></div>
   </div><div>
     <div class="box"><div class="boxin" style="text-align:center"><a id="pl-cmp" class="btn" style="display:inline-block"></a></div></div>
-    <div class="box"><h2 data-i="pl_surf_t"></h2><div class="boxin"><table id="pl-rec"></table></div></div>
+    <div class="box"><h2 data-i="pl_surf_t"></h2><div class="boxin"><table id="pl-rec"></table><div class="meta" id="pl-dur" style="margin-top:6px"></div></div></div>
     <div class="box"><h2 data-i="pl_best"></h2><div class="boxin" id="pl-best" style="line-height:1.6"></div></div>
     <div class="ad mr" data-i="ad_mr"></div>
     <div class="box"><h2 data-i="pl_plus_t"></h2><div class="boxin lock" data-i="pl_plus"></div></div>
@@ -277,6 +277,7 @@ const T = {
  en: {
   nav_home: 'Home', nav_draws: 'Draws', nav_rating: 'Seeded Rating', nav_players: 'Players', nav_predictor: 'Match predictor', nav_record: 'Track record', nav_method: 'Methodology',
   sub: () => (D.live.length ? `<b>Live:</b> ${D.live.join(', ')} · ` : '') + (D.next ? `<b>Next:</b> ${D.next.en} · ` : '') + 'Data through',
+  upd_at: w => `site updated ${w}`,
   ad_lb: 'ADVERTISEMENT · 728×90', ad_mr: 'ADVERTISEMENT · 300×250',
   c1k: 'Seeded #1', c2k: () => `Model accuracy (ATP, ${F.first_test_year}–${String(F.last_year).slice(2)})`, c2s: () => `vs ${pct(F.main.atp)} for the ATP ranking`, c3k: () => `Last ${F.top3.n} Grand Slams`,
   c3s: 'champion was in our pre-tournament top 3', c4k: 'Most underrated (top 50)',
@@ -306,7 +307,7 @@ const T = {
   orec_note: 'Both probabilities are recorded at the same moment, before the match. Retirements and walkovers excluded. The model never uses odds.',
   pl_search: 'Find a player (top 300)…',
   nav_cal: 'Calendar', cal_h: y => `ATP calendar ${y}`, cal_res_h: y => `ATP ${y} — results`, cal_next: y => `${y} season`, cal_past: y => `${y} results`,
-  cal_meta: 'Date = start of the tournament week (official ATP calendar, January 2026). Seeded favourites = our top 3 on the surface today, updated every night.',
+  cal_meta: 'Date = start of the tournament week (official ATP calendar, January 2026). Seeded favourites = our top 3 on the surface today, updated every night and after each new result.',
   cal_res_meta: 'Every tournament of the season: champion, final, and where the champion stood among our pre-tournament favourites (rating + 14-day rhythm, exactly as in our predictions).',
   cc_all: 'All', cc_big: 'Slams &amp; Masters', h_cat: 'Category', h_surf2: 'Surface', h_favs: 'Seeded favourites (surface)', h_final: 'Final',
   h_ourfav: 'Our favourite', h_winrk: 'Champion\'s Seeded rank', tbc: 'TBC', cat: c => ({G: 'Grand Slam', M: 'Masters 1000', F: 'ATP Finals', '500': 'ATP 500', '250': 'ATP 250', C: 'Challenger'})[c] || c,
@@ -336,7 +337,9 @@ const T = {
   h_trend: 'Trend (6 mo)', spark_tip: (a, b) => `6 months ago: ${a} → now: ${b}`,
   h_player: 'Player', h_ctry: 'Ctry', h_rating: 'Rating', h_gap: 'Gap', h_30: '30 days', h_30s: '30 d', h_rising: 'Rising', h_falling: 'Falling',
   h_qf: 'QF', h_sf: 'SF', h_f: 'F', h_win: 'WIN', h_upset: 'Upset alert', h_date: 'Date', h_tourn: 'Tournament', h_rd: 'Rd', h_opp: 'Opponent',
-  h_opprt: 'Opp. rating', h_score: 'Score', h_pts: 'Points won', h_champ: 'Champion', h_odds: 'Our odds', h_ourrk: 'Our rank', h_fav: 'Our #1 favourite',
+  h_opprt: 'Opp. rating', h_score: 'Score', h_pts: 'Points won', h_dur: 'Length',
+  pl_dur: (a3, n3, a5, n5) => 'Average match length (completed matches, 12 months): ' + [a3 && `<b>${a3}</b> best of 3 (${n3} matches)`, a5 && `<b>${a5}</b> best of 5 (${n5} matches)`].filter(Boolean).join(' · '),
+  cmp_dur: bo => `Avg match length (${bo === '5' ? 'best of 5' : 'best of 3'})`, h_champ: 'Champion', h_odds: 'Our odds', h_ourrk: 'Our rank', h_fav: 'Our #1 favourite',
   h_said: 'We said', h_exp: 'Expected titles', h_act: 'Actual',
   inactive: 'inactive', last_match: 'last match', under: n => `Underrated by ${n} places`, over: n => `Overrated by ${n} places`, inline: 'In line with his level',
   win: 'W', loss: 'L', grid_t: s => `Top 8 head-to-head grid — chance that the row player beats the column player (${s}, best of 3)`,
@@ -351,6 +354,7 @@ const T = {
  fr: {
   nav_home: 'Accueil', nav_draws: 'Tableaux', nav_rating: 'Seeded Rating', nav_players: 'Joueurs', nav_predictor: 'Comparateur de match', nav_record: 'Bilan du modèle', nav_method: 'Méthodologie',
   sub: () => (D.live.length ? `<b>En cours :</b> ${D.live.join(', ')} · ` : '') + (D.next ? `<b>À venir :</b> ${D.next.fr} · ` : '') + 'Données au',
+  upd_at: w => `site mis à jour le ${w}`,
   ad_lb: 'PUBLICITÉ · 728×90', ad_mr: 'PUBLICITÉ · 300×250',
   c1k: 'N°1 Seeded', c2k: () => `Précision du modèle (ATP, ${F.first_test_year}-${String(F.last_year).slice(2)})`, c2s: () => `contre ${pct(F.main.atp)} pour le classement ATP`, c3k: () => `${F.top3.n} derniers Grands Chelems`,
   c3s: 'le vainqueur était dans notre top 3 avant le tournoi', c4k: 'Le plus sous-coté (top 50)',
@@ -380,7 +384,7 @@ const T = {
   orec_note: 'Les deux probabilités sont enregistrées au même moment, avant le match. Abandons et forfaits exclus. Le modèle n\'utilise jamais les cotes.',
   pl_search: 'Chercher un joueur (top 300)…',
   nav_cal: 'Calendrier', cal_h: y => `Calendrier ATP ${y}`, cal_res_h: y => `ATP ${y} — résultats`, cal_next: y => `Saison ${y}`, cal_past: y => `Résultats ${y}`,
-  cal_meta: 'Date = début de la semaine du tournoi (calendrier officiel ATP, janvier 2026). Favoris Seeded = notre top 3 actuel sur la surface, mis à jour chaque nuit.',
+  cal_meta: 'Date = début de la semaine du tournoi (calendrier officiel ATP, janvier 2026). Favoris Seeded = notre top 3 actuel sur la surface, mis à jour chaque nuit et après chaque nouveau résultat.',
   cal_res_meta: 'Tous les tournois de la saison : vainqueur, finale, et la place du vainqueur parmi nos favoris d\'avant-tournoi (note + rythme sur 14 jours, exactement comme dans nos prédictions).',
   cc_all: 'Tous', cc_big: 'Grands Chelems et Masters', h_cat: 'Catégorie', h_surf2: 'Surface', h_favs: 'Favoris Seeded (surface)', h_final: 'Finale',
   h_ourfav: 'Notre favori', h_winrk: 'Rang Seeded du vainqueur', tbc: 'à confirmer', cat: c => ({G: 'Grand Chelem', M: 'Masters 1000', F: 'ATP Finals', '500': 'ATP 500', '250': 'ATP 250', C: 'Challenger'})[c] || c,
@@ -409,7 +413,9 @@ const T = {
   h_trend: 'Tendance (6 mois)', spark_tip: (a, b) => `Il y a 6 mois : ${a} → aujourd'hui : ${b}`,
   h_player: 'Joueur', h_ctry: 'Pays', h_rating: 'Note', h_gap: 'Écart', h_30: '30 jours', h_30s: '30 j', h_rising: 'En hausse', h_falling: 'En baisse',
   h_qf: 'QF', h_sf: 'DF', h_f: 'F', h_win: 'TITRE', h_upset: 'Alerte surprise', h_date: 'Date', h_tourn: 'Tournoi', h_rd: 'Tour', h_opp: 'Adversaire',
-  h_opprt: 'Note adv.', h_score: 'Score', h_pts: 'Points gagnés', h_champ: 'Vainqueur', h_odds: 'Nos chances', h_ourrk: 'Notre rang', h_fav: 'Notre favori n°1',
+  h_opprt: 'Note adv.', h_score: 'Score', h_pts: 'Points gagnés', h_dur: 'Durée',
+  pl_dur: (a3, n3, a5, n5) => 'Durée moyenne d\'un match (matchs terminés, 12 mois) : ' + [a3 && `<b>${a3}</b> en 2 sets gagnants (${n3} matchs)`, a5 && `<b>${a5}</b> en 3 sets gagnants (${n5} matchs)`].filter(Boolean).join(' · '),
+  cmp_dur: bo => `Durée moyenne d'un match (${bo === '5' ? '3 sets gagnants' : '2 sets gagnants'})`, h_champ: 'Vainqueur', h_odds: 'Nos chances', h_ourrk: 'Notre rang', h_fav: 'Notre favori n°1',
   h_said: 'On annonçait', h_exp: 'Titres attendus', h_act: 'Titres réels',
   inactive: 'inactif', last_match: 'dernier match le', under: n => `Sous-coté de ${n} places`, over: n => `Surcoté de ${n} places`, inline: 'Conforme à son niveau',
   win: 'V', loss: 'D', grid_t: s => `Face-à-face du top 8 — chances que le joueur en ligne batte le joueur en colonne (${s}, 2 sets gagnants)`,
@@ -455,7 +461,9 @@ function renderStatic() {
   document.documentElement.lang = L;
   document.querySelectorAll('[data-i]').forEach(el => el.innerHTML = t(el.dataset.i));
   document.querySelectorAll('[data-lang]').forEach(a => a.classList.toggle('on', a.dataset.lang === L));
-  $('#dd').textContent = dt(D.date);
+  let bw = '';
+  try { if (D.built) bw = new Date(D.built).toLocaleString(L === 'fr' ? 'fr-FR' : 'en-GB', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'}); } catch (e) {}
+  $('#dd').textContent = dt(D.date) + (bw ? ' · ' + t('upd_at', bw) : '');
   $('#rq').placeholder = t('search');
   $('#c2v').textContent = pct(F.main.seeded);
   $('#c3v').textContent = `${F.top3.in_top3} / ${F.top3.n}`;
@@ -641,7 +649,7 @@ function renderPlayer() {
   $('#pl-surf').innerHTML = ['hard', 'clay', 'grass'].map(s => { const rk = R.filter(r => r[s] > I[s]).length + 1;
     return `<tr><td>${t(s)}</td><td class="n b">${fmt(I[s])}</td><td class="n meta" style="margin:0">${nr}${rk}</td></tr>`; }).join('');
   $('#pl-cmp').textContent = t('pl_cmp'); $('#pl-cmp').href = `#predictor/${I.slug}`;
-  ['#pl-wl', '#pl-wls', '#pl-recent', '#pl-rec', '#pl-best', '#pl-chart'].forEach(s => $(s).innerHTML = '');
+  ['#pl-wl', '#pl-wls', '#pl-recent', '#pl-rec', '#pl-dur', '#pl-best', '#pl-chart'].forEach(s => $(s).innerHTML = '');
   $('#pl-meta').textContent = I.ioc;
   playerData(i, P => fillPlayer(I, P));
 }
@@ -658,9 +666,10 @@ function fillPlayer(I, P) {
       .map(([k, x], j) => `<tr><td style="white-space:normal">${j === 0 ? '<b>' + t(k) + '</b>' : t(k)}</td><td class="n">${wl(x)}</td><td class="n${j === 0 ? ' b' : ''}">${wp(x)}</td></tr>`).join('');
   const bw = P.best;
   $('#pl-best').innerHTML = bw ? t('pl_best_txt', `<b>${plink(bw.opp_i, bw.opp)}</b>`, fmt(bw.opp_note), t('tour', bw.t), t('round', bw.rd), dt(bw.date)) + ` · <b>${bw.score}</b>` : t('pl_nobest');
-  $('#pl-recent').innerHTML = `<tr><th>${t('h_date')}</th><th>${t('h_tourn')}</th><th>${t('h_rd')}</th><th>${t('h_opp')}</th><th>${t('h_opprt')}</th><th></th><th>${t('h_score')}</th><th>${t('h_pts')}</th></tr>` +
+  $('#pl-recent').innerHTML = `<tr><th>${t('h_date')}</th><th>${t('h_tourn')}</th><th>${t('h_rd')}</th><th>${t('h_opp')}</th><th>${t('h_opprt')}</th><th></th><th>${t('h_score')}</th><th>${t('h_dur')}</th><th>${t('h_pts')}</th></tr>` +
     P.recent.map(m => `<tr><td>${dt(m.date)}</td><td>${t('tour', m.t)}</td><td>${t('round', m.rd)}</td><td>${plink(m.opp_i, m.opp)}</td><td class="n">${fmt(m.opp_note)}</td>
-    <td class="${m.res === 'W' ? 'up' : 'down'}">${m.res === 'W' ? t('win') : t('loss')}</td><td>${m.score}</td><td class="n">${pct(m.dom)}</td></tr>`).join('');
+    <td class="${m.res === 'W' ? 'up' : 'down'}">${m.res === 'W' ? t('win') : t('loss')}</td><td>${m.score}</td><td class="n">${dur(m.min) || '–'}</td><td class="n">${pct(m.dom)}</td></tr>`).join('');
+  $('#pl-dur').innerHTML = (I.m3 || I.m5) ? t('pl_dur', dur(I.m3), I.n3, dur(I.m5), I.n5) : '';
   // courbe 24 mois (les mois sans note fiable sont laissés vides)
   const mob = window.innerWidth < 760, h = P.history, W = mob ? 400 : 820, H = mob ? 210 : 190, Lm = 34, B = 25, Tm = 14;
   $('#pl-chart').setAttribute('viewBox', `0 0 ${W} ${H}`);
@@ -712,6 +721,7 @@ function renderPredictor() {
     }).join('') + '</tr>').join('');
 }
 
+const dur = m => m ? Math.floor(m / 60) + 'h' + String(m % 60).padStart(2, '0') : '';
 const SURF_KEY = {Hard: 'hard', Clay: 'clay', Grass: 'grass', Carpet: 'hard'};
 const monthYear = iso => { const d = new Date(iso + 'T12:00:00'); return d.toLocaleDateString(L === 'fr' ? 'fr-FR' : 'en-GB', {month: 'short', year: 'numeric'}); };
 function card(i, sf) {
@@ -723,6 +733,7 @@ function card(i, sf) {
     <div class="kv"><span>${t('srank')}</span><b>${nr}${r.rank}</b></div>
     <div class="kv"><span>${t('atprank')}</span><b>${r.atp ? nr + r.atp : '–'}</b></div>
     <div class="kv"><span>${t('surf_rt', t(sf))}</span><b>${fmt(r[sf])}</b></div>
+    <div class="kv"><span>${t('cmp_dur', $('#pbo').value)}</span><b>${dur(r['m' + $('#pbo').value]) || '–'}</b></div>
     <div class="kv"><span>${t('trend')}</span><b class="${r.d30 > 0 ? 'up' : r.d30 < 0 ? 'down' : ''}">${r.d30 == null ? '–' : (r.d30 > 0 ? '+' : '') + fmt(r.d30)}</b></div>
     <div style="margin-top:8px"><b>${t('form_t')}</b> <span class="meta">(${t('rec', w, f.length - w)})</span></div><div style="margin-top:4px">${sq}</div>`;
 }

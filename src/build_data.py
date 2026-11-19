@@ -4,7 +4,7 @@ from datetime import date
 from pathlib import Path
 import numpy as np
 import pandas as pd
-from seeded_model import load_matches
+from seeded_model import load_matches, clean_minutes
 from seeded_rating import SeededRating, to_100, RELIABLE_MIN, PROVISIONAL_MIN
 
 from paths import STATE, DATA, OUT, YEAR, TOURNAMENTS
@@ -55,7 +55,8 @@ for r in m.itertuples(index=False):
                 "day": int(r.day), "t": r.tourney_name, "lvl": r.tourney_level, "rd": r.round, "surf": r.surface,
                 "opp_id": opp, "opp": opp_name, "opp_note": round(float(to_100(sr.level(opp, r.day))), 1),
                 "opp_atp": None if pd.isna(opp_rank) else int(opp_rank),
-                "res": "W" if won else "L", "score": r.score, "src": r.source, "dom": round(100 * (r.dom if won else 1 - r.dom), 1)})
+                "res": "W" if won else "L", "score": r.score, "src": r.source, "dom": round(100 * (r.dom if won else 1 - r.dom), 1),
+                "bo": int(r.best_of), "min": clean_minutes(r.minutes, r.best_of)})
     sr.update(r)
 while len(monthly) < len(month_marks):          # mois pas encore atteints (sécurité)
     monthly.append({})
@@ -64,6 +65,14 @@ both = pd.concat([
     m[["winner_id", "winner_rank", "winner_ioc", "day"]].set_axis(["id", "rank", "ioc", "day"], axis=1),
     m[["loser_id", "loser_rank", "loser_ioc", "day"]].set_axis(["id", "rank", "ioc", "day"], axis=1)])
 last = both.sort_values("day").drop_duplicates("id", keep="last").set_index("id")
+
+def avg_min(pm):
+    out = {}
+    for bo in (3, 5):
+        v = [x["min"] for x in pm if x["bo"] == bo and x["min"]]
+        out[f"m{bo}"] = round(sum(v) / len(v)) if len(v) >= 3 else None
+        out[f"n{bo}"] = len(v)
+    return out
 
 rows = []
 for pid in sr.hist:
@@ -77,6 +86,8 @@ for pid in sr.hist:
                  "d30": round(sr.note(pid, today) - snap30[pid], 1) if snap30 and pid in snap30 else None,
                  "inactive": bool(today - sr.last_day(pid) > 90),
                  "n14": sr.n_rhythm(pid, today),
+                 # point 23 : durée moyenne d'un match terminé (12 mois), séparément en 2 et 3 sets gagnants — info brute
+                 **avg_min(pmatches.get(pid, [])),
                  "spark": [round(w[pid], 1) if pid in w else None for w in weekly] + [round(sr.note(pid, today), 1)]})
 df = pd.DataFrame(rows).sort_values("note", ascending=False).reset_index(drop=True)
 df["rank"] = df.index + 1
@@ -145,7 +156,7 @@ for r in top.itertuples(index=False):
     wins = [x for x in pm if x["res"] == "W"]
     best = max(wins, key=lambda x: x["opp_note"]) if wins else None
     rec = sorted(pm, key=lambda x: x["day"], reverse=True)[:15]
-    fmt_m = lambda x: {**{k: v for k, v in x.items() if k not in ("day", "opp_id", "lvl", "src")}, "date": date.fromordinal(x["day"]).strftime("%d %b %y"),
+    fmt_m = lambda x: {**{k: v for k, v in x.items() if k not in ("day", "opp_id", "lvl", "src", "bo")}, "date": date.fromordinal(x["day"]).strftime("%d %b %y"),
                        "opp_i": idx.get(x["opp_id"])}
     players.append({
         "id": r.id, "bio": bio.get(r.id, {}),
@@ -275,6 +286,7 @@ if f_on.exists():
 nxt = next((t for t in CONFIG if t.get("next")), None)
 
 out = {"date": date.fromordinal(today).strftime("%d %b %Y"), "live": live,
+       "built": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(timespec="minutes"),
        "next": {"en": nxt["next"]["en"], "fr": nxt["next"]["fr"]} if nxt else None,
        "ranking": json.loads(top.to_json(orient="records")),
        "players": players, "season": season, "season_year": YEAR, "cal": CAL, "odds": odds_out, "odds_record": odds_record,

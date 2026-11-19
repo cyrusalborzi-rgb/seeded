@@ -6,10 +6,11 @@ Mise à jour complète du site Seeded (lancée chaque nuit par GitHub Actions) :
   4. données du site (classement, joueurs, comparateur…)
   5. génération du site (site/)
 Lancer depuis la racine du dépôt :  python src/run_all.py [--download]
+Passage « live » (toutes les 30 min) :  python src/run_all.py --live  (seulement si un tournoi en cours a bougé)
 """
 import json, subprocess, sys
 from pathlib import Path
-from paths import ROOT, TOURNAMENTS
+from paths import ROOT, TOURNAMENTS, OUT, DATA
 
 PY = sys.executable
 SRC = Path(__file__).resolve().parent
@@ -17,6 +18,34 @@ SRC = Path(__file__).resolve().parent
 def step(title, args):
     print(f"\n=== {title} ===", flush=True)
     subprocess.run([PY, str(SRC / args[0]), *args[1:]], check=True, cwd=ROOT)
+
+if "--live" in sys.argv:
+    # Passage « live » (toutes les 30 min, workflow live.yml) : seulement les tournois en cours + cotes toutes les 6 h.
+    # Si rien n'a changé : on s'arrête là, le site en ligne ne bouge pas.
+    OUT.mkdir(exist_ok=True)
+    (OUT / "deploy.txt").write_text("0")
+    if len(list(DATA.glob("*.csv"))) < 50:    # cache vide ou incomplet
+        step("1. Pas de données en cache : téléchargement complet", ["fetch_data.py"])
+        (OUT / "live_changed.txt").write_text("1")
+    else:
+        step("1. Tournois en cours (2 petits fichiers)", ["fetch_live.py"])
+    step("1b. Cotes du marché (si les dernières ont plus de 6 h)", ["fetch_odds.py", "--if-older", "6"])
+    flag = lambda f: (OUT / f).exists() and (OUT / f).read_text().strip() == "1"
+    if not (flag("live_changed.txt") or flag("odds_changed.txt")):
+        print("\nRien de nouveau : pas de republication ✔"); sys.exit(0)
+    if not (OUT / "facts.json").exists():
+        step("2. Backtest (absent du cache)", ["backtest.py"])
+    for t in json.loads((TOURNAMENTS / "tournaments.json").read_text()):
+        args = ["tournoi.py", "--tableau", t["draw"], "--nom", t["nom"], "--surface", t["surface"], "--bo", str(t["bo"])]
+        if t.get("id"):
+            args += ["--id", t["id"]]
+        if t.get("tours_joues"):
+            args += ["--tours-joues", t["tours_joues"]]
+        step(f"3. Page tournoi : {t['nom']}", args)
+    step("4. Données du site", ["build_data.py"])
+    step("5. Génération du site", ["build_site.py"])
+    (OUT / "deploy.txt").write_text("1")
+    print("\nTerminé ✔ (passage live)"); sys.exit(0)
 
 if "--download" in sys.argv:
     step("1. Téléchargement des données", ["fetch_data.py"])

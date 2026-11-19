@@ -82,6 +82,17 @@ def load_matches(data_dir="data", start_year=1995, end_year=2026):
     return m
 
 
+def clean_minutes(minutes, best_of=3):
+    """Durée d'un match en minutes, ou None si absente ou visiblement fausse (ex. 1356 min en Challenger)."""
+    try:
+        v = float(minutes)
+    except (TypeError, ValueError):
+        return None
+    if v != v or v < 10 or v > (420 if int(best_of or 3) == 5 else 300):
+        return None
+    return int(round(v))
+
+
 def _games_share(score):
     """Part des jeux gagnés par le vainqueur, à partir du score (ex. '6-4 7-6(5)')."""
     w = l = 0
