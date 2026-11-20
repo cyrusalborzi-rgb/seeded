@@ -10,7 +10,8 @@ import hashlib, json, sys, urllib.request
 from paths import DATA, STATE, OUT
 
 FILES = {"ongoing_tourneys.csv": "https://stats.tennismylife.org/data/ongoing_tourneys.csv",
-         "challenger_ongoing_tourneys.csv": "https://stats.tennismylife.org/data/challenger_ongoing_tourneys.csv"}
+         "challenger_ongoing_tourneys.csv": "https://stats.tennismylife.org/data/challenger_ongoing_tourneys.csv",
+         "wta_ongoing_tourneys.csv": "https://stats.tennismylife.org/data/wta_ongoing_tourneys.csv"}      # point 19 : WTA
 
 
 def main():

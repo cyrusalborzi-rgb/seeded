@@ -13,5 +13,21 @@
       "en": "Australian Open 2027 — Seeded odds published as soon as the draw is out",
       "fr": "Open d'Australie 2027 — probabilités Seeded publiées dès le tirage"
     }
+  },
+  {
+    "slug": "australian-open-2026-wta",
+    "circuit": "wta",
+    "nom": "Australian Open 2026",
+    "draw": "tournaments/ao2026_wta.csv",
+    "surface": "Hard",
+    "bo": 3,
+    "id": "2026-901",
+    "tours_joues": "R128,R64,R32",
+    "featured": true,
+    "note": "Démo WTA : l'Open d'Australie 2026 (simple dames) rejoué comme si on était après le 3e tour.",
+    "next": {
+      "en": "Australian Open 2027 — Seeded odds published as soon as the draw is out",
+      "fr": "Open d'Australie 2027 — probabilités Seeded publiées dès le tirage"
+    }
   }
 ]

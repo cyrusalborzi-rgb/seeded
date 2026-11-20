@@ -90,6 +90,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 <b>Is Seeded a betting tool?</b>No. Seeded publishes its own probabilities to understand and enjoy tennis. It gives no tips.
 <b>Why show the bookmakers' probabilities?</b>For Grand Slams, Masters 1000 and ATP 500 events, we show next to ours the average probability of about 15 European bookmakers (margin removed; offshore sites not licensed in France are excluded). Our model never uses them: it only looks at match results, so it sometimes disagrees with the market — sometimes a lot. That is the point: it is an independent opinion. Since November 2026 we keep a live record of both, match after match, on the Track record page. Disagreeing with the market is not a reason to bet: bookmakers also know things our model cannot see (injuries, last-minute news). 18+ · Gambling involves risks.
 <b>Which players have a page?</b>Every player in the Seeded top 300 (15+ matches in the last 12 months). Each page shows his rating over the last 24 months, his rating and rank on each surface, his record over the last 12 months and his recent matches. Click any name on the site to open it.
+<b>Is there a women's version?</b>Yes: click “WTA” at the top of any page. Same method and same settings as for the men (we checked them on WTA data only: no variant did better). The WTA ranking covers about 115 players, because our source does not include WTA 125 and ITF events: fewer players reach the 15 matches needed. The 2027 WTA calendar comes from the official WTA calendar (October 2026).
 <b>How often is it updated?</b>A full refresh every night. On top of that, a robot checks ongoing tournaments every 30 minutes: as soon as a new result appears in our source, ratings, draws and pages are recalculated and republished (usually within the hour). The limit is our source: when it publishes a result late, Seeded is late too.
 </div>
 
@@ -98,6 +99,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 
 <h2>10. Version history</h2>
 <table class="ver">
+<tr><td>v0.17</td><td>WTA tour: a full women's version of the site (Seeded Rating, player pages, Australian Open 2026 draw, 2027 WTA calendar, model record, market odds), reached with the ATP / WTA switch at the top</td></tr>
 <tr><td>v0.16</td><td>Many more links: surfaces, ranks, categories, upcoming tournaments, key figures and methodology terms now lead to the matching page</td></tr>
 <tr><td>v0.15</td><td>2027 Challenger calendar in the Calendar (with categories 50 to 175, added as the ATP releases it)</td></tr>
 <tr><td>v0.14</td><td>Seeded logo (a mini-draw that ends on the winning ball), tab and phone icons; the logo now takes you home</td></tr>
@@ -191,6 +193,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <b>Seeded est-il un outil de paris ?</b>Non. Seeded publie ses propres probabilités pour comprendre et apprécier le tennis. Il ne donne aucun pronostic à jouer.
 <b>Pourquoi afficher les probabilités des bookmakers ?</b>Pour les Grands Chelems, Masters 1000 et ATP 500, on affiche à côté des nôtres la probabilité moyenne d'une quinzaine de bookmakers européens (marge retirée ; les sites offshore non agréés en France sont exclus). Notre modèle ne les utilise jamais : il ne regarde que les résultats des matchs, donc il n'est parfois pas d'accord avec le marché — parfois franchement. C'est tout l'intérêt : c'est un avis indépendant. Depuis novembre 2026, on tient un bilan en direct des deux, match après match, sur la page Bilan. Être en désaccord avec le marché n'est pas une raison de parier : les bookmakers savent aussi des choses que notre modèle ne voit pas (blessures, infos de dernière minute). 18+ · Jouer comporte des risques.
 <b>Quels joueurs ont une page ?</b>Tous les joueurs du top 300 Seeded (15 matchs ou plus sur 12 mois). Chaque page montre l'évolution de sa note sur 24 mois, sa note et son rang sur chaque surface, son bilan sur 12 mois et ses derniers matchs. Clique sur n'importe quel nom du site pour l'ouvrir.
+<b>Y a-t-il une version féminine ?</b>Oui : clique sur « WTA » en haut de n'importe quelle page. Même méthode et mêmes réglages que chez les hommes (vérifiés sur les seules données WTA : aucune variante ne faisait mieux). Le classement WTA compte environ 115 joueuses, car notre source n'inclut pas les tournois WTA 125 et ITF : moins de joueuses atteignent les 15 matchs nécessaires. Le calendrier WTA 2027 vient du calendrier officiel de la WTA (octobre 2026).
 <b>À quelle fréquence c'est mis à jour ?</b>Une mise à jour complète chaque nuit. En plus, un robot vérifie les tournois en cours toutes les 30 minutes : dès qu'un nouveau résultat apparaît dans notre source, les notes, les tableaux et les pages sont recalculés et republiés (en général dans l'heure). La limite, c'est notre source : quand elle publie un résultat en retard, Seeded l'est aussi.
 </div>
 
@@ -199,6 +202,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 
 <h2>10. Historique des versions</h2>
 <table class="ver">
+<tr><td>v0.17</td><td>Circuit WTA : une version féminine complète du site (Seeded Rating, pages joueuses, tableau de l'Open d'Australie 2026, calendrier WTA 2027, bilan du modèle, cotes du marché), accessible avec le bouton ATP / WTA en haut</td></tr>
 <tr><td>v0.16</td><td>Beaucoup plus de liens : surfaces, rangs, catégories, prochains tournois, chiffres clés et termes de la méthodologie mènent à la bonne page</td></tr>
 <tr><td>v0.15</td><td>Calendrier Challenger 2027 dans le Calendrier (avec les catégories 50 à 175, ajouté au fur et à mesure des publications ATP)</td></tr>
 <tr><td>v0.14</td><td>Logo Seeded (un mini-tableau qui finit sur la balle du vainqueur), icônes d'onglet et de téléphone ; le logo ramène à l'accueil</td></tr>

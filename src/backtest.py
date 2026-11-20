@@ -18,20 +18,25 @@ import pandas as pd
 from seeded_model import load_matches, build_bracket, simulate_draw, expected, bo3_to_bo5
 from seeded_rating import SeededRating, to_100
 
-import json
+import json, sys
 from paths import DATA, OUT, YEAR
 
+# python backtest.py --wta : même backtest pour le circuit féminin (fichiers *_wta, tout en 2 sets gagnants)
+TOUR = "wta" if "--wta" in sys.argv else "atp"
+SUF = "_wta" if TOUR == "wta" else ""
+BO_SLAM = 3 if TOUR == "wta" else 5
+
 print("Chargement des matchs…")
-matches = load_matches(DATA, start_year=1995, end_year=YEAR)
+matches = load_matches(DATA, start_year=1995, end_year=YEAR, tour=TOUR)
 print(f"  {len(matches):,} matchs chargés".replace(",", " "))
 
 # Tableaux complets des Grands Chelems terminés depuis 2012 (fichiers bruts,
 # pour garder aussi les matchs perdus par forfait/abandon)
 slams = {}
 for year in range(2012, YEAR + 1):
-    if not (DATA / f"{year}.csv").exists():
+    if not (DATA / f"{year}{SUF}.csv").exists():
         continue
-    raw = pd.read_csv(DATA / f"{year}.csv", dtype={"winner_id": str, "loser_id": str})
+    raw = pd.read_csv(DATA / f"{year}{SUF}.csv", dtype={"winner_id": str, "loser_id": str})
     for tid, g in raw[raw.tourney_level == "G"].groupby("tourney_id"):
         if len(g) == 127 and "F" in set(g["round"]):
             slams[tid] = g
@@ -73,10 +78,10 @@ def report(df, label, key):
     ll = lambda p: -np.log(p.clip(1e-6, 1)).mean()
     print(f"  {label:<22} {len(df):>6} matchs | Seeded Rating {100 * (df.p_seeded > .5).mean():.1f} % "
           f"(log-loss {ll(df.p_seeded):.4f}) | Elo seul {100 * (df.p_elo > .5).mean():.1f} % "
-          f"({ll(df.p_elo):.4f}) | classement ATP {100 * rank_acc:.1f} %")
+          f"({ll(df.p_elo):.4f}) | classement {TOUR.upper()} {100 * rank_acc:.1f} %")
 
 
-report(preds, "Circuit principal ATP", "main")
+report(preds, f"Circuit principal {TOUR.upper()}", "main")
 report(preds[preds.level == "G"], "Grands Chelems", "slams")
 
 # ------------------------------------------------- 2 & 3. simulation des tableaux
@@ -86,7 +91,7 @@ for tid, g in sorted(slams.items(), key=lambda kv: kv[1].tourney_date.iloc[0]):
     for r in g.itertuples(index=False):        # noms des joueurs jamais vus
         snap.names.setdefault(r.winner_id, r.winner_name)
         snap.names.setdefault(r.loser_id, r.loser_name)
-    sim = simulate_draw(snap, build_bracket(g), g.surface.iloc[0], best_of=5, n_sims=10_000)
+    sim = simulate_draw(snap, build_bracket(g), g.surface.iloc[0], best_of=BO_SLAM, n_sims=10_000)
     champ = g[g["round"] == "F"].iloc[0].winner_name
     year, name = str(g.tourney_date.iloc[0])[:4], g.tourney_name.iloc[0]
     rows += [(p / 100, pl == champ) for pl, p in zip(sim.player, sim.Titre)]
@@ -104,7 +109,7 @@ print("\n2) Chances de titre AVANT chaque Grand Chelem 2024-2026 (10 000 simulat
 summary = pd.DataFrame(summary)
 FACTS["top3"] = {"n": int(len(summary)), "in_top3": int((summary.pos <= 3).sum())}
 summary = summary.drop(columns="pos")
-summary.to_csv(OUT / "bilan_grands_chelems.csv", index=False)
+summary.to_csv(OUT / f"bilan_grands_chelems{SUF}.csv", index=False)
 print(summary.to_string(index=False))
 
 print(f"\n3) Calibration des chances de titre ({len(slams)} Grands Chelems depuis 2012)")
@@ -114,19 +119,19 @@ cal["tranche"] = pd.cut(cal.proba, [0, .05, .15, .30, .50, 1.01], right=False,
 table = (cal.groupby("tranche", observed=True)
             .agg(joueurs=("titre", "size"), titres_attendus=("proba", "sum"),
                  titres_reels=("titre", "sum")).round(1))
-table.to_csv(OUT / "calibration_titres.csv")
+table.to_csv(OUT / f"calibration_titres{SUF}.csv")
 print(table.to_string())
 FACTS["n_slams_calib"] = len(slams)
 FACTS["n_matches_total"] = int(len(matches))
 FACTS["first_test_year"] = 2023
 FACTS["last_year"] = int(YEAR)
-(OUT / "facts.json").write_text(json.dumps(FACTS, indent=1))   # source de vérité pour le site
+(OUT / f"facts{SUF}.json").write_text(json.dumps(FACTS, indent=1))   # source de vérité pour le site
 
 if ao2026 is None:
     raise SystemExit(0)
 print("\n4) Open d'Australie 2026 — top 10 avant le tournoi")
 ao2026["note"] = [round(float(to_100(snap_ao.display_level(p, "Hard"))), 1) for p in ao2026.id]   # note /100 (sans rythme)
 cols = ["player", "note", "R64", "R32", "R16", "QF", "SF", "F", "Titre"]
-ao2026[cols].round(1).to_csv(OUT / "ao2026_probas.csv", index=False)
+ao2026[cols].round(1).to_csv(OUT / f"ao2026_probas{SUF}.csv", index=False)
 print(ao2026[["player", "note", "QF", "SF", "F", "Titre"]].head(10).round(1).to_string(index=False))
 print("\nFichiers écrits dans le dossier outputs/")

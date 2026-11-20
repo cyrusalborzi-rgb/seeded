@@ -1,5 +1,6 @@
-"""Prépare les données du site (outputs/site_data.json) à partir des données TennisMyLife et des sorties du backtest."""
-import json
+"""Prépare les données du site (outputs/site_data.json) à partir des données TennisMyLife et des sorties du backtest.
+python build_data.py --wta  ->  outputs/site_data_wta.json (circuit féminin : fichiers *_wta, pas de WTA 125 / ITF dans la source)"""
+import json, sys
 from datetime import date
 from pathlib import Path
 import numpy as np
@@ -8,10 +9,15 @@ from seeded_model import load_matches, clean_minutes
 from seeded_rating import SeededRating, to_100, RELIABLE_MIN, PROVISIONAL_MIN
 
 from paths import STATE, DATA, OUT, YEAR, TOURNAMENTS
-CONFIG = json.loads((TOURNAMENTS / "tournaments.json").read_text())
+TOUR = "wta" if "--wta" in sys.argv else "atp"
+SUF = "_wta" if TOUR == "wta" else ""
+CONFIG = [t for t in json.loads((TOURNAMENTS / "tournaments.json").read_text()) if t.get("circuit", "atp") == TOUR]
 FEATURED = next(t for t in CONFIG if t.get("featured"))
+RAW_FILES = (lambda y: [DATA / f"{y}_wta.csv"]) if TOUR == "wta" else \
+            (lambda y: [DATA / f"{y}.csv", DATA / f"{y}_challenger.csv", DATA / "atp_quali" / f"{y}_atp_quali.csv"])
+ONGOING = [DATA / "wta_ongoing_tourneys.csv"] if TOUR == "wta" else [DATA / "ongoing_tourneys.csv", DATA / "challenger_ongoing_tourneys.csv"]
 
-m = load_matches(DATA, 1995, YEAR)
+m = load_matches(DATA, 1995, YEAR, tour=TOUR)
 sr = SeededRating()
 today = int(m.day.max())
 
@@ -95,8 +101,8 @@ df["gap"] = df.atp - df["rank"]
 top = df.head(300)
 
 ao = pd.read_csv(OUT / f"{FEATURED['slug']}.csv").head(16)
-bilan = pd.read_csv(OUT / "bilan_grands_chelems.csv")
-calib = pd.read_csv(OUT / "calibration_titres.csv")
+bilan = pd.read_csv(OUT / f"bilan_grands_chelems{SUF}.csv")
+calib = pd.read_csv(OUT / f"calibration_titres{SUF}.csv")
 
 # ---- comparateur : face-à-face (tous niveaux, abandons compris, forfaits exclus) + forme récente
 idx = {pid: i for i, pid in enumerate(top.id)}
@@ -104,10 +110,10 @@ RAWCOLS = {"tourney_id", "tourney_name", "tourney_level", "surface", "tourney_da
            "winner_age", "winner_hand", "winner_ht", "loser_age", "loser_hand", "loser_ht"}
 frames = []
 for y in range(1990, YEAR + 1):
-    for f in [DATA / f"{y}.csv", DATA / f"{y}_challenger.csv", DATA / "atp_quali" / f"{y}_atp_quali.csv"]:
+    for f in RAW_FILES(y):
         if f.exists():
             frames.append(pd.read_csv(f, usecols=lambda c: c in RAWCOLS, dtype={"winner_id": str, "loser_id": str}))
-for f in [DATA / "ongoing_tourneys.csv", DATA / "challenger_ongoing_tourneys.csv"]:
+for f in ONGOING:
     if f.exists():
         frames.append(pd.read_csv(f, usecols=lambda c: c in RAWCOLS, dtype={"winner_id": str, "loser_id": str}))
 allm = pd.concat(frames).drop_duplicates(["tourney_date", "tourney_name", "round", "winner_id", "loser_id"])
@@ -187,10 +193,11 @@ for tid, g in cur.groupby("tourney_id"):
                     "win_rk": order.index(f.winner_id) + 1 if f.winner_id in order else None, "n": len(order)})
     season.append(row)
 season.sort(key=lambda x: x["d"])
-CAL = json.loads((TOURNAMENTS / "calendar_2027.json").read_text())
+_calf = TOURNAMENTS / f"calendar_2027{SUF}.json"
+CAL = json.loads(_calf.read_text()) if _calf.exists() else {"events": [], "source": None}
 # point 30 : Challengers 2027, publiés par l'ATP en plusieurs fois (tools/import_challengers.py)
 _chf = TOURNAMENTS / "challenger_2027.json"
-_ch = json.loads(_chf.read_text()) if _chf.exists() else {"events": [], "asof": None}
+_ch = json.loads(_chf.read_text()) if (_chf.exists() and TOUR == "atp") else {"events": [], "asof": None}
 CAL["ch"], CAL["ch_asof"] = _ch["events"], _ch.get("asof")
 for e in CAL["ch"]:
     e["cat"] = "C"
@@ -210,7 +217,8 @@ for pid, nm in names.items():
 for pid in names:                                    # en cas d'homonymes, le joueur le plus actif récemment gagne
     if sr.n_recent(pid, today) >= 5:
         by_norm[_nrm(names[pid])] = pid
-SLAMS = {"australianopen": ("Hard", 5), "frenchopen": ("Clay", 5), "rolandgarros": ("Clay", 5), "wimbledon": ("Grass", 5), "usopen": ("Hard", 5)}
+_BO = 3 if TOUR == "wta" else 5
+SLAMS = {"australianopen": ("Hard", _BO), "frenchopen": ("Clay", _BO), "rolandgarros": ("Clay", _BO), "wimbledon": ("Grass", _BO), "usopen": ("Hard", _BO)}
 SURF_OF = {"H": "Hard", "IH": "Hard", "CL": "Clay", "G": "Grass"}
 def odds_context(title):
     tn = _nrm(title)
@@ -222,7 +230,8 @@ def odds_context(title):
         if key and key in tn:
             return SURF_OF[e["surf"]], 3
     return "Hard", 3
-odds_raw = json.loads((STATE / "odds_current.json").read_text()) if (STATE / "odds_current.json").exists() else {"events": []}
+_oc = STATE / f"odds_current{SUF}.json"
+odds_raw = json.loads(_oc.read_text()) if _oc.exists() else {"events": []}
 odds_ev = []
 for e in odds_raw.get("events", []):
     surf, bo = odds_context(e["t"])
@@ -242,7 +251,7 @@ odds_out = {"updated": odds_raw.get("updated"), "demo": bool(odds_raw.get("demo"
 # dans les données. Matchs abandonnés / forfaits exclus (ils ne sont pas dans nos matchs terminés).
 from datetime import datetime, timezone
 now_utc = datetime.now(timezone.utc).isoformat()[:19]
-arch_path = STATE / "odds_archive.json"
+arch_path = STATE / f"odds_archive{SUF}.json"
 arch = json.loads(arch_path.read_text()) if arch_path.exists() else {}
 if not odds_out["demo"]:
     for raw_e, e in zip(odds_raw.get("events", []), odds_ev):
@@ -287,20 +296,28 @@ print("cotes du marché :", len(odds_ev), "matchs" + (" (EXEMPLE)" if odds_out["
       "| sans proba Seeded :", sum(x["ps"] is None for x in odds_ev))
 
 live = []
-f_on = DATA / "ongoing_tourneys.csv"
+f_on = ONGOING[0]
 if f_on.exists():
-    live = sorted(pd.read_csv(f_on).tourney_name.dropna().unique().tolist())
+    _on = pd.read_csv(f_on)
+    # la source garde un tournoi fini dans « en cours » : on l'écarte si la finale est jouée
+    # ou si la dernière date date de plus de 16 jours (un Grand Chelem dure 15 jours)
+    for nm, g in _on.dropna(subset=["tourney_name"]).groupby("tourney_name"):
+        _last = pd.to_datetime(g.tourney_date.astype(str), format="%Y%m%d", errors="coerce").max()
+        if (g["round"] == "F").any() or (pd.notna(_last) and (date.today() - _last.date()).days > 16):
+            continue
+        live.append(nm)
+    live.sort()
 nxt = next((t for t in CONFIG if t.get("next")), None)
 
 out = {"date": date.fromordinal(today).strftime("%d %b %Y"), "live": live,
        "built": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(timespec="minutes"),
        "next": {"en": nxt["next"]["en"], "fr": nxt["next"]["fr"]} if nxt else None,
        "ranking": json.loads(top.to_json(orient="records")),
-       "players": players, "season": season, "season_year": YEAR, "cal": CAL, "odds": odds_out, "odds_record": odds_record,
+       "circuit": TOUR, "players": players, "season": season, "season_year": YEAR, "cal": CAL, "odds": odds_out, "odds_record": odds_record,
        "ao": json.loads(ao.to_json(orient="records")),
        "bilan": json.loads(bilan.to_json(orient="records")),
        "calib": json.loads(calib.to_json(orient="records")),
        "h2h": h2h, "form": form}
-(OUT / "site_data.json").write_text(json.dumps(out))
+(OUT / f"site_data{SUF}.json").write_text(json.dumps(out))
 print("ok", len(top), "joueurs")
 print(top.sort_values("d30", ascending=False).head(5)[["name", "note", "d30"]].to_string(index=False))

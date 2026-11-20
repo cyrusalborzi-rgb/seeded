@@ -37,6 +37,7 @@ from page_tournoi import build_page
 
 from paths import DATA, OUT, STATE, TOURNAMENTS
 ROUNDS = ["R128", "R64", "R32", "R16", "QF", "SF", "F"]
+CIRCUIT = "atp"        # "wta" avec --circuit wta (fichiers *_wta.csv)
 
 
 # ------------------------------------------------------------------ outils
@@ -54,7 +55,8 @@ def read_raw(tourney_id):
     """Tous les matchs (forfaits compris) d'un tournoi, depuis les fichiers bruts."""
     year = tourney_id[:4]
     frames = []
-    for f in [DATA / f"{year}.csv", DATA / "ongoing_tourneys.csv"]:
+    for f in ([DATA / f"{year}_wta.csv", DATA / "wta_ongoing_tourneys.csv"] if CIRCUIT == "wta"
+              else [DATA / f"{year}.csv", DATA / "ongoing_tourneys.csv"]):
         if f.exists():
             d = pd.read_csv(f, dtype={"winner_id": str, "loser_id": str})
             frames.append(d[d.tourney_id == tourney_id])
@@ -64,7 +66,7 @@ def read_raw(tourney_id):
 
 def find_tourney_id(nom):
     """Cherche le tournoi en cours portant ce nom (sans l'année)."""
-    f = DATA / "ongoing_tourneys.csv"
+    f = DATA / ("wta_ongoing_tourneys.csv" if CIRCUIT == "wta" else "ongoing_tourneys.csv")
     if not f.exists():
         return None
     d = pd.read_csv(f)
@@ -152,17 +154,21 @@ def main():
     ap.add_argument("--sims", type=int, default=50_000)
     ap.add_argument("--exporter-tableau", help="démo : exporter le tableau d'un tournoi passé")
     ap.add_argument("--sortie", default="tableaux/tableau.csv")
+    ap.add_argument("--circuit", default="atp", choices=["atp", "wta"])
     a = ap.parse_args()
+    global CIRCUIT
+    CIRCUIT = a.circuit
 
     if a.exporter_tableau:
         export_draw(a.exporter_tableau, a.sortie); return
 
     OUT.mkdir(exist_ok=True)
+    SUFX = "-wta" if CIRCUIT == "wta" else ""
     draw = pd.read_csv(a.tableau).sort_values("position")
     year = int(re.search(r"\d{4}", a.nom).group()) if re.search(r"\d{4}", a.nom) else datetime.now().year
 
     print("Chargement des matchs…")
-    matches = load_matches(DATA, 1995, year)
+    matches = load_matches(DATA, 1995, year, tour=CIRCUIT)
     tid = a.id or find_tourney_id(a.nom)
 
     engine = SeededRating()
@@ -230,7 +236,7 @@ def main():
     sim["alive"] = ~sim.id.isin(losers)
 
     # évolution depuis la dernière mise à jour
-    hist_path = STATE / f"{slug(a.nom)}_historique.json"
+    hist_path = STATE / f"{slug(a.nom)}{SUFX}_historique.json"
     hist = json.loads(hist_path.read_text()) if hist_path.exists() else {}
     previous = [int(k) for k in hist if int(k) < n_played]
     if previous:
@@ -254,7 +260,7 @@ def main():
 
     cols = ["player", "ioc", "atp", "elo"] + [c for c in ["R64", "R32", "R16", "QF", "SF", "F", "Titre"]
                                                if c in sim.columns] + ["delta", "alive"]
-    sim[cols].round(2).to_csv(OUT / f"{slug(a.nom)}.csv", index=False)
+    sim[cols].round(2).to_csv(OUT / f"{slug(a.nom)}{SUFX}.csv", index=False)
     # ---- données de la page (rendue en JavaScript, avec le simulateur "What if")
     size = len(bracket)
     n_rounds = int(np.log2(size))
@@ -286,11 +292,11 @@ def main():
         pl["court"] = court.get(p_)
     data = {"meta": meta, "bo": a.bo, "wi_sims": 20000, "players": players,
             "bracket": [idx[p] if p is not None else -1 for p in bracket], "played": played_js}
-    (OUT / f"{slug(a.nom)}.html").write_text(build_page(data, a.nom), encoding="utf-8")
-    (OUT / f"{slug(a.nom)}_data.json").write_text(json.dumps(data))      # utilisé par la maquette
+    (OUT / f"{slug(a.nom)}{SUFX}.html").write_text(build_page(data, a.nom), encoding="utf-8")
+    (OUT / f"{slug(a.nom)}{SUFX}_data.json").write_text(json.dumps(data))      # utilisé par la maquette
     print(f"\n{a.nom} — {etat}")
     print(sim[["player", "QF", "SF", "F", "Titre", "delta"]].head(10).round(1).to_string(index=False))
-    print(f"\nPage écrite : {OUT / (slug(a.nom) + '.html')}")
+    print(f"\nPage écrite : {OUT / (slug(a.nom) + SUFX + '.html')}")
 
 
 if __name__ == "__main__":

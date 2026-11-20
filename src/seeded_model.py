@@ -37,14 +37,17 @@ COLS = ["tourney_id", "tourney_name", "surface", "tourney_level",
         "minutes", "indoor"]
 
 
-def load_matches(data_dir="data", start_year=1995, end_year=2026):
-    """Charge tous les matchs ATP (circuit principal + Challengers + qualifs)."""
+def load_matches(data_dir="data", start_year=1995, end_year=2026, tour="atp"):
+    """Charge tous les matchs ATP (circuit principal + Challengers + qualifs),
+    ou WTA avec tour="wta" (circuit principal seulement : la source n'a pas les WTA 125 / ITF)."""
     data_dir = Path(data_dir)
     frames = []
+    wta = tour == "wta"
     for year in range(start_year, end_year + 1):
-        for path in [data_dir / f"{year}.csv",
+        for path in ([data_dir / f"{year}_wta.csv"] if wta else
+                     [data_dir / f"{year}.csv",
                      data_dir / f"{year}_challenger.csv",
-                     data_dir / "atp_quali" / f"{year}_atp_quali.csv"]:
+                     data_dir / "atp_quali" / f"{year}_atp_quali.csv"]):
             if path.exists():
                 df = pd.read_csv(path, usecols=lambda c: c in COLS,
                                  dtype={"winner_id": str, "loser_id": str})
@@ -52,8 +55,9 @@ def load_matches(data_dir="data", start_year=1995, end_year=2026):
                                 else "quali" if "quali" in path.name else "main")
                 frames.append(df)
     # Tournois en cours (ex : ATP Finals cette semaine)
-    for name, src in [("ongoing_tourneys.csv", "main"),
-                      ("challenger_ongoing_tourneys.csv", "challenger")]:
+    for name, src in ([("wta_ongoing_tourneys.csv", "main")] if wta else
+                      [("ongoing_tourneys.csv", "main"),
+                       ("challenger_ongoing_tourneys.csv", "challenger")]):
         path = data_dir / name
         if path.exists():
             df = pd.read_csv(path, usecols=lambda c: c in COLS,
@@ -62,6 +66,8 @@ def load_matches(data_dir="data", start_year=1995, end_year=2026):
             frames.append(df)
 
     m = pd.concat(frames, ignore_index=True)
+    if wta:      # WTA 1000 = même rang que les Masters 1000 (poids un peu plus fort, comme côté ATP)
+        m["tourney_level"] = m["tourney_level"].astype(str).replace({"1000": "M", "PM": "M", "P5": "M", "T1": "M"})
     m = m.drop_duplicates(subset=["tourney_id", "round", "winner_id", "loser_id"])
 
     # On retire les forfaits (W/O) et les abandons (RET/DEF) : ils ne disent

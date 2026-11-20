@@ -1,5 +1,5 @@
 """
-Cotes du marché pour les matchs ATP à venir (The Odds API) — affichées à côté de nos probabilités, pour information.
+Cotes du marché pour les matchs ATP et WTA à venir (The Odds API) — affichées à côté de nos probabilités, pour information.
 
 RÈGLE D'INDÉPENDANCE : ces cotes ne servent JAMAIS à calculer, régler ou corriger le modèle Seeded.
 Elles servent uniquement à être affichées à côté de nos probas, et à mesurer notre bilan face au marché.
@@ -13,6 +13,8 @@ Elles servent uniquement à être affichées à côté de nos probas, et à mesu
 Sorties (dans state/, sauvegardé par le robot) :
   state/odds_current.json  -> matchs à venir avec la proba du marché (utilisé par le site)
   state/odds_archive.json  -> dernière proba du marché relevée avant chaque match (bilan maison, point 21b)
+  Avec --wta : mêmes fichiers suffixés _wta. Le quota gratuit est partagé entre les deux circuits :
+  ATP toutes les 6 h, WTA toutes les 12 h (≈ 360 crédits/mois en pleine saison, sous les 500).
 """
 import json, os, sys, urllib.parse, urllib.request
 from datetime import datetime, timezone
@@ -20,7 +22,9 @@ from paths import STATE, OUT
 
 API = "https://api.the-odds-api.com/v4"
 MIN_REMAINING = 25                       # garde-fou : on ne descend pas sous 25 crédits
-MAX_CALLS = int(os.environ.get("ODDS_MAX_CALLS", "6"))
+TOUR = "wta" if "--wta" in sys.argv else "atp"
+SUF = "_wta" if TOUR == "wta" else ""
+MAX_CALLS = int(os.environ.get("ODDS_MAX_CALLS", "4" if TOUR == "wta" else "6"))
 # Région « eu » de The Odds API, SANS les sites offshore non agréés en France (choix de Cyrus, 19/11).
 # Restent ~15 bookmakers sérieux, dont Pinnacle et les plateformes d'échange (Betfair, Matchbook)
 # et les sites français agréés ANJ (Betclic, PMU, Unibet, Winamax).
@@ -56,9 +60,10 @@ def consensus(ev):
 
 def main():
     STATE.mkdir(exist_ok=True)
-    cur_path, arch_path = STATE / "odds_current.json", STATE / "odds_archive.json"
+    cur_path, arch_path = STATE / f"odds_current{SUF}.json", STATE / f"odds_archive{SUF}.json"
     OUT.mkdir(exist_ok=True)
-    (OUT / "odds_changed.txt").write_text("0")
+    if TOUR == "atp":                                                # la passe WTA (lancée après) ne remet pas à 0
+        (OUT / "odds_changed.txt").write_text("0")
     key = os.environ.get("ODDS_API_KEY", "").strip()
     # passages « live » : on ne relève les cotes que si les dernières ont plus de N heures (quota gratuit)
     if "--if-older" in sys.argv and cur_path.exists():
@@ -74,8 +79,8 @@ def main():
         sports, remaining = get("/sports", key)                      # gratuit
     except Exception as e:                                            # jamais bloquant pour le reste du site
         print("⚠ The Odds API injoignable :", e); return
-    atp = [s for s in sports if s.get("key", "").startswith("tennis_atp") and s.get("active")]
-    print("Tournois ATP cotés en ce moment :", [s["title"] for s in atp] or "aucun")
+    atp = [s for s in sports if s.get("key", "").startswith(f"tennis_{TOUR}") and s.get("active")]
+    print(f"Tournois {TOUR.upper()} cotés en ce moment :", [s["title"] for s in atp] or "aucun")
     events, calls = [], 0
     for s in atp:
         if calls >= MAX_CALLS or (remaining is not None and remaining < MIN_REMAINING):

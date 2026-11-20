@@ -93,6 +93,8 @@ function SeededTournament(root, D, lang) {
     }
   };
   let L = lang || 'en'; const t = () => TR[L];
+  if (window.SEEDED_TR) for (const l of ['en', 'fr']) for (const k in TR[l]) { const v = TR[l][k];      // wta.html : textes au féminin + WTA
+    TR[l][k] = typeof v === 'function' ? (...a) => { const r = v(...a); return typeof r === 'string' ? window.SEEDED_TR[l](r) : r; } : typeof v === 'string' ? window.SEEDED_TR[l](v) : v; }
   const nf = (v, d = 1) => { const s = Number(v).toFixed(d); return L === 'fr' ? s.replace('.', ',') : s; };
   const pc = (v, d = 0) => nf(v, d) + (L === 'fr' ? ' %' : '%');
   const N = D.players.length, B = D.bracket, SIZE = B.length, NR = Math.round(Math.log2(SIZE));
@@ -197,7 +199,7 @@ function SeededTournament(root, D, lang) {
     const cell = v => v <= 0 ? '<td class="n z">–</td>' : v >= 99.95 ? '<td class="n" style="background:#cfe8b5">100</td>' :
       `<td class="n" style="background:rgba(70,140,40,${(Math.pow(v / 100, .6) * .55).toFixed(3)})">${v >= .1 ? nf(v) : '&lt;' + nf(.1)}</td>`;
     const showCourt = D.players.some(p => p.court);
-    let h = `<tr><th>#</th><th>${t().player}</th><th>${t().ctry}</th><th>ATP</th><th>${t().rating}</th>` +
+    let h = `<tr><th>#</th><th>${t().player}</th><th>${t().ctry}</th><th>${window.SEEDED_TL || 'ATP'}</th><th>${t().rating}</th>` +
       cols.map(k => `<th class="s" data-sort="${k}">${colLabel(k)}${sortCol === k ? (sortDir < 0 ? ' ▼' : ' ▲') : ''}</th>`).join('') +
       `<th${what ? ` title="${t().changeTip}"` : ''}>${what ? t().change : t().delta}</th>` +
       (showCourt ? `<th title="${t().courtTip}">${t().court}</th>` : '') + '</tr>';

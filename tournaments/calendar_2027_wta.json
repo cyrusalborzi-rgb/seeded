@@ -1,0 +1,383 @@
+{
+ "source": "Calendrier officiel WTA 2027 (PDF « WTA_Calendar_2027 », version du 1er octobre 2026, fourni par Cyrus). Date = début de la semaine du tournoi (Grands Chelems : même jour d'ouverture que côté ATP). United Cup (épreuve mixte par équipes) non reprise, comme côté ATP. Mettre ce fichier à jour à la main si la WTA change une date.",
+ "events": [
+  {
+   "d": "2027-01-04",
+   "name": "Brisbane",
+   "cat": "500",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-01-04",
+   "name": "Auckland",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-01-11",
+   "name": "Adelaide",
+   "cat": "500",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-01-11",
+   "name": "Hobart",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-01-17",
+   "name": "Australian Open",
+   "cat": "G",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-02-01",
+   "name": "Abu Dhabi",
+   "cat": "500",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-02-01",
+   "name": "Cluj-Napoca",
+   "cat": "250",
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-02-01",
+   "name": "Ostrava",
+   "cat": "250",
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-02-08",
+   "name": "Doha",
+   "cat": "M",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-02-15",
+   "name": "Dubai",
+   "cat": "M",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-02-22",
+   "name": "Mérida",
+   "cat": "500",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-02-22",
+   "name": "Austin",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-03-01",
+   "name": "Indian Wells",
+   "cat": "M",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-03-15",
+   "name": "Miami",
+   "cat": "M",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-03-29",
+   "name": "Charleston",
+   "cat": "500",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-03-29",
+   "name": "Bogota",
+   "cat": "250",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-04-05",
+   "name": "Linz",
+   "cat": "500",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-04-12",
+   "name": "Stuttgart",
+   "cat": "500",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-04-12",
+   "name": "Rouen",
+   "cat": "250",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-04-19",
+   "name": "Madrid",
+   "cat": "M",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-04-26",
+   "name": "Rabat",
+   "cat": "250",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-05-03",
+   "name": "Rome",
+   "cat": "M",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-05-17",
+   "name": "Strasbourg",
+   "cat": "500",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-05-23",
+   "name": "Roland Garros",
+   "cat": "G",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-06-07",
+   "name": "London",
+   "cat": "500",
+   "surf": "G",
+   "sure": true
+  },
+  {
+   "d": "2027-06-07",
+   "name": "'s-Hertogenbosch",
+   "cat": "250",
+   "surf": "G",
+   "sure": true
+  },
+  {
+   "d": "2027-06-14",
+   "name": "Berlin",
+   "cat": "500",
+   "surf": "G",
+   "sure": true
+  },
+  {
+   "d": "2027-06-14",
+   "name": "Nottingham",
+   "cat": "250",
+   "surf": "G",
+   "sure": true
+  },
+  {
+   "d": "2027-06-21",
+   "name": "Bad Homburg",
+   "cat": "500",
+   "surf": "G",
+   "sure": true
+  },
+  {
+   "d": "2027-06-21",
+   "name": "Eastbourne",
+   "cat": "250",
+   "surf": "G",
+   "sure": true
+  },
+  {
+   "d": "2027-06-28",
+   "name": "Wimbledon",
+   "cat": "G",
+   "surf": "G",
+   "sure": true
+  },
+  {
+   "d": "2027-07-12",
+   "name": "Athens",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-07-12",
+   "name": "Hamburg",
+   "cat": "250",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-07-19",
+   "name": "Iasi",
+   "cat": "250",
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-07-19",
+   "name": "Prague",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-07-26",
+   "name": "Washington",
+   "cat": "500",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-07-26",
+   "name": "Memphis",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-08-02",
+   "name": "Montreal",
+   "cat": "M",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-08-09",
+   "name": "Cincinnati",
+   "cat": "M",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-08-23",
+   "name": "Monterrey",
+   "cat": "500",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-08-29",
+   "name": "US Open",
+   "cat": "G",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-09-13",
+   "name": "Guadalajara",
+   "cat": "500",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-09-13",
+   "name": "São Paulo",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-09-20",
+   "name": "Singapore",
+   "cat": "500",
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-09-20",
+   "name": "Seoul",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-09-27",
+   "name": "Beijing",
+   "cat": "M",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-10-11",
+   "name": "Wuhan",
+   "cat": "M",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-10-18",
+   "name": "Ningbo",
+   "cat": "500",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-10-18",
+   "name": "Osaka",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-10-25",
+   "name": "Tokyo",
+   "cat": "500",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-10-25",
+   "name": "Guangzhou",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-11-01",
+   "name": "Hong Kong",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-11-01",
+   "name": "Manila",
+   "cat": "250",
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-11-08",
+   "name": "WTA Finals",
+   "cat": "F",
+   "surf": "IH",
+   "sure": true
+  }
+ ]
+}

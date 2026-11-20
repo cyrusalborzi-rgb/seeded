@@ -13,10 +13,21 @@ from paths import OUT, SITE, TOURNAMENTS, ROOT
 
 FEEDBACK_FORM = "o9RgDP"        # formulaire Tally « Seeded — Feedback » (réponses : tally.so)
 CONFIG = json.loads((TOURNAMENTS / "tournaments.json").read_text())
-FEATURED = next(t for t in CONFIG if t.get("featured"))
-site_data = json.loads((OUT / "site_data.json").read_text())
-facts = json.loads((OUT / "facts.json").read_text())
-tour = (OUT / f"{FEATURED['slug']}_data.json").read_text()      # écrit par tournoi.py
+facts_atp = json.loads((OUT / "facts.json").read_text())        # la Méthodologie détaille le backtest ATP (mêmes réglages pour la WTA)
+
+
+def load_circuit(circ):
+    """Données du site pour un circuit : 'atp' -> index.html, 'wta' -> wta.html (point 19)."""
+    suf = "_wta" if circ == "wta" else ""
+    feat = next(t for t in CONFIG if t.get("featured") and t.get("circuit", "atp") == circ)
+    return (json.loads((OUT / f"site_data{suf}.json").read_text()), json.loads((OUT / f"facts{suf}.json").read_text()),
+            (OUT / f"{feat['slug']}_data.json").read_text())        # écrit par tournoi.py
+
+
+# Thème WTA « Framboise » (choix de Cyrus, 20/11) : chaque couleur du thème ATP a sa jumelle rose
+WTA_THEME = {"#1d3557": "#8a1c4a", "#1d4f91": "#b0285f", "#eef2f7": "#fbeef3", "#d9e4f1": "#f6d6e3", "#9fb3cc": "#d9a3b9",
+             "#9fd36b": "#f7a8c8", "#2c4a73": "#a8325f", "#dfe7f2": "#f7dce7", "#6f86a3": "#c993ab", "#d5dde8": "#efd0dc",
+             "#c5ef93": "#fbd0e2", "#7fb34b": "#d9799f"}
 
 HTML = r"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
@@ -36,6 +47,10 @@ a{color:#1d4f91;text-decoration:none} a:hover{text-decoration:underline}
 .nav a.on{background:#2c4a73;color:#fff;font-weight:bold}
 .sp{flex:1}
 .lang{font-size:11px;color:#6f86a3} .lang a{color:#9fb3cc;padding:2px 3px;cursor:pointer} .lang a.on{color:#fff;font-weight:bold}
+.circ{display:inline-flex;border:1px solid #6f86a3;border-radius:3px;overflow:hidden;flex:0 0 auto}
+.circ a{color:#dfe7f2;padding:3px 9px;font-size:11.5px;font-weight:bold;letter-spacing:.5px} .circ a:hover{text-decoration:none;background:#2c4a73}
+.circ a.on{background:#fff;color:#1d3557}
+.wnote{background:#fbeef3;border-left:4px solid #8a1c4a;padding:8px 12px;margin:0 0 12px;max-width:900px}
 .plus{background:#9fd36b;color:#1d3557;font-weight:bold;padding:4px 9px;font-size:12px}
 .sub{background:#eef2f7;border-bottom:1px solid #d5dde8}
 .subin{max-width:1180px;margin:0 auto;padding:5px 10px;font-size:12px;color:#445}
@@ -133,6 +148,7 @@ __TCSS__
     <a href="#player" data-i="nav_players"></a><a href="#predictor" data-i="nav_predictor"></a><a href="#record" data-i="nav_record"></a><a href="#method" data-i="nav_method"></a>
   </span>
   <span class="sp"></span>
+  <span class="circ"><a href="index.html" data-circ="atp">ATP</a><a href="wta.html" data-circ="wta">WTA</a></span>
   <span class="lang"><a data-lang="en">EN</a> | <a data-lang="fr">FR</a></span>
   <span class="plus">Seeded+</span>
 </div></div>
@@ -284,7 +300,7 @@ const T = {
   c1k: 'Seeded #1', c2k: () => `Model accuracy (ATP, ${F.first_test_year}–${String(F.last_year).slice(2)})`, c2s: () => `vs ${pct(F.main.atp)} for the ATP ranking`, c3k: () => `Last ${F.top3.n} Grand Slams`,
   c3s: 'champion was in our pre-tournament top 3', c4k: 'Most underrated (top 50)',
   ao_mini_t: 'Australian Open 2026 — replay demo (after round 3)', ao_more: 'Full title odds &amp; draw →',
-  top10_t: 'Seeded Rating — top 10', rank_more: 'Full ranking (300 players) →', movers_t: 'Biggest movers — last 30 days (Seeded top 100)',
+  top10_t: 'Seeded Rating — top 10', rank_more: () => `Full ranking (${R.length} players) →`, movers_t: 'Biggest movers — last 30 days (Seeded top 100)',
   nl_t: 'Newsletter', nl_txt: 'Title odds in your inbox every night of a Grand Slam.', nl_btn: 'Subscribe — free',
   plus_txt: 'Unlimited "what if" draw simulator, round-by-round odds for every tournament, upset alerts, full player stats.<br><b>€3 / month</b> · or €5 per Grand Slam',
   pred_teaser: 'Who wins Sinner vs Alcaraz on clay? <a href="#predictor">Try it →</a>',
@@ -307,13 +323,14 @@ const T = {
   orec_fav: 'Right favourite', orec_ll: 'Log-loss (lower = better)', orec_dis: (n, k) => `Disagreements on the favourite: <b>${n}</b> — Seeded was right <b>${k}</b> time${k > 1 ? 's' : ''}, the bookmakers <b>${n - k}</b>.`,
   orec_last: 'Latest matches', h_winner2: 'Winner', h_closer: 'Closer',
   orec_note: 'Both probabilities are recorded at the same moment, before the match. Retirements and walkovers excluded. The model never uses odds.',
-  pl_search: 'Find a player (top 300)…',
+  pl_search: () => `Find a player (top ${R.length})…`,
   nav_cal: 'Calendar', cal_h: y => `ATP calendar ${y}`, cal_res_h: y => `ATP ${y} — results`, cal_next: y => `${y} season`, cal_past: y => `${y} results`,
   cal_meta: 'Date = start of the tournament week (official ATP calendar, January 2026). Seeded favourites = our top 3 on the surface today, updated every night and after each new result.',
   cal_res_meta: 'Every tournament of the season: champion, final, and where the champion stood among our pre-tournament favourites (rating + 14-day rhythm, exactly as in our predictions).',
   cc_all: 'All', cc_big: 'Slams &amp; Masters', h_cat: 'Category', h_surf2: 'Surface', h_favs: 'Seeded favourites (surface)', h_final: 'Final',
   h_ourfav: 'Our favourite', h_winrk: 'Champion\'s Seeded rank', tbc: 'TBC', cat: c => ({G: 'Grand Slam', M: 'Masters 1000', F: 'ATP Finals', '500': 'ATP 500', '250': 'ATP 250', C: 'Challenger'})[c] || c,
   cal_noC: 'The 2027 Challenger calendar is released by the ATP in several parts: coming soon.',
+  cal_none: 'The 2027 calendar is coming very soon.',
   cal_chNote: (upto, v) => `The ATP releases the 2027 Challenger calendar in several parts: tournaments up to the week of ${upto} so far${v ? ' (ATP version of ' + v + ')' : ''}. More will be added as they are announced. No favourites are shown for Challengers: the top players never play them.`,
   cal_sum_ch: n => `<b>${n}</b> Challengers announced so far for 2027.`,
   surf2: c => ({H: 'Hard', IH: 'Hard (indoor)', CL: 'Clay', G: 'Grass'})[c], cal_more: 'Full calendar →', home_next_t: 'Next tournaments',
@@ -363,7 +380,7 @@ const T = {
   c1k: 'N°1 Seeded', c2k: () => `Précision du modèle (ATP, ${F.first_test_year}-${String(F.last_year).slice(2)})`, c2s: () => `contre ${pct(F.main.atp)} pour le classement ATP`, c3k: () => `${F.top3.n} derniers Grands Chelems`,
   c3s: 'le vainqueur était dans notre top 3 avant le tournoi', c4k: 'Le plus sous-coté (top 50)',
   ao_mini_t: 'Open d\'Australie 2026 — démo rejouée (après le 3e tour)', ao_more: 'Toutes les probabilités et le tableau →',
-  top10_t: 'Seeded Rating — top 10', rank_more: 'Classement complet (300 joueurs) →', movers_t: 'Plus fortes évolutions — 30 derniers jours (top 100 Seeded)',
+  top10_t: 'Seeded Rating — top 10', rank_more: () => `Classement complet (${R.length} joueurs) →`, movers_t: 'Plus fortes évolutions — 30 derniers jours (top 100 Seeded)',
   nl_t: 'Newsletter', nl_txt: 'Les chances de titre dans ta boîte mail chaque soir de Grand Chelem.', nl_btn: 'S\'inscrire — gratuit',
   plus_txt: 'Simulateur « Et si ? » illimité, probabilités tour par tour pour chaque tournoi, alertes surprises, stats complètes des joueurs.<br><b>3 € / mois</b> · ou 5 € par Grand Chelem',
   pred_teaser: 'Qui gagne Sinner contre Alcaraz sur terre ? <a href="#predictor">Essaie →</a>',
@@ -386,13 +403,14 @@ const T = {
   orec_fav: 'Bon favori', orec_ll: 'Log-loss (plus bas = mieux)', orec_dis: (n, k) => `Désaccords sur le favori : <b>${n}</b> — Seeded avait raison <b>${k}</b> fois, les bookmakers <b>${n - k}</b>.`,
   orec_last: 'Derniers matchs', h_winner2: 'Vainqueur', h_closer: 'Plus proche',
   orec_note: 'Les deux probabilités sont enregistrées au même moment, avant le match. Abandons et forfaits exclus. Le modèle n\'utilise jamais les cotes.',
-  pl_search: 'Chercher un joueur (top 300)…',
+  pl_search: () => `Chercher un joueur (top ${R.length})…`,
   nav_cal: 'Calendrier', cal_h: y => `Calendrier ATP ${y}`, cal_res_h: y => `ATP ${y} — résultats`, cal_next: y => `Saison ${y}`, cal_past: y => `Résultats ${y}`,
   cal_meta: 'Date = début de la semaine du tournoi (calendrier officiel ATP, janvier 2026). Favoris Seeded = notre top 3 actuel sur la surface, mis à jour chaque nuit et après chaque nouveau résultat.',
   cal_res_meta: 'Tous les tournois de la saison : vainqueur, finale, et la place du vainqueur parmi nos favoris d\'avant-tournoi (note + rythme sur 14 jours, exactement comme dans nos prédictions).',
   cc_all: 'Tous', cc_big: 'Grands Chelems et Masters', h_cat: 'Catégorie', h_surf2: 'Surface', h_favs: 'Favoris Seeded (surface)', h_final: 'Finale',
   h_ourfav: 'Notre favori', h_winrk: 'Rang Seeded du vainqueur', tbc: 'à confirmer', cat: c => ({G: 'Grand Chelem', M: 'Masters 1000', F: 'ATP Finals', '500': 'ATP 500', '250': 'ATP 250', C: 'Challenger'})[c] || c,
   cal_noC: 'Le calendrier Challenger 2027 est publié par l\'ATP en plusieurs fois : bientôt ici.',
+  cal_none: 'Le calendrier 2027 arrive très bientôt.',
   cal_chNote: (upto, v) => `L'ATP publie le calendrier Challenger 2027 en plusieurs fois : pour l'instant, les tournois jusqu'à la semaine du ${upto}${v ? ' (version ATP du ' + v + ')' : ''}. La suite sera ajoutée au fur et à mesure. Pas de favoris pour les Challengers : les meilleurs joueurs n'y jouent pas.`,
   cal_sum_ch: n => `<b>${n}</b> Challengers annoncés pour l'instant en 2027.`,
   surf2: c => ({H: 'Dur', IH: 'Dur (salle)', CL: 'Terre battue', G: 'Gazon'})[c], cal_more: 'Tout le calendrier →', home_next_t: 'Prochains tournois',
@@ -443,6 +461,28 @@ const T = {
 let L = 'en';
 try { L = localStorage.getItem('seeded_lang') || (navigator.language || 'en').startsWith('fr') && 'fr' || 'en'; } catch (e) {}
 if (/[?&]lang=fr/.test(location.search)) L = 'fr';
+const CIRCUIT = '__CIRCUIT__', TL = CIRCUIT === 'wta' ? 'WTA' : 'ATP';
+if (CIRCUIT === 'wta') {
+  const W = {
+    en: x => x.replace(/Slams &amp; Masters( 1000)?/g, 'Slams &amp; WTA 1000').replace(/Masters 1000/g, 'WTA 1000').replace(/\bATP\b/g, 'WTA')
+              .replace(/\bhim\b/g, 'her').replace(/\bhis\b/g, 'her').replace(/\bhe\b/g, 'she').replace(/\bHe\b/g, 'She'),
+    fr: x => x.replace(/Grands Chelems et Masters( 1000)?/g, 'Grands Chelems et WTA 1000').replace(/Masters 1000/g, 'WTA 1000').replace(/\bATP\b/g, 'WTA')
+              .replace(/Le plus sous-coté/g, 'La plus sous-cotée').replace(/Ceux qui/g, 'Celles qui').replace(/le mieux classé\b/g, 'la mieux classée')
+              .replace(/un autre joueur/g, 'une autre joueuse').replace(/le 1er joueur/g, 'la 1re joueuse').replace(/du joueur/g, 'de la joueuse')
+              .replace(/au joueur/g, 'à la joueuse').replace(/\b([Ll])e joueur\b/g, (m, l) => (l === 'L' ? 'L' : 'l') + 'a joueuse')
+              .replace(/\b([Uu])n joueur\b/g, (m, u) => u + 'ne joueuse').replace(/\bjoueurs\b/g, 'joueuses').replace(/\bJoueurs\b/g, 'Joueuses')
+              .replace(/\bjoueur\b/g, 'joueuse').replace(/\bJoueur\b/g, 'Joueuse')
+              .replace(/\b([Ll])e favori\b/g, (m, l) => (l === 'L' ? 'L' : 'l') + 'a favorite').replace(/\bun favori\b/g, 'une favorite')
+              .replace(/\b([Ff])avoris\b/g, '$1avorites').replace(/\b([Ff])avori\b/g, '$1avorite')
+              .replace(/\bdu vainqueur\b/g, 'de la gagnante').replace(/\b([Ll])e vainqueur\b/g, (m, l) => (l === 'L' ? 'L' : 'l') + 'a gagnante')
+              .replace(/\b([Vv])ainqueur\b/g, (m, v) => (v === 'V' ? 'G' : 'g') + 'agnante').replace(/\binactif\b/g, 'inactive').replace(/\bdroitier\b/g, 'droitière').replace(/\bgaucher\b/g, 'gauchère')};
+  T.en.cal_meta = T.en.cal_meta.replace('January 2026', 'October 2026'); T.fr.cal_meta = T.fr.cal_meta.replace('janvier 2026', 'octobre 2026');
+  window.SEEDED_TR = W; window.SEEDED_TL = 'WTA';                   // aussi pour la page tournoi intégrée
+  for (const l of ['en', 'fr']) for (const k in T[l]) { const v = T[l][k];
+    T[l][k] = typeof v === 'function' ? (...a) => { const r = v(...a); return typeof r === 'string' ? W[l](r) : r; } : typeof v === 'string' ? W[l](v) : v; }
+}
+document.querySelectorAll('[data-circ]').forEach(a => { a.classList.toggle('on', a.dataset.circ === CIRCUIT);
+  a.onclick = e => { e.preventDefault(); const h = location.hash, keep = /^#(player|predictor)\//.test(h) ? '#rating' : h; location.href = a.getAttribute('href') + keep; }; });
 const t = (k, ...a) => { const v = T[L][k]; return typeof v === 'function' ? v(...a) : v; };
 
 // formats : virgule décimale et mois en français
@@ -495,10 +535,10 @@ function renderHome() {
   $('#h1').innerHTML = plink(0); $('#h1s').textContent = `${fmt(R[0].note)} / 100`;
   const und = R.filter(r => r.rank <= 50 && r.atp).sort((a, b) => b.gap - a.gap)[0];
   $('#h4').innerHTML = plink(und.rank - 1); const nr = L === 'fr' ? 'n°' : '#';
-  $('#h4s').textContent = `Seeded ${nr}${und.rank} · ATP ${nr}${und.atp}`;
+  $('#h4s').textContent = `Seeded ${nr}${und.rank} · ${TL} ${nr}${und.atp}`;
   $('#ao-mini').innerHTML = `<tr><th>${t('h_player')}</th><th>${t('h_qf')}</th><th>${t('h_sf')}</th><th>${t('h_f')}</th><th>${t('h_win')}</th></tr>` +
     D.ao.slice(0, 5).map(r => `<tr><td><b>${nlink(r.player)}</b></td><td class="n">${fmt(r.QF)}</td><td class="n">${fmt(r.SF)}</td><td class="n">${fmt(r.F)}</td><td class="n b">${pct(r.Titre)}</td></tr>`).join('');
-  $('#r-mini').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th><th>${t('h_rating')}</th><th>${t('h_trend')}</th><th>ATP</th><th>${t('h_gap')}</th></tr>` +
+  $('#r-mini').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th><th>${t('h_rating')}</th><th>${t('h_trend')}</th><th>${TL}</th><th>${t('h_gap')}</th></tr>` +
     R.slice(0, 10).map(r => `<tr><td class="n">${r.rank}</td><td><b>${plink(r.rank - 1)}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td><td class="n b">${fmt(r.note)}</td><td class="sp">${spark(r.spark)}</td><td class="n">${r.atp ?? ''}</td>${gapCell(r.gap)}</tr>`).join('');
   const mv = R.filter(r => r.rank <= 100 && r.d30 != null);
   const ups = [...mv].sort((a, b) => b.d30 - a.d30).slice(0, 5), downs = [...mv].sort((a, b) => a.d30 - b.d30).slice(0, 5);
@@ -515,7 +555,7 @@ function renderRating() {
   const sh = (k, lab) => `<th><a class="ql" href="#rating/${k}">${lab}</a>${surf === k ? ' ▼' : ''}</th>`;
   // la colonne triée passe juste après le nom (sur téléphone, c'est elle qu'on voit sans faire défiler)
   const COLS = [surf, ...['note', 'hard', 'clay', 'grass'].filter(k => k !== surf)], lab = k => k === 'note' ? t('h_rating') : t(k);
-  $('#r-full').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th>${sh(COLS[0], lab(COLS[0]))}<th>${t('h_trend')}</th>${COLS.slice(1).map(k => sh(k, lab(k))).join('')}<th>ATP</th><th>${t('h_gap')}</th><th>${t('h_30')}</th></tr>` +
+  $('#r-full').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th>${sh(COLS[0], lab(COLS[0]))}<th>${t('h_trend')}</th>${COLS.slice(1).map(k => sh(k, lab(k))).join('')}<th>${TL}</th><th>${t('h_gap')}</th><th>${t('h_30')}</th></tr>` +
     rows.map(r => `<tr><td class="n">${r.srank}</td><td><b>${plink(r.rank - 1)}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td>
     <td class="n b">${fmt(r[COLS[0]])}</td><td class="sp">${spark(r.spark)}</td>${COLS.slice(1).map(k => `<td class="n">${fmt(r[k])}</td>`).join('')}
     <td class="n">${r.atp ?? ''}</td>${gapCell(r.gap)}<td class="n ${r.d30 > 0 ? 'up' : r.d30 < 0 ? 'down' : 'z'}">${r.d30 == null ? '–' : (r.d30 > 0 ? '+' : '') + fmt(r.d30)}</td></tr>`).join('');
@@ -531,12 +571,12 @@ const dfmt = (iso, sure = true) => { const d = new Date(iso + 'T12:00:00');
 const monthName = iso => { const s = new Date(iso + 'T12:00:00').toLocaleDateString(L === 'fr' ? 'fr-FR' : 'en-GB', {month: 'long', year: 'numeric'}); return s[0].toUpperCase() + s.slice(1); };
 const last = n => n.split(' ').slice(-1)[0];
 const topOn = (sk, k) => [...R].sort((a, b) => b[sk] - a[sk]).slice(0, k);
-const CALY = +D.cal.events[0].d.slice(0, 4), today = new Date().toISOString().slice(0, 10);
+const CALY = D.cal.events.length ? +D.cal.events[0].d.slice(0, 4) : D.season_year + 1, today = new Date().toISOString().slice(0, 10);
 const nextEv = () => D.cal.events.find(e => e.d >= today);
 let calCat = 'all';
 const catOk = c => calCat === 'all' ? true : calCat === 'big' ? ['G', 'M', 'F'].includes(c) : c === calCat;
 function renderCalendar() {
-  document.querySelectorAll('[data-cc]').forEach(b => { b.classList.toggle('on', b.dataset.cc === calCat); b.innerHTML = /^\d+$/.test(b.dataset.cc) ? 'ATP ' + b.dataset.cc : b.dataset.cc === 'C' ? 'Challenger' : t('cc_' + b.dataset.cc); });
+  document.querySelectorAll('[data-cc]').forEach(b => { b.classList.toggle('on', b.dataset.cc === calCat); b.style.display = b.dataset.cc === 'C' && CIRCUIT === 'wta' ? 'none' : ''; b.innerHTML = /^\d+$/.test(b.dataset.cc) ? TL + ' ' + b.dataset.cc : b.dataset.cc === 'C' ? 'Challenger' : t('cc_' + b.dataset.cc); });
   const nx = nextEv();
   {
     $('#cal-h').textContent = t('cal_h', CALY); $('#cal-meta').textContent = t('cal_meta');
@@ -550,6 +590,7 @@ function renderCalendar() {
         <td>${catChip(e.cat, e.lvl)}</td><td>${sfChip(e.surf)}</td><td>${favs}</td></tr>`;
     });
     if (calCat === 'C' && !CH.length) h += `<tr><td colspan="5" class="z">${t('cal_noC')}</td></tr>`;
+    if (!rows.length && calCat !== 'C') h += `<tr><td colspan="5" class="z" style="white-space:normal">${t('cal_none')}</td></tr>`;
     $('#cal-t').innerHTML = h;
     const ev = rows;
     const chNote = CH.length && ['all', 'C'].includes(calCat) ? '<br><span class="meta">' + t('cal_chNote', dfmt(CH[CH.length - 1].d), D.cal.ch_asof ? dfmt(D.cal.ch_asof) : '') + '</span>' : '';
@@ -565,7 +606,7 @@ function renderSurface() {
   const srk = {}; topOn(SF, R.length).forEach((r, k) => srk[r.id] = k + 1);
   const gain = r => r.rank - srk[r.id];                 // places gagnées (ou perdues) sur cette surface
   const sp = r => { const d = gain(r); return `<td class="n ${d >= 3 ? 'up' : d <= -3 ? 'down' : 'z'}">${d > 0 ? '+' : ''}${d}</td>`; };
-  $('#sf-top').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th><th>${t('h_srt')}</th><th>${t('h_all')}</th><th>${t('h_allrk')}</th><th>${t('h_spec')}</th><th>ATP</th></tr>` +
+  $('#sf-top').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th><th>${t('h_srt')}</th><th>${t('h_all')}</th><th>${t('h_allrk')}</th><th>${t('h_spec')}</th><th>${TL}</th></tr>` +
     topOn(SF, 50).map((r, k) => `<tr><td class="n">${k + 1}</td><td><b>${plink(r.rank - 1)}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td>
       <td class="n b">${fmt(r[SF])}</td><td class="n">${fmt(r.note)}</td><td class="n"><a class="ql" href="#rating">${r.rank}</a></td>${sp(r)}<td class="n">${r.atp ?? ''}</td></tr>`).join('');
   $('#sf-spec').innerHTML = [...R.slice(0, 100)].sort((a, b) => gain(b) - gain(a)).slice(0, 8)
@@ -578,7 +619,7 @@ function renderSurface() {
   $('#sf-titles').innerHTML = tl.length ? tl.map(([n, v]) => `<tr><td><b>${plink(v.i, n)}</b></td><td class="n b">${v.n}</td></tr>`).join('') : `<tr><td>${t('sf_none')}</td></tr>`;
 }
 function renderHomeNext() {
-  $('#home-next').innerHTML = D.cal.events.filter(e => e.d >= today).slice(0, 5).map(e =>
+  $('#home-next').innerHTML = (D.cal.events.length ? '' : `<tr><td class="z" style="white-space:normal">${t('cal_none')}</td></tr>`) + D.cal.events.filter(e => e.d >= today).slice(0, 5).map(e =>
     `<tr><td class="${e.sure ? '' : 'tbc'}">${e.sure ? dfmt(e.d) : monthName(e.d)}</td><td><a class="ql" href="#calendar">${t('tour', e.name)}</a></td><td>${sfChip(e.surf)}</td></tr>`).join('');
   $('#r-sflinks').innerHTML = t('sf_links') + ' ' + ['hard', 'clay', 'grass'].map(k => `<a href="#surface/${k}">${t(k)}</a>`).join(' · ');
 }
@@ -632,7 +673,7 @@ const PCACHE = {};
 function playerData(i, cb) {                       // site publié : un petit fichier par joueur, chargé à la demande
   if (D.players) return cb(D.players[i]);
   if (PCACHE[i]) return cb(PCACHE[i]);
-  fetch(`data/p/${R[i].id}.json`).then(r => r.json()).then(j => { PCACHE[i] = j; if (PL === i) cb(j); }).catch(() => {});
+  fetch(`data/${CIRCUIT === 'wta' ? 'w' : 'p'}/${R[i].id}.json`).then(r => r.json()).then(j => { PCACHE[i] = j; if (PL === i) cb(j); }).catch(() => {});
 }
 function renderPlayer() {
   const i = PL, I = R[i], nr = L === 'fr' ? 'n°' : '#';
@@ -743,7 +784,7 @@ function renderCompare(a, b, sf) {
   if (a === b) { $('#ch').innerHTML = ''; return; }
   if (!D.h2h) {                                   // face-à-face chargé à la demande (fichier séparé)
     $('#ch').innerHTML = '<div class="h2hsub" style="margin:30px 0">…</div>';
-    if (!window._h2hLoading) { window._h2hLoading = fetch('data/h2h.json').then(r => r.json()).then(j => { D.h2h = j; renderPredictor(); }).catch(() => {}); }
+    if (!window._h2hLoading) { window._h2hLoading = fetch(CIRCUIT === 'wta' ? 'data/h2h_wta.json' : 'data/h2h.json').then(r => r.json()).then(j => { D.h2h = j; renderPredictor(); }).catch(() => {}); }
     return;
   }
   const key = Math.min(a, b) + '-' + Math.max(a, b), list = (D.h2h[key] || []).slice().reverse();
@@ -765,6 +806,14 @@ function renderCompare(a, b, sf) {
 
 function renderMethod() {
   document.querySelectorAll('[data-mlang]').forEach(b => b.style.display = b.dataset.mlang === L ? '' : 'none');
+  // wta.html : encadré WTA en tête de la Méthodologie (le détail qui suit porte sur le circuit masculin)
+  let wn = document.getElementById('m-wta');
+  if (CIRCUIT === 'wta') {
+    if (!wn) { wn = document.createElement('div'); wn.id = 'm-wta'; wn.className = 'wnote'; $('#p-method').prepend(wn); }
+    wn.innerHTML = L === 'fr'
+      ? `<b>Circuit WTA.</b> Même méthode et mêmes réglages que pour le circuit masculin : nous les avons vérifiés sur les seules données WTA, et aucune variante ne faisait mieux. Backtest 2023-${String(F.last_year).slice(2)} : <b>${pct(F.main.seeded)}</b> de bonnes favorites sur ${num(F.main.n)} matchs, contre ${pct(F.main.atp)} pour le classement WTA ; Grands Chelems : ${pct(F.slams.seeded)} (classement WTA : ${pct(F.slams.atp)}). La gagnante était dans notre top 3 avant ${F.top3.in_top3} des ${F.top3.n} derniers Grands Chelems.<br><span class="meta">Le détail ci-dessous (chiffres compris) porte sur le circuit masculin. Limite propre à la WTA : notre source ne contient pas les WTA 125 ni l'ITF, d'où un classement d'environ ${R.length} joueuses fiables (15 matchs ou plus sur 12 mois).</span>`
+      : `<b>WTA tour.</b> Same method and same settings as for the men's tour: we checked them on WTA data only, and no variant did better. Backtest 2023-${String(F.last_year).slice(2)}: <b>${pct(F.main.seeded)}</b> correct favourites over ${num(F.main.n)} matches, vs ${pct(F.main.atp)} for the WTA ranking; Grand Slams: ${pct(F.slams.seeded)} (WTA ranking: ${pct(F.slams.atp)}). The champion was in our pre-tournament top 3 at ${F.top3.in_top3} of the last ${F.top3.n} Grand Slams.<br><span class="meta">The details below (figures included) are for the men's tour. A WTA-specific limit: our source does not include WTA 125 or ITF events, hence a ranking of about ${R.length} reliable players (15+ matches in 12 months).</span>`;
+  } 
   const blk = document.querySelector(`[data-mlang="${L}"]`);
   // courbe : écart de note -> chance de gagner
   const W = 620, H = 230, x0 = 50, y0 = 195, xs = (W - x0 - 20) / 30, ys = (y0 - 15) / 50;
@@ -831,7 +880,7 @@ let TOUR = null;
 // ---- encadré d'avis (formulaire Tally ; la page et la langue sont transmises en champs cachés)
 const FB = '__FB__';
 function fbUrl(kind) {
-  const page = (location.hash || '#home').slice(1);
+  const page = (CIRCUIT === 'wta' ? 'wta/' : '') + (location.hash || '#home').slice(1);   // avis venus de la WTA repérables
   return `https://tally.so/${kind}/${FB}?page=${encodeURIComponent(page)}&lang=${L}` + (kind === 'embed' ? '&hideTitle=1&transparentBackground=1' : '');
 }
 function fbToggle(force) {
@@ -875,27 +924,35 @@ window.onhashchange = route;
 renderAll(); route();
 </script></body></html>"""
 
-def page(data_obj, files=True):
-    return (HTML.replace("__FAV__", logo.favicon_links(files)).replace("__LOGO__", logo.icon(bg=None))
-                .replace("__FB__", FEEDBACK_FORM).replace("__M_CSS__", methodo.CSS).replace("__M_EN__", methodo.render("en", facts))
-                .replace("__M_FR__", methodo.render("fr", facts))
-                .replace("__TCSS__", T_CSS).replace("__TJS__", T_JS).replace("__FACTS__", json.dumps(facts))
-                .replace("__TOUR__", tour).replace("__DATA__", json.dumps(data_obj)))
+def page(data_obj, facts, tour, circ="atp", files=True):
+    h = (HTML.replace("__FAV__", logo.favicon_links(files)).replace("__LOGO__", logo.icon(bg=None))
+             .replace("__FB__", FEEDBACK_FORM).replace("__M_CSS__", methodo.CSS).replace("__M_EN__", methodo.render("en", facts_atp))
+             .replace("__M_FR__", methodo.render("fr", facts_atp)).replace("__CIRCUIT__", circ)
+             .replace("__TCSS__", T_CSS).replace("__TJS__", T_JS).replace("__FACTS__", json.dumps(facts))
+             .replace("__TOUR__", tour).replace("__DATA__", json.dumps(data_obj)))
+    if circ == "wta":
+        h = h.replace("<title>Seeded — tennis by the numbers</title>", "<title>Seeded WTA — tennis by the numbers</title>")
+        for a, b in WTA_THEME.items():
+            h = h.replace(a, b).replace(a.upper(), b).replace(a.replace("#", "%23"), b.replace("#", "%23"))
+    return h
 
 
-# 1) version publiée : face-à-face à part (plus léger au chargement)
 (SITE / "data").mkdir(exist_ok=True)
-(SITE / "data" / "h2h.json").write_text(json.dumps(site_data["h2h"]))
-(SITE / "data" / "p").mkdir(exist_ok=True)
-for f in (SITE / "data" / "p").glob("*.json"):
-    f.unlink()
-for p in site_data["players"]:
-    (SITE / "data" / "p" / f"{p['id']}.json").write_text(json.dumps(p))
-light = {k: v for k, v in site_data.items() if k not in ("h2h", "players")}
-(SITE / "index.html").write_text(page(light), encoding="utf-8")
+for circ, html_name, pdir, h2h_name, alone in (("atp", "index.html", "p", "h2h.json", "seeded-standalone.html"),
+                                                ("wta", "wta.html", "w", "h2h_wta.json", "seeded-standalone-wta.html")):
+    site_data, facts, tour = load_circuit(circ)
+    # 1) version publiée : face-à-face et pages joueurs à part (chargés à la demande)
+    (SITE / "data" / h2h_name).write_text(json.dumps(site_data["h2h"]))
+    (SITE / "data" / pdir).mkdir(exist_ok=True)
+    for f in (SITE / "data" / pdir).glob("*.json"):
+        f.unlink()
+    for p in site_data["players"]:
+        (SITE / "data" / pdir / f"{p['id']}.json").write_text(json.dumps(p))
+    light = {k: v for k, v in site_data.items() if k not in ("h2h", "players")}
+    (SITE / html_name).write_text(page(light, facts, tour, circ), encoding="utf-8")
+    # 2) version tout-en-un (fichier unique, pour l'ouvrir sans serveur)
+    (OUT / alone).write_text(page(site_data, facts, tour, circ, files=False), encoding="utf-8")
 (SITE / ".nojekyll").write_text("")
-# 2) version tout-en-un (fichier unique, pour l'ouvrir sans serveur)
-(OUT / "seeded-standalone.html").write_text(page(site_data, files=False), encoding="utf-8")
 for f in ("favicon-32.png", "apple-touch-icon.png", "favicon.svg"):       # icônes d'onglet / d'écran d'accueil
     shutil.copy(ROOT / "assets" / f, SITE / f)
-print("Site écrit :", SITE / "index.html", "| version autonome :", OUT / "seeded-standalone.html")
+print("Site écrit :", SITE / "index.html", "+", SITE / "wta.html", "| versions autonomes dans", OUT)
