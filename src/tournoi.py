@@ -24,18 +24,19 @@ Démo sur un tournoi passé (rejoué "comme si") :
        --surface Hard --bo 5 --id 2026-580 --tours-joues R128
 """
 
-import argparse, html, json, re, unicodedata
+import argparse, html, json, os, re, unicodedata
 from datetime import datetime
 from difflib import get_close_matches
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from seeded_model import load_matches, build_bracket, simulate_draw, clean_minutes
+from seeded_model import load_matches, build_bracket, simulate_draw, clean_minutes, bo3_to_bo5
 from seeded_rating import SeededRating, to_100
 from page_tournoi import build_page
 
 from paths import DATA, OUT, STATE, TOURNAMENTS
+import archive
 ROUNDS = ["R128", "R64", "R32", "R16", "QF", "SF", "F"]
 CIRCUIT = "atp"        # "wta" avec --circuit wta (fichiers *_wta.csv)
 
@@ -245,7 +246,8 @@ def main():
     else:
         sim["delta"] = np.nan
     hist[str(n_played)] = dict(zip(sim.player, sim.Titre.round(3)))
-    hist_path.write_text(json.dumps(hist))
+    if not os.environ.get("SEEDED_NO_HIST"):                   # outil de démo des archives : ne touche pas à l'historique
+        hist_path.write_text(json.dumps(hist))
 
     sim = sim.sort_values(["alive", "Titre"], ascending=[False, False]).reset_index(drop=True)
     etat = ("before the first ball" if n_played == 0 else
@@ -257,6 +259,21 @@ def main():
     meta = {"nom": a.nom, "nom_l": {"en": a.nom, "fr": nom_fr}, "maj_iso": datetime.now().isoformat(timespec="minutes"),
             "maj": datetime.now().strftime("%d %b %Y, %H:%M"), "etat": etat, "n_played": n_played,
             "last_round": last_round, "sims": a.sims}
+
+    # ---- point 16 : archives publiques (vraies prédictions seulement ; jamais pour un tournoi rejoué en démo)
+    arch_env = os.environ.get("SEEDED_ARCHIVE")
+    played_r = list(zip(raw["round"], raw.winner_id, raw.loser_id)) if tid and n_played else []
+    names_all = (dict(zip(raw.winner_id, raw.winner_name)) | dict(zip(raw.loser_id, raw.loser_name)) if tid and n_played else {}) \
+        | dict(zip(sim.id, sim.player))
+    if arch_env or not a.tours_joues:
+        arch_path = Path(arch_env) if arch_env else STATE / f"archive{'_wta' if CIRCUIT == 'wta' else ''}.json"
+        by_title = sim.sort_values("Titre", ascending=False)
+        archive.update(arch_path, slug(a.nom) + SUFX,
+                       {"name": a.nom, "name_fr": nom_fr, "circuit": CIRCUIT, "surface": a.surface, "bo": a.bo, "year": year},
+                       bracket, played_r, names_all,
+                       lambda x, y: (lambda p_: float(bo3_to_bo5(np.array([p_]))[0]) if a.bo == 5 else p_)(
+                           1.0 / (1.0 + 10 ** ((model.rating(y, a.surface) - model.rating(x, a.surface)) / 400.0))),   # comme le simulateur
+                       [[str(n), round(float(t_), 1)] for n, t_ in zip(by_title.player, by_title.Titre)], n_played)
 
     cols = ["player", "ioc", "atp", "elo"] + [c for c in ["R64", "R32", "R16", "QF", "SF", "F", "Titre"]
                                                if c in sim.columns] + ["delta", "alive"]

@@ -1,0 +1,1483 @@
+{
+"tournaments": {
+"australian-open-2026-wta": {
+"name": "Australian Open 2026",
+"name_fr": "Open d'Australie 2026",
+"circuit": "wta",
+"surface": "Hard",
+"bo": 3,
+"year": 2026,
+"snaps": [
+{
+"stage": "before",
+"n_played": 0,
+"top": [
+[
+"Aryna Sabalenka",
+29.0
+],
+[
+"Elena Rybakina",
+16.8
+],
+[
+"Iga Swiatek",
+10.3
+],
+[
+"Amanda Anisimova",
+7.9
+],
+[
+"Coco Gauff",
+5.8
+],
+[
+"Mirra Andreeva",
+5.6
+],
+[
+"Jessica Pegula",
+3.6
+],
+[
+"Marta Kostyuk",
+3.4
+],
+[
+"Victoria Mboko",
+2.6
+],
+[
+"Madison Keys",
+2.4
+]
+]
+},
+{
+"stage": "R128",
+"n_played": 64,
+"top": [
+[
+"Aryna Sabalenka",
+30.6
+],
+[
+"Elena Rybakina",
+16.0
+],
+[
+"Iga Swiatek",
+9.0
+],
+[
+"Amanda Anisimova",
+8.1
+],
+[
+"Mirra Andreeva",
+6.0
+],
+[
+"Coco Gauff",
+5.7
+],
+[
+"Jessica Pegula",
+4.2
+],
+[
+"Victoria Mboko",
+3.0
+],
+[
+"Karolina Muchova",
+2.9
+],
+[
+"Elina Svitolina",
+2.4
+]
+]
+},
+{
+"stage": "R64",
+"n_played": 96,
+"top": [
+[
+"Aryna Sabalenka",
+29.5
+],
+[
+"Elena Rybakina",
+16.1
+],
+[
+"Iga Swiatek",
+9.9
+],
+[
+"Amanda Anisimova",
+8.6
+],
+[
+"Jessica Pegula",
+6.4
+],
+[
+"Coco Gauff",
+5.9
+],
+[
+"Mirra Andreeva",
+5.8
+],
+[
+"Elina Svitolina",
+3.1
+],
+[
+"Victoria Mboko",
+3.0
+],
+[
+"Jasmine Paolini",
+2.3
+]
+]
+},
+{
+"stage": "R32",
+"n_played": 112,
+"top": [
+[
+"Aryna Sabalenka",
+28.5
+],
+[
+"Iga Swiatek",
+16.1
+],
+[
+"Elena Rybakina",
+15.4
+],
+[
+"Amanda Anisimova",
+8.5
+],
+[
+"Mirra Andreeva",
+5.6
+],
+[
+"Jessica Pegula",
+5.6
+],
+[
+"Coco Gauff",
+5.2
+],
+[
+"Elina Svitolina",
+3.8
+],
+[
+"Victoria Mboko",
+3.5
+],
+[
+"Iva Jovic",
+3.0
+]
+]
+},
+{
+"stage": "R16",
+"n_played": 120,
+"top": [
+[
+"Aryna Sabalenka",
+35.4
+],
+[
+"Elena Rybakina",
+17.1
+],
+[
+"Iga Swiatek",
+12.9
+],
+[
+"Jessica Pegula",
+8.8
+],
+[
+"Coco Gauff",
+8.0
+],
+[
+"Elina Svitolina",
+7.5
+],
+[
+"Amanda Anisimova",
+6.7
+],
+[
+"Iva Jovic",
+3.5
+],
+[
+"Linda Noskova",
+0.1
+],
+[
+"Xiyu Wang",
+0.0
+]
+]
+},
+{
+"stage": "QF",
+"n_played": 124,
+"top": [
+[
+"Aryna Sabalenka",
+43.8
+],
+[
+"Elena Rybakina",
+29.3
+],
+[
+"Jessica Pegula",
+13.5
+],
+[
+"Elina Svitolina",
+13.3
+],
+[
+"Linda Noskova",
+0.1
+],
+[
+"Xiyu Wang",
+0.0
+],
+[
+"Ajla Tomljanovic",
+0.0
+],
+[
+"Venus Williams",
+0.0
+],
+[
+"Sloane Stephens",
+0.0
+],
+[
+"Madison Keys",
+0.0
+]
+]
+},
+{
+"stage": "SF",
+"n_played": 126,
+"top": [
+[
+"Aryna Sabalenka",
+58.9
+],
+[
+"Elena Rybakina",
+41.1
+],
+[
+"Linda Noskova",
+0.1
+],
+[
+"Xiyu Wang",
+0.0
+],
+[
+"Venus Williams",
+0.0
+],
+[
+"Ajla Tomljanovic",
+0.0
+],
+[
+"Sloane Stephens",
+0.0
+],
+[
+"Sorana Cirstea",
+0.0
+],
+[
+"Anastasia Pavlyuchenkova",
+0.0
+],
+[
+"Karolina Pliskova",
+0.0
+]
+]
+}
+],
+"winner": "Elena Rybakina"
+}
+},
+"matches": {
+"australian-open-2026-wta|R128|214981~215219": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Elena Rybakina",
+"b": "Kaja Juvan",
+"pa": 0.944,
+"w": "a"
+},
+"australian-open-2026-wta|R128|203530~219875": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Varvara Gracheva",
+"b": "Viktorija Golubic",
+"pa": 0.4806,
+"w": "a"
+},
+"australian-open-2026-wta|R128|233741~238184": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Tereza Valentova",
+"b": "Maya Joint",
+"pa": 0.4984,
+"w": "a"
+},
+"australian-open-2026-wta|R128|215138~222258": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Linda Fruhvirtova",
+"b": "Lulu Sun",
+"pa": 0.2754,
+"w": "a"
+},
+"australian-open-2026-wta|R128|210722~222290": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Elise Mertens",
+"b": "Lanlana Tararudee",
+"pa": 0.7308,
+"w": "a"
+},
+"australian-open-2026-wta|R128|220416~221333": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Moyuka Uchijima",
+"b": "Solana Sierra",
+"pa": 0.3633,
+"w": "a"
+},
+"australian-open-2026-wta|R128|214082~223360": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Nikola Bartunkova",
+"b": "Daria Kasatkina",
+"pa": 0.1958,
+"w": "a"
+},
+"australian-open-2026-wta|R128|202505~211107": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Belinda Bencic",
+"b": "Katie Boulter",
+"pa": 0.775,
+"w": "a"
+},
+"australian-open-2026-wta|R128|206294~216347": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Iga Swiatek",
+"b": "Yue Yuan",
+"pa": 0.9302,
+"w": "a"
+},
+"australian-open-2026-wta|R128|213631~213887": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Marie Bouzkova",
+"b": "Renata Zarazua",
+"pa": 0.7491,
+"w": "a"
+},
+"australian-open-2026-wta|R128|214939~222661": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Anna Kalinskaya",
+"b": "Sonay Kartal",
+"pa": 0.5675,
+"w": "a"
+},
+"australian-open-2026-wta|R128|211814~220714": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Julia Grabher",
+"b": "Elisabetta Cocciaretto",
+"pa": 0.0745,
+"w": "a"
+},
+"australian-open-2026-wta|R128|213666~214040": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Maddison Inglis",
+"b": "Kimberly Birrell",
+"pa": 0.1037,
+"w": "a"
+},
+"australian-open-2026-wta|R128|201696~214643": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Laura Siegemund",
+"b": "Liudmila Samsonova",
+"pa": 0.3607,
+"w": "a"
+},
+"australian-open-2026-wta|R128|211768~222045": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Naomi Osaka",
+"b": "Antonia Ruzic",
+"pa": 0.8039,
+"w": "a"
+},
+"australian-open-2026-wta|R128|201514~220332": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Sorana Cirstea",
+"b": "Eva Lys",
+"pa": 0.6075,
+"w": "a"
+},
+"australian-open-2026-wta|R128|202468~220435": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Jessica Pegula",
+"b": "Anastasia Zakharova",
+"pa": 0.9192,
+"w": "a"
+},
+"australian-open-2026-wta|R128|215306~220520": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Mccartney Kessler",
+"b": "Emiliana Arango",
+"pa": 0.7582,
+"w": "a"
+},
+"australian-open-2026-wta|R128|221407~230870": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Oksana Selekhmeteva",
+"b": "Ella Seidel",
+"pa": 0.3148,
+"w": "a"
+},
+"australian-open-2026-wta|R128|201610~211651": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Paula Badosa",
+"b": "Zarina Diyas",
+"pa": 0.9223,
+"w": "a"
+},
+"australian-open-2026-wta|R128|201619~220716": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Madison Keys",
+"b": "220716",
+"pa": 0.9814,
+"w": "a"
+},
+"australian-open-2026-wta|R128|221909~239383": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Ashlyn Krueger",
+"b": "Sara Bejlek",
+"pa": 0.6079,
+"w": "a"
+},
+"australian-open-2026-wta|R128|201585~201662": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Karolina Pliskova",
+"b": "Sloane Stephens",
+"pa": 0.631,
+"w": "a"
+},
+"australian-open-2026-wta|R128|220367~222145": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Janice Tjen",
+"b": "Leylah Fernandez",
+"pa": 0.3124,
+"w": "a"
+},
+"australian-open-2026-wta|R128|215899~216153": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Amanda Anisimova",
+"b": "Simona Waltert",
+"pa": 0.9208,
+"w": "a"
+},
+"australian-open-2026-wta|R128|211701~215910": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Katerina Siniakova",
+"b": "Panna Udvardy",
+"pa": 0.8848,
+"w": "a"
+},
+"australian-open-2026-wta|R128|213550~220548": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Peyton Stearns",
+"b": "Sofia Kenin",
+"pa": 0.3866,
+"w": "a"
+},
+"australian-open-2026-wta|R128|213583~238075": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Petra Marcinko",
+"b": "Tatjana Maria",
+"pa": 0.4855,
+"w": "a"
+},
+"australian-open-2026-wta|R128|211843~216016": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Xiyu Wang",
+"b": "Anhelina Kalinina",
+"pa": 0.4538,
+"void": true
+},
+"australian-open-2026-wta|R128|211533~211685": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Jelena Ostapenko",
+"b": "Rebecca Sramkova",
+"pa": 0.6259,
+"w": "a"
+},
+"australian-open-2026-wta|R128|221985~222328": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Linda Noskova",
+"b": "Darja Semenistaja",
+"pa": 0.9553,
+"w": "a"
+},
+"australian-open-2026-wta|R128|201533~223194": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Taylah Preston",
+"b": "Shuai Zhang",
+"pa": 0.545,
+"w": "a"
+},
+"australian-open-2026-wta|R128|214544~239456": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Aryna Sabalenka",
+"b": "Tiantsoa Sarah Rakotomanga Rajaonah",
+"pa": 0.9648,
+"w": "a"
+},
+"australian-open-2026-wta|R128|201499~222296": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Zhuoxuan Bai",
+"b": "Anastasia Pavlyuchenkova",
+"pa": 0.2437,
+"w": "a"
+},
+"australian-open-2026-wta|R128|215480~215713": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Anastasia Potapova",
+"b": "Suzan Lamens",
+"pa": 0.6999,
+"w": "a"
+},
+"australian-open-2026-wta|R128|216566~221054": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Emma Raducanu",
+"b": "Mananchaya Sawangkaew",
+"pa": 0.7213,
+"w": "a"
+},
+"australian-open-2026-wta|R128|239475~263644": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Victoria Mboko",
+"b": "Emerson Jones",
+"pa": 0.9248,
+"w": "a"
+},
+"australian-open-2026-wta|R128|216083~221124": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Caty McNally",
+"b": "Himeno Sakatsume",
+"pa": 0.3803,
+"w": "a"
+},
+"australian-open-2026-wta|R128|213646~220704": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Clara Tauson",
+"b": "Dalma Galfi",
+"pa": 0.7914,
+"w": "a"
+},
+"australian-open-2026-wta|R128|215571~221236": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Polina Kudermetova",
+"b": "Guiomar Maristany Zuleta De Reales",
+"pa": 0.6605,
+"w": "a"
+},
+"australian-open-2026-wta|R128|220465~260300": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Iva Jovic",
+"b": "Katie Volynets",
+"pa": 0.8782,
+"w": "a"
+},
+"australian-open-2026-wta|R128|211880~222233": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Priscilla Hon",
+"b": "Marina Stakusic",
+"pa": 0.4735,
+"w": "a"
+},
+"australian-open-2026-wta|R128|205925~211148": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Jasmine Paolini",
+"b": "Aliaksandra Sasnovich",
+"pa": 0.7438,
+"w": "a"
+},
+"australian-open-2026-wta|R128|211684~220662": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Magdalena Frech",
+"b": "Veronika Erjavec",
+"pa": 0.8365,
+"w": "a"
+},
+"australian-open-2026-wta|R128|201709~206242": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Yulia Putintseva",
+"b": "Beatriz Haddad Maia",
+"pa": 0.4716,
+"w": "a"
+},
+"australian-open-2026-wta|R128|216146~221039": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Elsa Jacquemot",
+"b": "Marta Kostyuk",
+"pa": 0.0907,
+"w": "a"
+},
+"australian-open-2026-wta|R128|206420~220309": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Zeynep Sonmez",
+"b": "Ekaterina Alexandrova",
+"pa": 0.1924,
+"w": "a"
+},
+"australian-open-2026-wta|R128|214388~216097": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Anna Bondar",
+"b": "Elizabeth Mandlik",
+"pa": 0.7986,
+"w": "a"
+},
+"australian-open-2026-wta|R128|202494~213710": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Elina Svitolina",
+"b": "Cristina Bucsa",
+"pa": 0.8128,
+"w": "a"
+},
+"australian-open-2026-wta|R128|215936~221626": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Linda Klimovicova",
+"b": "Francesca Jones",
+"pa": 0.7137,
+"w": "a"
+},
+"australian-open-2026-wta|R128|206252~223670": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Diana Shnaider",
+"b": "Barbora Krejcikova",
+"pa": 0.5081,
+"w": "a"
+},
+"australian-open-2026-wta|R128|215020~221883": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Talia Gibson",
+"b": "Anna Blinkova",
+"pa": 0.25,
+"w": "a"
+},
+"australian-open-2026-wta|R128|202499~259799": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Mirra Andreeva",
+"b": "Donna Vekic",
+"pa": 0.8845,
+"w": "a"
+},
+"australian-open-2026-wta|R128|206289~206417": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Maria Sakkari",
+"b": "Leolia Jeanjean",
+"pa": 0.8949,
+"w": "a"
+},
+"australian-open-2026-wta|R128|211817~215035": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Elena Gabriela Ruse",
+"b": "Dayana Yastremska",
+"pa": 0.2948,
+"w": "a"
+},
+"australian-open-2026-wta|R128|201548~263857": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Ajla Tomljanovic",
+"b": "Yuliia Starodubtseva",
+"pa": 0.7312,
+"w": "a"
+},
+"australian-open-2026-wta|R128|215872~221103": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Coco Gauff",
+"b": "Kamilla Rakhimova",
+"pa": 0.9226,
+"w": "a"
+},
+"australian-open-2026-wta|R128|200748~215337": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Olga Danilovic",
+"b": "Venus Williams",
+"pa": 0.6942,
+"w": "a"
+},
+"australian-open-2026-wta|R128|203501~221024": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Hailey Baptiste",
+"b": "Taylor Townsend",
+"pa": 0.2462,
+"w": "a"
+},
+"australian-open-2026-wta|R128|204411~222601": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Storm Hunter",
+"b": "Jessica Bouzas Maneiro",
+"pa": 0.2186,
+"w": "a"
+},
+"australian-open-2026-wta|R128|211713~214096": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Karolina Muchova",
+"b": "Jaqueline Cristian",
+"pa": 0.7618,
+"w": "a"
+},
+"australian-open-2026-wta|R128|219917~223253": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Alycia Parks",
+"b": "Alexandra Eala",
+"pa": 0.2755,
+"w": "a"
+},
+"australian-open-2026-wta|R128|202663~215613": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Magda Linette",
+"b": "Emma Navarro",
+"pa": 0.4416,
+"w": "a"
+},
+"australian-open-2026-wta|R128|215785~215983": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R128",
+"a": "Ann Li",
+"b": "Camila Osorio",
+"pa": 0.5093,
+"w": "a"
+},
+"australian-open-2026-wta|R64|214981~219875": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Elena Rybakina",
+"b": "Varvara Gracheva",
+"pa": 0.9327,
+"w": "a"
+},
+"australian-open-2026-wta|R64|222258~238184": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Tereza Valentova",
+"b": "Linda Fruhvirtova",
+"pa": 0.7703,
+"w": "a"
+},
+"australian-open-2026-wta|R64|210722~220416": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Elise Mertens",
+"b": "Moyuka Uchijima",
+"pa": 0.8426,
+"w": "a"
+},
+"australian-open-2026-wta|R64|202505~223360": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Nikola Bartunkova",
+"b": "Belinda Bencic",
+"pa": 0.1086,
+"w": "a"
+},
+"australian-open-2026-wta|R64|213631~216347": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Iga Swiatek",
+"b": "Marie Bouzkova",
+"pa": 0.7976,
+"w": "a"
+},
+"australian-open-2026-wta|R64|211814~214939": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Anna Kalinskaya",
+"b": "Julia Grabher",
+"pa": 0.9459,
+"w": "a"
+},
+"australian-open-2026-wta|R64|201696~213666": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Maddison Inglis",
+"b": "Laura Siegemund",
+"pa": 0.1598,
+"w": "a"
+},
+"australian-open-2026-wta|R64|201514~211768": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Naomi Osaka",
+"b": "Sorana Cirstea",
+"pa": 0.6209,
+"w": "a"
+},
+"australian-open-2026-wta|R64|202468~220520": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Jessica Pegula",
+"b": "Mccartney Kessler",
+"pa": 0.7539,
+"w": "a"
+},
+"australian-open-2026-wta|R64|211651~221407": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Oksana Selekhmeteva",
+"b": "Paula Badosa",
+"pa": 0.1386,
+"w": "a"
+},
+"australian-open-2026-wta|R64|201619~221909": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Madison Keys",
+"b": "Ashlyn Krueger",
+"pa": 0.7993,
+"w": "a"
+},
+"australian-open-2026-wta|R64|201662~222145": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Karolina Pliskova",
+"b": "Janice Tjen",
+"pa": 0.4613,
+"w": "a"
+},
+"australian-open-2026-wta|R64|211701~216153": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Amanda Anisimova",
+"b": "Katerina Siniakova",
+"pa": 0.7973,
+"w": "a"
+},
+"australian-open-2026-wta|R64|220548~238075": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Peyton Stearns",
+"b": "Petra Marcinko",
+"pa": 0.5677,
+"w": "a"
+},
+"australian-open-2026-wta|R64|211533~216133": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Xin Yu Wang",
+"b": "Jelena Ostapenko",
+"pa": 0.486,
+"w": "a"
+},
+"australian-open-2026-wta|R64|222328~223194": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Linda Noskova",
+"b": "Taylah Preston",
+"pa": 0.5654,
+"w": "a"
+},
+"australian-open-2026-wta|R64|214544~222296": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Aryna Sabalenka",
+"b": "Zhuoxuan Bai",
+"pa": 0.9672,
+"w": "a"
+},
+"australian-open-2026-wta|R64|215713~221054": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Anastasia Potapova",
+"b": "Emma Raducanu",
+"pa": 0.3612,
+"w": "a"
+},
+"australian-open-2026-wta|R64|216083~239475": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Victoria Mboko",
+"b": "Caty McNally",
+"pa": 0.8417,
+"w": "a"
+},
+"australian-open-2026-wta|R64|220704~221236": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Clara Tauson",
+"b": "Polina Kudermetova",
+"pa": 0.8121,
+"w": "a"
+},
+"australian-open-2026-wta|R64|211880~260300": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Iva Jovic",
+"b": "Priscilla Hon",
+"pa": 0.8655,
+"w": "a"
+},
+"australian-open-2026-wta|R64|211148~211684": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Jasmine Paolini",
+"b": "Magdalena Frech",
+"pa": 0.747,
+"w": "a"
+},
+"australian-open-2026-wta|R64|201709~221039": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Yulia Putintseva",
+"b": "Elsa Jacquemot",
+"pa": 0.5357,
+"w": "a"
+},
+"australian-open-2026-wta|R64|214388~220309": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Zeynep Sonmez",
+"b": "Anna Bondar",
+"pa": 0.5965,
+"w": "a"
+},
+"australian-open-2026-wta|R64|202494~221626": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Elina Svitolina",
+"b": "Linda Klimovicova",
+"pa": 0.7863,
+"w": "a"
+},
+"australian-open-2026-wta|R64|221883~223670": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Diana Shnaider",
+"b": "Talia Gibson",
+"pa": 0.8495,
+"w": "a"
+},
+"australian-open-2026-wta|R64|206289~259799": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Mirra Andreeva",
+"b": "Maria Sakkari",
+"pa": 0.8614,
+"w": "a"
+},
+"australian-open-2026-wta|R64|201548~211817": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Elena Gabriela Ruse",
+"b": "Ajla Tomljanovic",
+"pa": 0.4682,
+"w": "a"
+},
+"australian-open-2026-wta|R64|215337~221103": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Coco Gauff",
+"b": "Olga Danilovic",
+"pa": 0.8297,
+"w": "a"
+},
+"australian-open-2026-wta|R64|204411~221024": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Hailey Baptiste",
+"b": "Storm Hunter",
+"pa": 0.6521,
+"w": "a"
+},
+"australian-open-2026-wta|R64|214096~219917": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Karolina Muchova",
+"b": "Alycia Parks",
+"pa": 0.9103,
+"w": "a"
+},
+"australian-open-2026-wta|R64|202663~215983": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R64",
+"a": "Magda Linette",
+"b": "Ann Li",
+"pa": 0.5634,
+"w": "a"
+},
+"australian-open-2026-wta|R32|214981~238184": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R32",
+"a": "Elena Rybakina",
+"b": "Tereza Valentova",
+"pa": 0.8391,
+"w": "a"
+},
+"australian-open-2026-wta|R32|210722~223360": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R32",
+"a": "Elise Mertens",
+"b": "Nikola Bartunkova",
+"pa": 0.7316,
+"w": "a"
+},
+"australian-open-2026-wta|R32|214939~216347": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R32",
+"a": "Iga Swiatek",
+"b": "Anna Kalinskaya",
+"pa": 0.7401,
+"w": "a"
+},
+"australian-open-2026-wta|R32|211768~213666": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R32",
+"a": "Maddison Inglis",
+"b": "Naomi Osaka",
+"pa": 0.0733,
+"w": "a"
+},
+"australian-open-2026-wta|R32|202468~221407": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R32",
+"a": "Jessica Pegula",
+"b": "Oksana Selekhmeteva",
+"pa": 0.8812,
+"w": "a"
+},
+"australian-open-2026-wta|R32|201619~201662": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R32",
+"a": "Madison Keys",
+"b": "Karolina Pliskova",
+"pa": 0.7196,
+"w": "a"
+},
+"australian-open-2026-wta|R32|216153~220548": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R32",
+"a": "Amanda Anisimova",
+"b": "Peyton Stearns",
+"pa": 0.8881,
+"w": "a"
+},
+"australian-open-2026-wta|R32|216133~222328": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R32",
+"a": "Xin Yu Wang",
+"b": "Linda Noskova",
+"pa": 0.3287,
+"w": "a"
+},
+"australian-open-2026-wta|R32|214544~215713": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R32",
+"a": "Aryna Sabalenka",
+"b": "Anastasia Potapova",
+"pa": 0.9051,
+"w": "a"
+},
+"australian-open-2026-wta|R32|220704~239475": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R32",
+"a": "Victoria Mboko",
+"b": "Clara Tauson",
+"pa": 0.7262,
+"w": "a"
+},
+"australian-open-2026-wta|R32|211148~260300": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R32",
+"a": "Iva Jovic",
+"b": "Jasmine Paolini",
+"pa": 0.4414,
+"w": "a"
+},
+"australian-open-2026-wta|R32|201709~220309": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R32",
+"a": "Yulia Putintseva",
+"b": "Zeynep Sonmez",
+"pa": 0.5229,
+"w": "a"
+},
+"australian-open-2026-wta|R32|202494~223670": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R32",
+"a": "Elina Svitolina",
+"b": "Diana Shnaider",
+"pa": 0.6681,
+"w": "a"
+},
+"australian-open-2026-wta|R32|211817~259799": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R32",
+"a": "Mirra Andreeva",
+"b": "Elena Gabriela Ruse",
+"pa": 0.8589,
+"w": "a"
+},
+"australian-open-2026-wta|R32|221024~221103": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R32",
+"a": "Coco Gauff",
+"b": "Hailey Baptiste",
+"pa": 0.864,
+"w": "a"
+},
+"australian-open-2026-wta|R32|202663~214096": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R32",
+"a": "Karolina Muchova",
+"b": "Magda Linette",
+"pa": 0.7472,
+"w": "a"
+},
+"australian-open-2026-wta|R16|210722~214981": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R16",
+"a": "Elena Rybakina",
+"b": "Elise Mertens",
+"pa": 0.8188,
+"w": "a"
+},
+"australian-open-2026-wta|R16|213666~216347": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R16",
+"a": "Iga Swiatek",
+"b": "Maddison Inglis",
+"pa": 0.9661,
+"w": "a"
+},
+"australian-open-2026-wta|R16|201619~202468": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R16",
+"a": "Jessica Pegula",
+"b": "Madison Keys",
+"pa": 0.61,
+"w": "a"
+},
+"australian-open-2026-wta|R16|216133~216153": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R16",
+"a": "Amanda Anisimova",
+"b": "Xin Yu Wang",
+"pa": 0.8278,
+"w": "a"
+},
+"australian-open-2026-wta|R16|214544~239475": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R16",
+"a": "Aryna Sabalenka",
+"b": "Victoria Mboko",
+"pa": 0.7372,
+"w": "a"
+},
+"australian-open-2026-wta|R16|201709~260300": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R16",
+"a": "Iva Jovic",
+"b": "Yulia Putintseva",
+"pa": 0.7889,
+"w": "a"
+},
+"australian-open-2026-wta|R16|202494~259799": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R16",
+"a": "Elina Svitolina",
+"b": "Mirra Andreeva",
+"pa": 0.4666,
+"w": "a"
+},
+"australian-open-2026-wta|R16|214096~221103": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "R16",
+"a": "Coco Gauff",
+"b": "Karolina Muchova",
+"pa": 0.5632,
+"w": "a"
+},
+"australian-open-2026-wta|QF|214981~216347": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "QF",
+"a": "Elena Rybakina",
+"b": "Iga Swiatek",
+"pa": 0.5366,
+"w": "a"
+},
+"australian-open-2026-wta|QF|202468~216153": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "QF",
+"a": "Jessica Pegula",
+"b": "Amanda Anisimova",
+"pa": 0.4955,
+"w": "a"
+},
+"australian-open-2026-wta|QF|214544~260300": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "QF",
+"a": "Aryna Sabalenka",
+"b": "Iva Jovic",
+"pa": 0.7741,
+"w": "a"
+},
+"australian-open-2026-wta|QF|202494~221103": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "QF",
+"a": "Elina Svitolina",
+"b": "Coco Gauff",
+"pa": 0.489,
+"w": "a"
+},
+"australian-open-2026-wta|SF|202468~214981": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "SF",
+"a": "Elena Rybakina",
+"b": "Jessica Pegula",
+"pa": 0.6131,
+"w": "a"
+},
+"australian-open-2026-wta|SF|202494~214544": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "SF",
+"a": "Aryna Sabalenka",
+"b": "Elina Svitolina",
+"pa": 0.6963,
+"w": "a"
+},
+"australian-open-2026-wta|F|214544~214981": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026-wta",
+"rd": "F",
+"a": "Elena Rybakina",
+"b": "Aryna Sabalenka",
+"pa": 0.4131,
+"w": "a"
+}
+},
+"demo": true
+}

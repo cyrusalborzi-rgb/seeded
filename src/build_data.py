@@ -309,11 +309,59 @@ if f_on.exists():
     live.sort()
 nxt = next((t for t in CONFIG if t.get("next")), None)
 
+# ---- point 16 : archives publiques des prédictions
+# Vraies archives (state/archive*.json, écrites par tournoi.py avant chaque match / tour) + matchs du bilan contre
+# le marché (notre proba enregistrée avant le match ; la proba du marché n'est pas reprise ici).
+# Tant qu'aucun tournoi n'est archivé, on montre en plus un EXEMPLE : l'Open d'Australie 2026 rejoué (tools/demo_archive.py).
+def _pi(name):
+    return idx.get(by_norm.get(_nrm(name)))
+def _arch_block(A, demo):
+    ts, ms = [], []
+    for k, t in A.get("tournaments", {}).items():
+        snaps = t.get("snaps", [])
+        w = t.get("winner")
+        before = next((s for s in snaps if s["stage"] == "before"), snaps[0] if snaps else None)
+        wr = next((i + 1 for i, (n, _) in enumerate(before["top"]) if n == w), None) if (before and w) else None
+        ts.append({"k": k, "name": t["name"], "name_fr": t.get("name_fr", t["name"]), "surf": t["surface"].lower(), "year": t.get("year"),
+                   "winner": w, "wi": _pi(w) if w else None, "w_rank": wr, "demo": demo,
+                   "snaps": [{"stage": s["stage"], "at": s.get("at"), "fav": s["top"][0], "fi": _pi(s["top"][0][0]),
+                              "wp": next((p for n, p in s["top"] if n == w), None) if w else None} for s in snaps]})
+    for k, m in A.get("matches", {}).items():
+        if m.get("void"):
+            continue
+        ms.append({"t": m["t"], "tk": m["tk"], "rd": m["rd"], "a": m["a"], "b": m["b"], "ai": _pi(m["a"]), "bi": _pi(m["b"]),
+                   "pa": m["pa"], "at": m.get("at"), "w": m.get("w"), "demo": demo})
+    return ts, ms
+_real = json.loads((STATE / f"archive{SUF}.json").read_text()) if (STATE / f"archive{SUF}.json").exists() else {}
+a_tours, a_matches = _arch_block(_real, False)
+for k, a in arch.items():                                  # matchs du bilan 20b (proba Seeded figée avant le match)
+    if a.get("ps") is None or a.get("void"):
+        continue
+    a_matches.append({"t": a["t"], "tk": None, "rd": None, "a": a["a"], "b": a["b"], "ai": _pi(a["a"]), "bi": _pi(a["b"]),
+                      "pa": a["ps"], "at": a.get("ps_at") or a.get("seen"), "time": a["time"], "w": a.get("w"), "demo": False})
+_demo_f = TOURNAMENTS / f"archive_demo{SUF}.json"
+use_demo = not a_tours and _demo_f.exists()
+if use_demo:
+    d_t, d_m = _arch_block(json.loads(_demo_f.read_text()), True)
+    a_tours += d_t; a_matches += d_m
+def _rec(ms):
+    done = [m for m in ms if m["w"]]
+    y = np.array([m["w"] == "a" for m in done], dtype=float); P = np.array([m["pa"] for m in done])
+    pw = np.where(y == 1, P, 1 - P)
+    return {"n": len(done), "pending": sum(1 for m in ms if not m["w"]), "acc": float(np.mean(pw > .5)) if len(done) else None,
+            "ll": _ll(pw), "since": min((m["at"] for m in ms if m["at"]), default=None)}
+_rk = {r: i for i, r in enumerate(["R128", "R64", "R32", "R16", "QF", "SF", "F"])}
+a_matches = (sorted([m for m in a_matches if not m["demo"]], key=lambda m: m.get("time") or m["at"] or "", reverse=True)
+             + sorted([m for m in a_matches if m["demo"]], key=lambda m: _rk.get(m["rd"], 9), reverse=True))
+archive_out = {"tours": a_tours, "matches": a_matches, "demo": use_demo,
+               "rec": _rec([m for m in a_matches if not m["demo"]]), "rec_demo": _rec([m for m in a_matches if m["demo"]]) if use_demo else None}
+print("archives :", len(a_tours), "tournoi(s),", len(a_matches), "matchs", "(dont EXEMPLE AO 2026)" if use_demo else "")
+
 out = {"date": date.fromordinal(today).strftime("%d %b %Y"), "live": live,
        "built": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(timespec="minutes"),
        "next": {"en": nxt["next"]["en"], "fr": nxt["next"]["fr"]} if nxt else None,
        "ranking": json.loads(top.to_json(orient="records")),
-       "circuit": TOUR, "players": players, "season": season, "season_year": YEAR, "cal": CAL, "odds": odds_out, "odds_record": odds_record,
+       "circuit": TOUR, "players": players, "season": season, "season_year": YEAR, "cal": CAL, "odds": odds_out, "odds_record": odds_record, "archive": archive_out,
        "ao": json.loads(ao.to_json(orient="records")),
        "bilan": json.loads(bilan.to_json(orient="records")),
        "calib": json.loads(calib.to_json(orient="records")),

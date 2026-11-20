@@ -95,6 +95,8 @@ select,input{font:inherit;padding:4px 6px;border:1px solid #bbb}
 .fb-panel iframe{flex:1;border:0;width:100%} .fb-alt{font-size:11px;color:#777;padding:5px 10px;border-top:1px solid #eee}
 a.pl{color:#1d3557}
 .mkt{margin-top:8px;font-size:12.5px} .mkt b{color:#1d3557}
+.arc-t{border:1px solid #d5dde8;padding:6px 8px;margin:0 0 10px} .arc-t h3{margin:0 0 4px;font-size:14px} .arc-t p{margin:2px 0 6px}
+.ok{color:#1a7f37;font-weight:bold} .ko{color:#c0392b;font-weight:bold}
 .tag.dis{background:#fde2c4;color:#8a4b00;border-color:#f0c08a} .tag.demo{background:#c0392b;color:#fff;border-color:#c0392b}
 tr.click{cursor:pointer} tr.click:hover td{background:#eef4fb!important}
 .sf{display:inline-block;color:#fff;font-size:10.5px;padding:1px 6px;border-radius:2px;white-space:nowrap} .sf:hover{text-decoration:none;opacity:.85}
@@ -145,7 +147,7 @@ __TCSS__
   <a class="logo" href="#home" data-i-title="nav_home">__LOGO__<span>SEED<i>ED</i></span></a>
   <span class="nav">
     <a href="#tournament" data-i="nav_draws"></a><a href="#calendar" data-i="nav_cal"></a><a href="#rating" data-i="nav_rating"></a>
-    <a href="#player" data-i="nav_players"></a><a href="#predictor" data-i="nav_predictor"></a><a href="#record" data-i="nav_record"></a><a href="#method" data-i="nav_method"></a>
+    <a href="#player" data-i="nav_players"></a><a href="#predictor" data-i="nav_predictor"></a><a href="#record" data-i="nav_record"></a><a href="#archives" data-i="nav_arch"></a><a href="#method" data-i="nav_method"></a>
   </span>
   <span class="sp"></span>
   <span class="circ"><a href="index.html" data-circ="atp">ATP</a><a href="wta.html" data-circ="wta">WTA</a></span>
@@ -263,7 +265,7 @@ __TCSS__
 
 <!-- ================= TRACK RECORD ================= -->
 <div class="page" id="p-record">
-  <h1 data-i="nav_record"></h1><div class="meta" data-i="rec_meta"></div>
+  <h1 data-i="nav_record"></h1><div class="meta"><span data-i="rec_meta"></span> <a class="ql" href="#archives" data-i="rec_arch"></a></div>
   <div class="grid"><div>
     <div class="box"><h2 data-i="rec_t1"></h2><div class="boxin"><table id="bilan"></table></div></div>
   </div><div>
@@ -271,6 +273,16 @@ __TCSS__
     <div class="meta" style="margin-top:6px" data-i="rec_calib_note"></div></div></div>
   </div></div>
   <div class="box" style="max-width:1000px"><h2 id="orec-h"></h2><div class="boxin" id="orec"></div></div>
+</div>
+
+<!-- ================= ARCHIVES (point 16) ================= -->
+<div class="page" id="p-archives">
+  <h1 data-i="nav_arch"></h1><div class="meta" id="arc-meta"></div>
+  <div class="box" style="max-width:1000px"><h2 data-i="arc_rec_h"></h2><div class="boxin" id="arc-rec"></div></div>
+  <div class="box" style="max-width:1000px"><h2 data-i="arc_t_h"></h2><div class="boxin" id="arc-t"></div></div>
+  <div class="box" style="max-width:1000px"><h2 data-i="arc_m_h"></h2><div class="boxin">
+    <div style="margin:0 0 6px"><button class="btn" data-af="all"></button><button class="btn" data-af="pend"></button><button class="btn" data-af="done"></button></div>
+    <table id="arc-m"></table><div id="arc-more" style="margin-top:6px"></div></div></div>
 </div>
 
 <!-- ================= METHODOLOGY ================= -->
@@ -370,7 +382,20 @@ const T = {
   h2h_t: 'Head-to-head', on_surf: s => `On ${s.toLowerCase()}`, last_meet: 'Last meeting', never: 'They have never played each other (tour, Challenger or qualifying).',
   form_t: 'Last 10 matches', rec: (w, l) => `${w}–${l}`, trend: 'Last 30 days', srank: 'Seeded rank', atprank: 'ATP rank', surf_rt: s => `${s} rating`,
   won: n => `${n} won`, all_meet: 'All meetings', h_date2: 'Date', h_surf: 'Surface', h_winner: 'Winner', more: n => `+ ${n} older`,
-  tour: x => x, round: x => x
+  tour: x => x, round: x => x,
+  nav_arch: 'Archives', rec_arch: 'See every prediction archived before the matches →',
+  arc_meta: 'Every Seeded prediction is saved <b>before</b> the match or the tournament, with its date, and never changed afterwards. Only the result is added once it is known.',
+  arc_proof: u => ` Proof: the archive files are public, and their <a href="${u}" target="_blank" rel="noopener">history on GitHub</a> shows when each entry was saved.`,
+  arc_rec_h: 'Live record', arc_t_h: 'Tournaments — title odds before each round', arc_m_h: 'Matches — our pre-match probability',
+  arc_rec: (n, acc, pend, since) => `Since ${since}: <b>${n}</b> finished match${n > 1 ? 'es' : ''} archived, our favourite won <b>${acc}</b>.` + (pend ? ` ${pend} waiting for a result.` : ''),
+  arc_rec_none: (pend, since) => `No finished match yet${since ? ' (archive started on ' + since + ')' : ''}.` + (pend ? ` <b>${pend}</b> prediction${pend > 1 ? 's' : ''} waiting for a result.` : '') + ' Full tournaments are archived from the 2027 Australian Open draw onwards.',
+  arc_small: 'Still very few matches: this percentage will only mean something after a few hundred.',
+  arc_demo: (n, acc) => `<span class="tag demo" style="margin:0">EXAMPLE</span> Real tournaments will appear here from January 2027. Meanwhile, here is what the page will look like, with the 2026 Australian Open: ${n} matches, our favourite won ${acc}. This example does not count in the live record.`,
+  arc_demo_tag: 'EXAMPLE',
+  arc_stage: x => x === 'before' ? 'Before the 1st match' : `After ${x}`,
+  h_stage: 'Step', h_wchances: w => `${w}'s chances`, h_saved: 'Saved', h_res: 'Result', arc_pend: 'pending',
+  arc_win: (w, rk, p) => `Champion: <b>${w}</b>` + (rk ? ` — our #${rk} favourite before the 1st match (${p})` : ''),
+  arc_live: 'In progress', arc_leg: 'Seeded = the chances of our favourite (in bold). ✓ = our favourite won, ✗ = it lost.', af_all: 'All', af_pend: 'Waiting', af_done: 'Finished', arc_more: n => `Show ${n} more`, arc_none_t: 'No tournament archived yet.',
  },
  fr: {
   nav_home: 'Accueil', nav_draws: 'Tableaux', nav_rating: 'Seeded Rating', nav_players: 'Joueurs', nav_predictor: 'Comparateur de match', nav_record: 'Bilan du modèle', nav_method: 'Méthodologie',
@@ -455,7 +480,20 @@ const T = {
                'Shanghai Masters': 'Shanghai', 'Monte Carlo': 'Monte-Carlo', 'Bucharest': 'Bucarest', 'Geneva': 'Genève', 'Hamburg': 'Hambourg', 'Barcelona': 'Barcelone',
                'Vienna': 'Vienne', 'Brussels': 'Bruxelles', 'Basel': 'Bâle', 'Beijing': 'Pékin', 'Kitzbuhel': 'Kitzbühel', 'Bastad': 'Båstad',
                'Mallorca': 'Majorque', "'s-Hertogenbosch": 'Bois-le-Duc', 'Queen\'s Club': 'Queen\'s', 'Washington': 'Washington'})[x] || x,
-  round: x => ({R128: '64es', R64: '32es', R32: '16es', R16: '8es', QF: 'QF', SF: 'DF', F: 'F', RR: 'Poules', BR: '3e place'})[x] || x
+  round: x => ({R128: '64es', R64: '32es', R32: '16es', R16: '8es', QF: 'QF', SF: 'DF', F: 'F', RR: 'Poules', BR: '3e place'})[x] || x,
+  nav_arch: 'Archives', rec_arch: 'Voir toutes les prédictions archivées avant les matchs →',
+  arc_meta: 'Chaque prédiction Seeded est enregistrée <b>avant</b> le match ou le tournoi, avec sa date, et n\'est jamais modifiée ensuite. Seul le résultat vient s\'ajouter une fois connu.',
+  arc_proof: u => ` La preuve : les fichiers d'archives sont publics, et leur <a href="${u}" target="_blank" rel="noopener">historique sur GitHub</a> montre la date de chaque enregistrement.`,
+  arc_rec_h: 'Bilan en direct', arc_t_h: 'Tournois — chances de titre avant chaque tour', arc_m_h: 'Matchs — notre proba avant le match',
+  arc_rec: (n, acc, pend, since) => `Depuis le ${since} : <b>${n}</b> match${n > 1 ? 's' : ''} terminé${n > 1 ? 's' : ''} archivé${n > 1 ? 's' : ''}, notre favori a gagné <b>${acc}</b>.` + (pend ? ` ${pend} en attente du résultat.` : ''),
+  arc_rec_none: (pend, since) => `Pas encore de match terminé${since ? ' (archives ouvertes le ' + since + ')' : ''}.` + (pend ? ` <b>${pend}</b> prédiction${pend > 1 ? 's' : ''} en attente du résultat.` : '') + ' Les tournois complets sont archivés à partir du tirage de l\'Open d\'Australie 2027.',
+  arc_small: 'Encore très peu de matchs : ce pourcentage ne voudra vraiment dire quelque chose qu\'après quelques centaines.',
+  arc_demo: (n, acc) => `<span class="tag demo" style="margin:0">EXEMPLE</span> Les vrais tournois apparaîtront ici à partir de janvier 2027. En attendant, voici à quoi ressemblera la page, avec l'Open d'Australie 2026 : ${n} matchs, notre favori a gagné ${acc}. Cet exemple ne compte pas dans le bilan en direct.`,
+  arc_demo_tag: 'EXEMPLE',
+  arc_stage: x => x === 'before' ? 'Avant le 1er match' : `Après les ${T.fr.round(x)}`,
+  h_stage: 'Étape', h_wchances: w => `Chances de ${w}`, h_saved: 'Enregistré', h_res: 'Résultat', arc_pend: 'en attente',
+  arc_win: (w, rk, p) => `Vainqueur : <b>${w}</b>` + (rk ? ` — notre favori n°${rk} avant le 1er match (${p})` : ''),
+  arc_live: 'En cours', arc_leg: 'Seeded = les chances de notre favori (en gras). ✓ = notre favori a gagné, ✗ = il a perdu.', af_all: 'Tous', af_pend: 'En attente', af_done: 'Terminés', arc_more: n => `Voir ${n} de plus`, arc_none_t: 'Aucun tournoi archivé pour l\'instant.',
  }
 };
 let L = 'en';
@@ -877,6 +915,39 @@ function renderRecord() {
 }
 
 let TOUR = null;
+
+// ---- archives publiques des prédictions (point 16)
+let AF = 'all', AN = 60;
+function renderArchives() {
+  const A = D.archive || {tours: [], matches: [], rec: {n: 0}}, R = A.rec || {n: 0};
+  const dd = iso => iso ? new Date(iso).toLocaleDateString(L === 'fr' ? 'fr-FR' : 'en-GB', {day: 'numeric', month: 'long', year: 'numeric'}) : '';
+  const dshort = iso => iso ? new Date(iso).toLocaleString(L === 'fr' ? 'fr-FR' : 'en-GB', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'}) : '';
+  $('#arc-meta').innerHTML = t('arc_meta') + t('arc_proof', 'https://github.com/cyrusalborzi-rgb/seeded/commits/main/state');
+  let h = R.n ? t('arc_rec', R.n, pct(100 * R.acc, 1), R.pending, dd(R.since)) + (R.n < 100 ? `<div class="meta">${t('arc_small')}</div>` : '')
+              : `<p style="margin:0">${t('arc_rec_none', R.pending || 0, dd(R.since))}</p>`;
+  if (A.demo && A.rec_demo) h += `<div class="note">${t('arc_demo', A.rec_demo.n, pct(100 * A.rec_demo.acc, 1))}</div>`;
+  $('#arc-rec').innerHTML = h;
+  const pn = (i, n) => i == null ? n : plink(i, n);
+  $('#arc-t').innerHTML = A.tours.length ? A.tours.map(x => {
+    const nm = (L === 'fr' ? x.name_fr : x.name), b0 = x.snaps[0];
+    const wp = x.winner ? x.snaps.find(s => s.stage === 'before') : null;
+    return `<div class="arc-t"><h3>${nm}${x.demo ? ` <span class="tag demo">${t('arc_demo_tag')}</span>` : ''} ${sfChip(x.surf[0] === 'h' ? 'H' : x.surf[0] === 'c' ? 'CL' : 'G')}</h3>
+      <p>${x.winner ? t('arc_win', pn(x.wi, x.winner), x.w_rank, wp && wp.wp != null ? pct(wp.wp, 1) : '') : t('arc_live')}</p>
+      <table><tr><th>${t('h_stage')}</th>${x.winner ? `<th>${t('h_wchances', last(x.winner))}</th>` : ''}<th>${t('h_ourfav')}</th>${x.demo ? '' : `<th>${t('h_saved')}</th>`}</tr>` +
+      x.snaps.map(s => `<tr><td>${t('arc_stage', s.stage)}</td>` + (x.winner ? `<td class="n b">${s.wp == null ? '–' : pct(s.wp, 1)}</td>` : '') +
+        `<td>${pn(s.fi, s.fav[0])} <span class="meta" style="margin:0">${pct(s.fav[1], 1)}</span></td>${x.demo ? '' : `<td>${dshort(s.at)}</td>`}</tr>`).join('') + '</table></div>';
+  }).join('') : `<p class="meta" style="margin:0">${t('arc_none_t')}</p>`;
+  document.querySelectorAll('[data-af]').forEach(b => { b.classList.toggle('on', b.dataset.af === AF); b.textContent = t('af_' + b.dataset.af); });
+  const M = A.matches.filter(m => AF === 'all' || (AF === 'pend' ? !m.w : !!m.w));
+  $('#arc-m').innerHTML = `<tr><th>${t('h_match')}</th><th>Seeded</th><th>${t('h_res')}</th><th>${t('h_rd')}</th><th>${t('h_tourn')}</th><th>${t('h_saved')}</th></tr>` +
+    M.slice(0, AN).map(m => { const fa = m.pa >= .5, pf = fa ? m.pa : 1 - m.pa, fn = fa ? pn(m.ai, m.a) : pn(m.bi, m.b), on = fa ? pn(m.bi, m.b) : pn(m.ai, m.a);
+      const res = !m.w ? `<span class="meta" style="margin:0">${t('arc_pend')}</span>` : ((m.w === 'a') === fa ? '<span class="ok">✓</span>' : '<span class="ko">✗</span>');
+      return `<tr><td><b>${fn}</b> – ${on}</td><td class="n">${pct(100 * pf, 0)}</td><td style="text-align:center">${res}</td><td>${m.rd ? t('round', m.rd) : '–'}</td>
+        <td>${t('tour', m.t.replace(/ \d{4}$/, ''))}${/\d{4}$/.test(m.t) ? ' ' + m.t.slice(-4) : ''}</td><td>${m.demo ? '–' : dshort(m.at)}</td></tr>`; }).join('');
+  $('#arc-more').innerHTML = `<div class="meta" style="margin:0 0 6px">${t('arc_leg')}</div>` + (M.length > AN ? `<button class="btn" id="arc-more-b">${t('arc_more', Math.min(60, M.length - AN))}</button>` : '');
+  if (M.length > AN) $('#arc-more-b').onclick = () => { AN += 60; renderArchives(); };
+}
+document.querySelectorAll('[data-af]').forEach(b => b.onclick = () => { AF = b.dataset.af; AN = 60; renderArchives(); });
 // ---- encadré d'avis (formulaire Tally ; la page et la langue sont transmises en champs cachés)
 const FB = '__FB__';
 function fbUrl(kind) {
@@ -890,7 +961,7 @@ function fbToggle(force) {
 }
 function renderFeedback() { $('#fb-btn').textContent = t('fb_btn'); $('#fb-title').textContent = t('fb_title'); }
 
-function renderAll() { renderFeedback(); renderStatic(); renderHome(); renderHomeNext(); renderOdds(); renderRating(); renderCalendar(); renderSurface(); renderPlayer(); renderPredictor(); renderRecord(); renderMethod();
+function renderAll() { renderFeedback(); renderStatic(); renderHome(); renderHomeNext(); renderOdds(); renderRating(); renderCalendar(); renderSurface(); renderPlayer(); renderPredictor(); renderRecord(); renderArchives(); renderMethod();
   if (TOUR) TOUR.setLang(L); else TOUR = SeededTournament($('#tour-app'), DT, L); }
 
 // ------------------------------------------------------------ interactions

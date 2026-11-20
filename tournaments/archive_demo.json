@@ -1,0 +1,1483 @@
+{
+"tournaments": {
+"australian-open-2026": {
+"name": "Australian Open 2026",
+"name_fr": "Open d'Australie 2026",
+"circuit": "atp",
+"surface": "Hard",
+"bo": 5,
+"year": 2026,
+"snaps": [
+{
+"stage": "before",
+"n_played": 0,
+"top": [
+[
+"Jannik Sinner",
+62.6
+],
+[
+"Carlos Alcaraz",
+20.1
+],
+[
+"Novak Djokovic",
+9.2
+],
+[
+"Daniil Medvedev",
+2.1
+],
+[
+"Alexander Zverev",
+1.2
+],
+[
+"Alex de Minaur",
+1.1
+],
+[
+"Felix Auger-Aliassime",
+0.6
+],
+[
+"Hubert Hurkacz",
+0.4
+],
+[
+"Taylor Fritz",
+0.4
+],
+[
+"Alexander Bublik",
+0.4
+]
+]
+},
+{
+"stage": "R128",
+"n_played": 64,
+"top": [
+[
+"Jannik Sinner",
+61.2
+],
+[
+"Carlos Alcaraz",
+20.5
+],
+[
+"Novak Djokovic",
+10.1
+],
+[
+"Daniil Medvedev",
+2.2
+],
+[
+"Alex de Minaur",
+1.3
+],
+[
+"Alexander Zverev",
+1.3
+],
+[
+"Taylor Fritz",
+0.6
+],
+[
+"Alexander Bublik",
+0.5
+],
+[
+"Hubert Hurkacz",
+0.5
+],
+[
+"Tommy Paul",
+0.3
+]
+]
+},
+{
+"stage": "R64",
+"n_played": 96,
+"top": [
+[
+"Jannik Sinner",
+59.8
+],
+[
+"Carlos Alcaraz",
+21.2
+],
+[
+"Novak Djokovic",
+11.0
+],
+[
+"Daniil Medvedev",
+2.0
+],
+[
+"Alex de Minaur",
+1.3
+],
+[
+"Alexander Zverev",
+1.2
+],
+[
+"Alexander Bublik",
+0.5
+],
+[
+"Taylor Fritz",
+0.5
+],
+[
+"Jakub Mensik",
+0.4
+],
+[
+"Tomas Machac",
+0.3
+]
+]
+},
+{
+"stage": "R32",
+"n_played": 112,
+"top": [
+[
+"Jannik Sinner",
+60.2
+],
+[
+"Carlos Alcaraz",
+21.6
+],
+[
+"Novak Djokovic",
+10.3
+],
+[
+"Daniil Medvedev",
+2.2
+],
+[
+"Alexander Zverev",
+1.5
+],
+[
+"Alex de Minaur",
+1.3
+],
+[
+"Taylor Fritz",
+0.5
+],
+[
+"Alexander Bublik",
+0.4
+],
+[
+"Jakub Mensik",
+0.4
+],
+[
+"Ben Shelton",
+0.4
+]
+]
+},
+{
+"stage": "R16",
+"n_played": 120,
+"top": [
+[
+"Jannik Sinner",
+57.7
+],
+[
+"Carlos Alcaraz",
+24.8
+],
+[
+"Novak Djokovic",
+11.3
+],
+[
+"Alexander Zverev",
+2.2
+],
+[
+"Alex de Minaur",
+2.0
+],
+[
+"Learner Tien",
+0.8
+],
+[
+"Lorenzo Musetti",
+0.6
+],
+[
+"Ben Shelton",
+0.6
+],
+[
+"Nishesh Basavareddy",
+0.0
+],
+[
+"Alexander Blockx",
+0.0
+]
+]
+},
+{
+"stage": "QF",
+"n_played": 124,
+"top": [
+[
+"Jannik Sinner",
+56.3
+],
+[
+"Carlos Alcaraz",
+31.1
+],
+[
+"Novak Djokovic",
+9.9
+],
+[
+"Alexander Zverev",
+2.7
+],
+[
+"Felix Auger-Aliassime",
+0.0
+],
+[
+"Sebastian Baez",
+0.0
+],
+[
+"Terence Atmane",
+0.0
+],
+[
+"Matteo Arnaldi",
+0.0
+],
+[
+"Nishesh Basavareddy",
+0.0
+],
+[
+"Alexander Blockx",
+0.0
+]
+]
+},
+{
+"stage": "SF",
+"n_played": 126,
+"top": [
+[
+"Carlos Alcaraz",
+60.3
+],
+[
+"Novak Djokovic",
+39.7
+],
+[
+"Terence Atmane",
+0.0
+],
+[
+"Matteo Arnaldi",
+0.0
+],
+[
+"Felix Auger-Aliassime",
+0.0
+],
+[
+"Sebastian Baez",
+0.0
+],
+[
+"Jenson Brooksby",
+0.0
+],
+[
+"Daniel Altmaier",
+0.0
+],
+[
+"Nishesh Basavareddy",
+0.0
+],
+[
+"Alexander Blockx",
+0.0
+]
+]
+}
+],
+"winner": "Carlos Alcaraz"
+}
+},
+"matches": {
+"australian-open-2026|R128|A0E2~W09E": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Carlos Alcaraz",
+"b": "Adam Walton",
+"pa": 0.9872,
+"w": "a"
+},
+"australian-open-2026|R128|H997~S0K7": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Yannick Hanfmann",
+"b": "Zachary Svajda",
+"pa": 0.4589,
+"w": "a"
+},
+"australian-open-2026|R128|MW02~S0N0": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Corentin Moutet",
+"b": "Tristan Schoolkate",
+"pa": 0.862,
+"w": "a"
+},
+"australian-open-2026|R128|K0AH~Z0BZ": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Michael Zheng",
+"b": "Sebastian Korda",
+"pa": 0.3594,
+"w": "a"
+},
+"australian-open-2026|R128|K0AZ~PL56": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Tommy Paul",
+"b": "Aleksandar Kovacevic",
+"pa": 0.8684,
+"w": "a"
+},
+"australian-open-2026|R128|T0A1~V832": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Thiago Agustin Tirante",
+"b": "Aleksandar Vukic",
+"pa": 0.2984,
+"w": "a"
+},
+"australian-open-2026|R128|DH50~M0JZ": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Alejandro Davidovich Fokina",
+"b": "Filip Misolic",
+"pa": 0.9278,
+"w": "a"
+},
+"australian-open-2026|R128|B0U4~O522": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Reilly Opelka",
+"b": "Nicolai Budkov Kjaer",
+"pa": 0.6401,
+"w": "a"
+},
+"australian-open-2026|R128|DH58~MK66": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Alex de Minaur",
+"b": "Mackenzie McDonald",
+"pa": 0.8959,
+"w": "a"
+},
+"australian-open-2026|R128|M0JF~N0BS": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Hamad Medjedovic",
+"b": "Mariano Navone",
+"pa": 0.7334,
+"w": "a"
+},
+"australian-open-2026|R128|KB95~TD51": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Frances Tiafoe",
+"b": "Jason Kubler",
+"pa": 0.7492,
+"w": "a"
+},
+"australian-open-2026|R128|C0DF~K0A3": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Francisco Comesana",
+"b": "Patrick Kypson",
+"pa": 0.5196,
+"w": "a"
+},
+"australian-open-2026|R128|B0CD~BK92": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Alexander Bublik",
+"b": "Jenson Brooksby",
+"pa": 0.8015,
+"w": "a"
+},
+"australian-open-2026|R128|F724~U182": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Marton Fucsovics",
+"b": "Camilo Ugo Carabelli",
+"pa": 0.7879,
+"w": "a"
+},
+"australian-open-2026|R128|EA24~KI95": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Tomas Martin Etcheverry",
+"b": "Miomir Kecmanovic",
+"pa": 0.6409,
+"w": "a"
+},
+"australian-open-2026|R128|C0E9~F0DM": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Arthur Fery",
+"b": "Flavio Cobolli",
+"pa": 0.3135,
+"w": "a"
+},
+"australian-open-2026|R128|D0F6~Z355": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Alexander Zverev",
+"b": "Gabriel Diallo",
+"pa": 0.83,
+"w": "a"
+},
+"australian-open-2026|R128|MP20~P09Z": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Alexandre Muller",
+"b": "Alexei Popyrin",
+"pa": 0.422,
+"w": "a"
+},
+"australian-open-2026|R128|BM95~N771": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Cameron Norrie",
+"b": "Benjamin Bonzi",
+"pa": 0.6721,
+"w": "a"
+},
+"australian-open-2026|R128|J0AZ~N0AM": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Emilio Nava",
+"b": "Kyrian Jacquet",
+"pa": 0.488,
+"w": "a"
+},
+"australian-open-2026|R128|C0AU~Z371": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Francisco Cerundolo",
+"b": "Zhizhen Zhang",
+"pa": 0.7739,
+"w": "a"
+},
+"australian-open-2026|R128|D0DP~D923": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Damir Dzumhur",
+"b": "Liam Draxl",
+"pa": 0.5816,
+"w": "a"
+},
+"australian-open-2026|R128|A0FC~RE44": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Andrey Rublev",
+"b": "Matteo Arnaldi",
+"pa": 0.7118,
+"w": "a"
+},
+"australian-open-2026|R128|B0PG~F0F2": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Jaime Faria",
+"b": "Alexander Blockx",
+"pa": 0.1416,
+"w": "a"
+},
+"australian-open-2026|R128|GC88~T0HA": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Learner Tien",
+"b": "Marcos Giron",
+"pa": 0.6242,
+"w": "a"
+},
+"australian-open-2026|R128|S0H2~Y218": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Aleksandr Shevchenko",
+"b": "Elias Ymer",
+"pa": 0.7061,
+"w": "a"
+},
+"australian-open-2026|R128|AG37~BT72": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Nuno Borges",
+"b": "Felix Auger-Aliassime",
+"pa": 0.2186,
+"w": "a"
+},
+"australian-open-2026|R128|C0C8~TC61": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Jordan Thompson",
+"b": "Juan Manuel Cerundolo",
+"pa": 0.7629,
+"w": "a"
+},
+"australian-open-2026|R128|D0C1~MM58": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Daniil Medvedev",
+"b": "Jesper de Jong",
+"pa": 0.9389,
+"w": "a"
+},
+"australian-open-2026|R128|HB64~TE30": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Quentin Halys",
+"b": "Alejandro Tabilo",
+"pa": 0.433,
+"w": "a"
+},
+"australian-open-2026|R128|M0CI~RC91": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Fabian Marozsan",
+"b": "Arthur Rinderknech",
+"pa": 0.5616,
+"w": "a"
+},
+"australian-open-2026|R128|F0BY~MQ75": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Kamil Majchrzak",
+"b": "Jacob Fearnley",
+"pa": 0.7186,
+"w": "a"
+},
+"australian-open-2026|R128|D643~MO44": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Novak Djokovic",
+"b": "Pedro Martinez",
+"pa": 0.9754,
+"w": "a"
+},
+"australian-open-2026|R128|A0GC~M0IF": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Francesco Maestrelli",
+"b": "Terence Atmane",
+"pa": 0.3848,
+"w": "a"
+},
+"australian-open-2026|R128|N0AE~V812": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Botic van de Zandschulp",
+"b": "Brandon Nakashima",
+"pa": 0.3425,
+"w": "a"
+},
+"australian-open-2026|R128|BD06~S0RE": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Juncheng Shang",
+"b": "Roberto Bautista Agut",
+"pa": 0.6238,
+"w": "a"
+},
+"australian-open-2026|R128|CD85~M0NI": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Jakub Mensik",
+"b": "Pablo Carreno Busta",
+"pa": 0.8112,
+"w": "a"
+},
+"australian-open-2026|R128|J0DZ~S0UV": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Rafael Jodar",
+"b": "Rei Sakamoto",
+"pa": 0.7357,
+"w": "a"
+},
+"australian-open-2026|R128|GJ37~Q02L": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Ethan Quinn",
+"b": "Tallon Griekspoor",
+"pa": 0.4394,
+"w": "a"
+},
+"australian-open-2026|R128|BU13~HB71": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Hubert Hurkacz",
+"b": "Zizou Bergs",
+"pa": 0.7425,
+"w": "a"
+},
+"australian-open-2026|R128|C0JP~M0EJ": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Lorenzo Musetti",
+"b": "Raphael Collignon",
+"pa": 0.7013,
+"w": "a"
+},
+"australian-open-2026|R128|SU87~TE16": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Lorenzo Sonego",
+"b": "Carlos Taberner",
+"pa": 0.877,
+"w": "a"
+},
+"australian-open-2026|R128|D875~M0FH": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Tomas Machac",
+"b": "Grigor Dimitrov",
+"pa": 0.4386,
+"w": "a"
+},
+"australian-open-2026|R128|M0HU~TE51": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Stefanos Tsitsipas",
+"b": "Shintaro Mochizuki",
+"pa": 0.8772,
+"w": "a"
+},
+"australian-open-2026|R128|FB98~R0EB": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Taylor Fritz",
+"b": "Valentin Royer",
+"pa": 0.8592,
+"w": "a"
+},
+"australian-open-2026|R128|KI82~SL28": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Vit Kopriva",
+"b": "Jan-Lennard Struff",
+"pa": 0.2883,
+"w": "a"
+},
+"australian-open-2026|R128|DB63~W367": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Stan Wawrinka",
+"b": "Laslo Djere",
+"pa": 0.6283,
+"w": "a"
+},
+"australian-open-2026|R128|G0IX~L0BV": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Arthur Gea",
+"b": "Jiri Lehecka",
+"pa": 0.1946,
+"w": "a"
+},
+"australian-open-2026|R128|G09O~S0AG": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Jannik Sinner",
+"b": "Hugo Gaston",
+"pa": 0.9915,
+"w": "a"
+},
+"australian-open-2026|R128|D994~P0HW": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "James Duckworth",
+"b": "Dino Prizmic",
+"pa": 0.4705,
+"w": "a"
+},
+"australian-open-2026|R128|F0FV~S0JA": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Eliot Spizzirri",
+"b": "Joao Fonseca",
+"pa": 0.3638,
+"w": "a"
+},
+"australian-open-2026|R128|N0BG~WB32": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Yibing Wu",
+"b": "Luca Nardi",
+"pa": 0.8588,
+"w": "a"
+},
+"australian-open-2026|R128|D0FJ~GD64": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Luciano Darderi",
+"b": "Cristian Garin",
+"pa": 0.5848,
+"w": "a"
+},
+"australian-open-2026|R128|B0BI~M0GZ": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Sebastian Baez",
+"b": "Giovanni Mpetshi Perricard",
+"pa": 0.4954,
+"w": "a"
+},
+"australian-open-2026|R128|KE29~M0QI": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Karen Khachanov",
+"b": "Alex Michelsen",
+"pa": 0.5706,
+"w": "a"
+},
+"australian-open-2026|R128|B0NN~O483": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Nishesh Basavareddy",
+"b": "Christopher O'Connell",
+"pa": 0.5699,
+"w": "a"
+},
+"australian-open-2026|R128|HH26~S0S1": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Ben Shelton",
+"b": "Ugo Humbert",
+"pa": 0.4801,
+"w": "a"
+},
+"australian-open-2026|R128|MC65~S0IA": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Dane Sweeny",
+"b": "Gael Monfils",
+"pa": 0.2294,
+"w": "a"
+},
+"australian-open-2026|R128|D0DT~VA25": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Valentin Vacherot",
+"b": "Martin Damm",
+"pa": 0.769,
+"w": "a"
+},
+"australian-open-2026|R128|H0BH~ME82": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Rinky Hijikata",
+"b": "Adrian Mannarino",
+"pa": 0.4455,
+"w": "a"
+},
+"australian-open-2026|R128|B0GG~RH16": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Casper Ruud",
+"b": "Mattia Bellucci",
+"pa": 0.8866,
+"w": "a"
+},
+"australian-open-2026|R128|MU94~S0GD": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Jaume Munar",
+"b": "Dalibor Svrcina",
+"pa": 0.7831,
+"w": "a"
+},
+"australian-open-2026|R128|AE14~C977": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Marin Cilic",
+"b": "Daniel Altmaier",
+"pa": 0.6527,
+"w": "a"
+},
+"australian-open-2026|R128|SU55~Y09V": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R128",
+"a": "Denis Shapovalov",
+"b": "Yunchaokete Bu",
+"pa": 0.7954,
+"w": "a"
+},
+"australian-open-2026|R64|A0E2~H997": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Carlos Alcaraz",
+"b": "Yannick Hanfmann",
+"pa": 0.9592,
+"w": "a"
+},
+"australian-open-2026|R64|MW02~Z0BZ": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Corentin Moutet",
+"b": "Michael Zheng",
+"pa": 0.537,
+"w": "a"
+},
+"australian-open-2026|R64|PL56~T0A1": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Tommy Paul",
+"b": "Thiago Agustin Tirante",
+"pa": 0.9037,
+"w": "a"
+},
+"australian-open-2026|R64|DH50~O522": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Alejandro Davidovich Fokina",
+"b": "Reilly Opelka",
+"pa": 0.698,
+"w": "a"
+},
+"australian-open-2026|R64|DH58~M0JF": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Alex de Minaur",
+"b": "Hamad Medjedovic",
+"pa": 0.8256,
+"w": "a"
+},
+"australian-open-2026|R64|C0DF~TD51": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Frances Tiafoe",
+"b": "Francisco Comesana",
+"pa": 0.6207,
+"w": "a"
+},
+"australian-open-2026|R64|BK92~F724": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Alexander Bublik",
+"b": "Marton Fucsovics",
+"pa": 0.7704,
+"w": "a"
+},
+"australian-open-2026|R64|EA24~F0DM": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Tomas Martin Etcheverry",
+"b": "Arthur Fery",
+"pa": 0.5982,
+"w": "a"
+},
+"australian-open-2026|R64|MP20~Z355": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Alexander Zverev",
+"b": "Alexandre Muller",
+"pa": 0.8814,
+"w": "a"
+},
+"australian-open-2026|R64|N0AM~N771": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Cameron Norrie",
+"b": "Emilio Nava",
+"pa": 0.7299,
+"w": "a"
+},
+"australian-open-2026|R64|C0AU~D923": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Francisco Cerundolo",
+"b": "Damir Dzumhur",
+"pa": 0.7882,
+"w": "a"
+},
+"australian-open-2026|R64|F0F2~RE44": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Andrey Rublev",
+"b": "Jaime Faria",
+"pa": 0.8608,
+"w": "a"
+},
+"australian-open-2026|R64|S0H2~T0HA": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Learner Tien",
+"b": "Aleksandr Shevchenko",
+"pa": 0.7941,
+"w": "a"
+},
+"australian-open-2026|R64|BT72~TC61": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Nuno Borges",
+"b": "Jordan Thompson",
+"pa": 0.4879,
+"w": "a"
+},
+"australian-open-2026|R64|HB64~MM58": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Daniil Medvedev",
+"b": "Quentin Halys",
+"pa": 0.8782,
+"w": "a"
+},
+"australian-open-2026|R64|M0CI~MQ75": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Fabian Marozsan",
+"b": "Kamil Majchrzak",
+"pa": 0.5762,
+"w": "a"
+},
+"australian-open-2026|R64|D643~M0IF": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Novak Djokovic",
+"b": "Francesco Maestrelli",
+"pa": 0.9764,
+"w": "a"
+},
+"australian-open-2026|R64|S0RE~V812": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Botic van de Zandschulp",
+"b": "Juncheng Shang",
+"pa": 0.3879,
+"w": "a"
+},
+"australian-open-2026|R64|J0DZ~M0NI": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Jakub Mensik",
+"b": "Rafael Jodar",
+"pa": 0.6902,
+"w": "a"
+},
+"australian-open-2026|R64|HB71~Q02L": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Ethan Quinn",
+"b": "Hubert Hurkacz",
+"pa": 0.1369,
+"w": "a"
+},
+"australian-open-2026|R64|M0EJ~SU87": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Lorenzo Musetti",
+"b": "Lorenzo Sonego",
+"pa": 0.7539,
+"w": "a"
+},
+"australian-open-2026|R64|M0FH~TE51": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Tomas Machac",
+"b": "Stefanos Tsitsipas",
+"pa": 0.6541,
+"w": "a"
+},
+"australian-open-2026|R64|FB98~KI82": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Taylor Fritz",
+"b": "Vit Kopriva",
+"pa": 0.8954,
+"w": "a"
+},
+"australian-open-2026|R64|G0IX~W367": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Stan Wawrinka",
+"b": "Arthur Gea",
+"pa": 0.5656,
+"w": "a"
+},
+"australian-open-2026|R64|D994~S0AG": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Jannik Sinner",
+"b": "James Duckworth",
+"pa": 0.9926,
+"w": "a"
+},
+"australian-open-2026|R64|S0JA~WB32": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Eliot Spizzirri",
+"b": "Yibing Wu",
+"pa": 0.4561,
+"w": "a"
+},
+"australian-open-2026|R64|B0BI~D0FJ": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Luciano Darderi",
+"b": "Sebastian Baez",
+"pa": 0.359,
+"w": "a"
+},
+"australian-open-2026|R64|B0NN~KE29": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Karen Khachanov",
+"b": "Nishesh Basavareddy",
+"pa": 0.7107,
+"w": "a"
+},
+"australian-open-2026|R64|S0IA~S0S1": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Ben Shelton",
+"b": "Dane Sweeny",
+"pa": 0.8859,
+"w": "a"
+},
+"australian-open-2026|R64|H0BH~VA25": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Valentin Vacherot",
+"b": "Rinky Hijikata",
+"pa": 0.7384,
+"w": "a"
+},
+"australian-open-2026|R64|MU94~RH16": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Casper Ruud",
+"b": "Jaume Munar",
+"pa": 0.6789,
+"w": "a"
+},
+"australian-open-2026|R64|C977~SU55": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R64",
+"a": "Marin Cilic",
+"b": "Denis Shapovalov",
+"pa": 0.4484,
+"w": "a"
+},
+"australian-open-2026|R32|A0E2~MW02": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R32",
+"a": "Carlos Alcaraz",
+"b": "Corentin Moutet",
+"pa": 0.9467,
+"w": "a"
+},
+"australian-open-2026|R32|DH50~PL56": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R32",
+"a": "Tommy Paul",
+"b": "Alejandro Davidovich Fokina",
+"pa": 0.5744,
+"w": "a"
+},
+"australian-open-2026|R32|DH58~TD51": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R32",
+"a": "Alex de Minaur",
+"b": "Frances Tiafoe",
+"pa": 0.8025,
+"w": "a"
+},
+"australian-open-2026|R32|BK92~EA24": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R32",
+"a": "Alexander Bublik",
+"b": "Tomas Martin Etcheverry",
+"pa": 0.7596,
+"w": "a"
+},
+"australian-open-2026|R32|N771~Z355": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R32",
+"a": "Alexander Zverev",
+"b": "Cameron Norrie",
+"pa": 0.7552,
+"w": "a"
+},
+"australian-open-2026|R32|C0AU~RE44": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R32",
+"a": "Francisco Cerundolo",
+"b": "Andrey Rublev",
+"pa": 0.4737,
+"w": "a"
+},
+"australian-open-2026|R32|BT72~T0HA": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R32",
+"a": "Learner Tien",
+"b": "Nuno Borges",
+"pa": 0.6756,
+"w": "a"
+},
+"australian-open-2026|R32|M0CI~MM58": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R32",
+"a": "Daniil Medvedev",
+"b": "Fabian Marozsan",
+"pa": 0.7468,
+"w": "a"
+},
+"australian-open-2026|R32|D643~V812": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R32",
+"a": "Novak Djokovic",
+"b": "Botic van de Zandschulp",
+"pa": 0.9411,
+"w": "a"
+},
+"australian-open-2026|R32|M0NI~Q02L": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R32",
+"a": "Jakub Mensik",
+"b": "Ethan Quinn",
+"pa": 0.8013,
+"w": "a"
+},
+"australian-open-2026|R32|M0EJ~M0FH": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R32",
+"a": "Lorenzo Musetti",
+"b": "Tomas Machac",
+"pa": 0.4938,
+"w": "a"
+},
+"australian-open-2026|R32|FB98~W367": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R32",
+"a": "Taylor Fritz",
+"b": "Stan Wawrinka",
+"pa": 0.826,
+"w": "a"
+},
+"australian-open-2026|R32|S0AG~S0JA": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R32",
+"a": "Jannik Sinner",
+"b": "Eliot Spizzirri",
+"pa": 0.9723,
+"w": "a"
+},
+"australian-open-2026|R32|D0FJ~KE29": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R32",
+"a": "Luciano Darderi",
+"b": "Karen Khachanov",
+"pa": 0.2703,
+"w": "a"
+},
+"australian-open-2026|R32|S0S1~VA25": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R32",
+"a": "Ben Shelton",
+"b": "Valentin Vacherot",
+"pa": 0.6606,
+"w": "a"
+},
+"australian-open-2026|R32|C977~RH16": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R32",
+"a": "Casper Ruud",
+"b": "Marin Cilic",
+"pa": 0.7009,
+"w": "a"
+},
+"australian-open-2026|R16|A0E2~PL56": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R16",
+"a": "Carlos Alcaraz",
+"b": "Tommy Paul",
+"pa": 0.8665,
+"w": "a"
+},
+"australian-open-2026|R16|BK92~DH58": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R16",
+"a": "Alex de Minaur",
+"b": "Alexander Bublik",
+"pa": 0.5745,
+"w": "a"
+},
+"australian-open-2026|R16|C0AU~Z355": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R16",
+"a": "Alexander Zverev",
+"b": "Francisco Cerundolo",
+"pa": 0.6994,
+"w": "a"
+},
+"australian-open-2026|R16|MM58~T0HA": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R16",
+"a": "Learner Tien",
+"b": "Daniil Medvedev",
+"pa": 0.321,
+"w": "a"
+},
+"australian-open-2026|R16|D643~M0NI": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R16",
+"a": "Novak Djokovic",
+"b": "Jakub Mensik",
+"pa": 0.8033,
+"w": "a"
+},
+"australian-open-2026|R16|FB98~M0EJ": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R16",
+"a": "Lorenzo Musetti",
+"b": "Taylor Fritz",
+"pa": 0.4884,
+"w": "a"
+},
+"australian-open-2026|R16|D0FJ~S0AG": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R16",
+"a": "Jannik Sinner",
+"b": "Luciano Darderi",
+"pa": 0.9849,
+"w": "a"
+},
+"australian-open-2026|R16|RH16~S0S1": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "R16",
+"a": "Ben Shelton",
+"b": "Casper Ruud",
+"pa": 0.531,
+"w": "a"
+},
+"australian-open-2026|QF|A0E2~DH58": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "QF",
+"a": "Carlos Alcaraz",
+"b": "Alex de Minaur",
+"pa": 0.7828,
+"w": "a"
+},
+"australian-open-2026|QF|T0HA~Z355": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "QF",
+"a": "Alexander Zverev",
+"b": "Learner Tien",
+"pa": 0.6099,
+"w": "a"
+},
+"australian-open-2026|QF|D643~M0EJ": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "QF",
+"a": "Novak Djokovic",
+"b": "Lorenzo Musetti",
+"pa": 0.7925,
+"w": "a"
+},
+"australian-open-2026|QF|S0AG~S0S1": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "QF",
+"a": "Jannik Sinner",
+"b": "Ben Shelton",
+"pa": 0.9237,
+"w": "a"
+},
+"australian-open-2026|SF|A0E2~Z355": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "SF",
+"a": "Carlos Alcaraz",
+"b": "Alexander Zverev",
+"pa": 0.8055,
+"w": "a"
+},
+"australian-open-2026|SF|D643~S0AG": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "SF",
+"a": "Novak Djokovic",
+"b": "Jannik Sinner",
+"pa": 0.2226,
+"w": "a"
+},
+"australian-open-2026|F|A0E2~D643": {
+"t": "Australian Open 2026",
+"tk": "australian-open-2026",
+"rd": "F",
+"a": "Carlos Alcaraz",
+"b": "Novak Djokovic",
+"pa": 0.6085,
+"w": "a"
+}
+},
+"demo": true
+}
