@@ -101,6 +101,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 
 <h2>10. Version history</h2>
 <table class="ver">
+<tr><td>v0.21</td><td>“Share this visual” button on player pages, the match comparator and draws: a ready-to-post image (1080×1350) with a link back to the page</td></tr>
 <tr><td>v0.20</td><td>WTA pages: pink browser-tab and iPhone home-screen icons</td></tr>
 <tr><td>v0.19</td><td>Calendar: no more favourites shown for tournaments months away; they will only come back for upcoming tournaments, set at a fixed date before each one</td></tr>
 <tr><td>v0.18</td><td>Archives page: every prediction saved before the match or the tournament, dated, never changed, with its result and a live record</td></tr>
@@ -209,6 +210,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 
 <h2>10. Historique des versions</h2>
 <table class="ver">
+<tr><td>v0.21</td><td>Bouton « Partager ce visuel » sur les pages joueurs, le comparateur et les tableaux : une image prête à poster (1080×1350) avec un lien vers la page</td></tr>
 <tr><td>v0.20</td><td>Pages WTA : icône d'onglet et icône d'écran d'accueil iPhone en rose</td></tr>
 <tr><td>v0.19</td><td>Calendrier : plus de favoris affichés pour des tournois dans plusieurs mois ; ils reviendront seulement pour les tournois à venir, fixés à une date précise avant chacun</td></tr>
 <tr><td>v0.18</td><td>Page Archives : chaque prédiction enregistrée avant le match ou le tournoi, datée, jamais modifiée, avec son résultat et un bilan en direct</td></tr>

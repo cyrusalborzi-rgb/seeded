@@ -9,6 +9,7 @@ import json
 CSS = r"""
 .st-wrap h1{font-size:18px;margin:12px 0 2px}
 .st-meta{color:#555;margin-bottom:8px;font-size:12px}
+.st-share{font:inherit;font-size:12px;font-weight:bold;padding:5px 10px;margin:0 0 8px;border:1px solid #1d3557;background:#1d3557;color:#fff;cursor:pointer}
 .st-note{background:#f4f4f4;border:1px solid #ddd;padding:6px 8px;margin:8px 0;font-size:12px;line-height:1.5}
 .st-wrap input.st-q{font:inherit;padding:3px 6px;border:1px solid #bbb;margin:4px 0 6px;width:220px}
 .st-wrap table{border-collapse:collapse;width:100%}
@@ -158,6 +159,7 @@ function SeededTournament(root, D, lang) {
   // ---------------------------------------------------------------- rendu
   root.innerHTML = `<div class="st-wrap">
     <h1 data-r="title"></h1><div class="st-meta" data-r="meta"></div>
+    <button class="st-share" data-r="share" data-tshare="1" style="display:none"></button>
     <div class="st-sc" data-r="sc"></div>
     <div class="st-tabs"><button class="st-tab on" data-tab="0"></button><button class="st-tab" data-tab="1"></button></div>
     <div data-r="p0"><div class="st-note" data-r="note0"></div><input class="st-q" data-r="q"><div class="st-tw"><table data-r="t"></table></div></div>
@@ -174,6 +176,12 @@ function SeededTournament(root, D, lang) {
     root.querySelectorAll('.st-tab').forEach((b, i) => { b.textContent = i ? t().tab1 : t().tab0; b.classList.toggle('on', i === tab); });
     R('note0').innerHTML = t().note0; R('q').placeholder = t().search; R('how').innerHTML = t().how; R('how2').textContent = t().how2;
     R('p0').style.display = tab ? 'none' : ''; R('p1').style.display = tab ? '' : 'none';
+    if (window.SEEDED_SHARE) { R('share').style.display = ''; R('share').textContent = window.SEEDED_SHL ? window.SEEDED_SHL() : 'Share'; }
+  }
+  function shareData() {          // point 15 : visuel « chances de titre » (top 8, scénario « Et si ? » compris)
+    const top = [...Array(N).keys()].filter(i => !LOST[i] && CUR[NR][i] > 0).sort((a, b) => CUR[NR][b] - CUR[NR][a]).slice(0, 8);
+    return {slug: (D.meta.nom || '').toLowerCase().replace(/[^a-z0-9]+/g, '-'), name: D.meta.nom_l?.[L] || D.meta.nom, scen: picks().length > 0,
+            state: D.meta.n_played ? t().stN(D.meta.n_played, colLabelForRound(D.meta.last_round)) : t().st0, rows: top.map(i => [name(i), CUR[NR][i]])};
   }
   function colLabelForRound(r) {   // "R32" (tour joué) -> libellé du tour
     const left = {R128: 128, R64: 64, R32: 32, R16: 16, QF: 8, SF: 4, F: 2}[r] || 0;
@@ -275,8 +283,9 @@ function SeededTournament(root, D, lang) {
 
   // ------------------------------------------------------------ interactions
   root.addEventListener('click', e => {
-    const el = e.target.closest('[data-win],[data-undo],[data-reset],[data-tab],[data-view],[data-sort]');
+    const el = e.target.closest('[data-win],[data-undo],[data-reset],[data-tab],[data-view],[data-sort],[data-tshare]');
     if (!el || !root.contains(el)) return;
+    if (el.dataset.tshare) { window.SEEDED_SHARE(shareData()); return; }
     if (el.dataset.win) { const [i, w] = el.dataset.win.split(',').map(Number); toggle(i, w); }
     else if (el.dataset.undo) setWins(+el.dataset.undo, 0);
     else if (el.dataset.reset) { FW = new Int8Array(N); CUR = BASE; render(); }

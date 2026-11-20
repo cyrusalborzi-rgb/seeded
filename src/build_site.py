@@ -96,6 +96,11 @@ select,input{font:inherit;padding:4px 6px;border:1px solid #bbb}
 a.pl{color:#1d3557}
 .mkt{margin-top:8px;font-size:12.5px} .mkt b{color:#1d3557}
 .arc-t{border:1px solid #d5dde8;padding:6px 8px;margin:0 0 10px} .arc-t h3{margin:0 0 4px;font-size:14px} .arc-t p{margin:2px 0 6px}
+.btn.shb{background:#1d3557;color:#fff;border-color:#1d3557;font-weight:bold}
+.sh-ov{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:60;display:none;align-items:center;justify-content:center;padding:10px}
+.sh-ov.on{display:flex} .sh-box{background:#fff;width:440px;max-width:100%;max-height:100%;display:flex;flex-direction:column}
+.sh-in{padding:10px;overflow:auto;text-align:center} #sh-img{width:100%;max-width:380px;border:1px solid #d5dde8;display:block;margin:0 auto 8px}
+.sh-act .btn{margin:3px}
 .ok{color:#1a7f37;font-weight:bold} .ko{color:#c0392b;font-weight:bold}
 .tag.dis{background:#fde2c4;color:#8a4b00;border-color:#f0c08a} .tag.demo{background:#c0392b;color:#fff;border-color:#c0392b}
 tr.click{cursor:pointer} tr.click:hover td{background:#eef4fb!important}
@@ -213,7 +218,7 @@ __TCSS__
     <div class="box"><h2 data-i="recent_t"></h2><div class="boxin"><table id="pl-recent"></table>
       <div class="meta" style="margin-top:6px" data-i="recent_note"></div></div></div>
   </div><div>
-    <div class="box"><div class="boxin" style="text-align:center"><a id="pl-cmp" class="btn" style="display:inline-block"></a></div></div>
+    <div class="box"><div class="boxin" style="text-align:center"><a id="pl-cmp" class="btn" style="display:inline-block"></a> <button class="btn shb" data-share="player" data-i="sh_btn"></button></div></div>
     <div class="box"><h2 data-i="pl_surf_t"></h2><div class="boxin"><table id="pl-rec"></table><div class="meta" id="pl-dur" style="margin-top:6px"></div></div></div>
     <div class="box"><h2 data-i="pl_best"></h2><div class="boxin" id="pl-best" style="line-height:1.6"></div></div>
     <div class="ad mr" data-i="ad_mr"></div>
@@ -252,6 +257,7 @@ __TCSS__
     <div class="pbar"><div id="ba" style="background:#1d3557"></div><div id="bb" style="background:#7a8ea8"></div></div>
     <div id="pexp" class="meta"></div>
     <div id="pmkt" class="mkt"></div>
+    <div style="margin-top:8px"><button class="btn shb" data-share="match" data-i="sh_btn"></button></div>
   </div>
   <div class="cmp">
     <div class="box"><h2 id="ca-h"></h2><div class="boxin" id="ca"></div></div>
@@ -289,6 +295,10 @@ __TCSS__
 <div class="page" id="p-method"><div class="mt" data-mlang="en">__M_EN__</div><div class="mt" data-mlang="fr">__M_FR__</div></div>
 
 <div class="foot" data-i="foot"></div>
+<div class="sh-ov" id="sh-ov" onclick="if(event.target===this)shClose()"><div class="sh-box">
+  <div class="fb-head"><span data-i="sh_t"></span><button onclick="shClose()" aria-label="close">×</button></div>
+  <div class="sh-in"><img id="sh-img" alt=""><div class="sh-act"><button class="btn shb" id="sh-go"></button><button class="btn" id="sh-dl"></button><button class="btn" id="sh-cp"></button></div>
+  <div class="meta" id="sh-msg" style="margin:6px 0 0"></div></div></div></div>
 <button class="fb-btn" id="fb-btn" onclick="fbToggle()"></button>
 <div class="fb-panel" id="fb-panel"><div class="fb-head"><span id="fb-title"></span><button onclick="fbToggle(false)" aria-label="close">×</button></div>
   <iframe id="fb-frame" title="Feedback"></iframe><div class="fb-alt" id="fb-alt"></div></div>
@@ -383,6 +393,11 @@ const T = {
   form_t: 'Last 10 matches', rec: (w, l) => `${w}–${l}`, trend: 'Last 30 days', srank: 'Seeded rank', atprank: 'ATP rank', surf_rt: s => `${s} rating`,
   won: n => `${n} won`, all_meet: 'All meetings', h_date2: 'Date', h_surf: 'Surface', h_winner: 'Winner', more: n => `+ ${n} older`,
   tour: x => x, round: x => x,
+  sh_btn: '📤 Share this visual', sh_t: 'Share this visual', sh_go: 'Share…', sh_dl: 'Download the image', sh_cp: 'Copy the link', sh_cpd: 'Link copied ✓',
+  sh_hint: 'Post the image on Instagram, X, WhatsApp… The link brings people straight back to this page.', sh_win: 'chance of winning',
+  sh_surf: s => `On ${s.toLowerCase()}`, sh_rank: (s, a) => `Seeded #${s}` + (a ? `  ·  ATP #${a}` : ''), sh_12m: 'last 12 months', sh_titles: n => `${n} title${n === 1 ? '' : 's'}`,
+  sh_title_odds: 'Title chances', sh_h2h: 'Head-to-head', sh_by: 'Seeded Rating by surface', sh_est: 'Seeded estimate · not betting advice',
+  sh_scen: 'What-if scenario',
   nav_arch: 'Archives', rec_arch: 'See every prediction archived before the matches →',
   arc_meta: 'Every Seeded prediction is saved <b>before</b> the match or the tournament, with its date, and never changed afterwards. Only the result is added once it is known.',
   arc_proof: u => ` Proof: the archive files are public, and their <a href="${u}" target="_blank" rel="noopener">history on GitHub</a> shows when each entry was saved.`,
@@ -481,6 +496,11 @@ const T = {
                'Vienna': 'Vienne', 'Brussels': 'Bruxelles', 'Basel': 'Bâle', 'Beijing': 'Pékin', 'Kitzbuhel': 'Kitzbühel', 'Bastad': 'Båstad',
                'Mallorca': 'Majorque', "'s-Hertogenbosch": 'Bois-le-Duc', 'Queen\'s Club': 'Queen\'s', 'Washington': 'Washington'})[x] || x,
   round: x => ({R128: '64es', R64: '32es', R32: '16es', R16: '8es', QF: 'QF', SF: 'DF', F: 'F', RR: 'Poules', BR: '3e place'})[x] || x,
+  sh_btn: '📤 Partager ce visuel', sh_t: 'Partager ce visuel', sh_go: 'Partager…', sh_dl: "Télécharger l'image", sh_cp: 'Copier le lien', sh_cpd: 'Lien copié ✓',
+  sh_hint: "Poste l'image sur Instagram, X, WhatsApp… Le lien ramène directement sur cette page.", sh_win: 'de chances de gagner',
+  sh_surf: s => `Sur ${s.toLowerCase()}`, sh_rank: (s, a) => `Seeded n°${s}` + (a ? `  ·  ATP n°${a}` : ''), sh_12m: 'sur 12 mois', sh_titles: n => `${n} titre${n > 1 ? 's' : ''}`,
+  sh_title_odds: 'Chances de titre', sh_h2h: 'Face-à-face', sh_by: 'Seeded Rating par surface', sh_est: 'Estimation Seeded · pas un conseil de pari',
+  sh_scen: 'Scénario « Et si ? »',
   nav_arch: 'Archives', rec_arch: 'Voir toutes les prédictions archivées avant les matchs →',
   arc_meta: 'Chaque prédiction Seeded est enregistrée <b>avant</b> le match ou le tournoi, avec sa date, et n\'est jamais modifiée ensuite. Seul le résultat vient s\'ajouter une fois connu.',
   arc_proof: u => ` La preuve : les fichiers d'archives sont publics, et leur <a href="${u}" target="_blank" rel="noopener">historique sur GitHub</a> montre la date de chaque enregistrement.`,
@@ -734,6 +754,7 @@ function renderPlayer() {
   playerData(i, P => fillPlayer(I, P));
 }
 function fillPlayer(I, P) {
+  window._curP = P;                                        // pour le visuel à partager (point 15)
   const nr = L === 'fr' ? 'n°' : '#', b = P.bio || {}, sep = ' · ';
   $('#pl-meta').innerHTML = [I.ioc, b.age && t('pl_age', b.age), b.ht && num((b.ht / 100).toFixed(2)) + ' m', b.hand && t('pl_hand', b.hand),
     P.last_day && `${t('last_match')} ${dt(P.last_day)}`, I.n14 ? `<a class="ql" href="#method/2">${t('pl_rhythm', I.n14)}</a>` : ''].filter(Boolean).join(sep);
@@ -790,6 +811,7 @@ function renderPredictor() {
   $('#pexp').innerHTML = t('pred_exp', t(sf), a.name, fmt(a[sf]), b.name, fmt(b[sf]), fmt(Math.abs(a[sf] - b[sf]))) + rhythm +
     `<br><span style="color:#888">ⓘ ${t('pred_lock')}</span>`;
   $('#pmkt').innerHTML = marketLine(+$('#pa').value, +$('#pb').value, p);
+  window._pred = {a: +$('#pa').value, b: +$('#pb').value, sf, bo: $('#pbo').value, p};   // pour le visuel à partager (point 15)
   renderCompare(+$('#pa').value, +$('#pb').value, sf);
   const T8 = R.slice(0, 8);
   $('#grid-t').textContent = t('grid_t', t(sf).toLowerCase());
@@ -949,6 +971,110 @@ function renderArchives() {
   if (M.length > AN) $('#arc-more-b').onclick = () => { AN += 60; renderArchives(); };
 }
 document.querySelectorAll('[data-af]').forEach(b => b.onclick = () => { AF = b.dataset.af; AN = 60; renderArchives(); });
+
+// ---- point 15 : « Partager ce visuel » — image 1080×1350 (format Instagram / X) dessinée dans un canvas
+const LOGO_SVG = __LOGO_SVG__, SITE_URL = 'cyrusalborzi-rgb.github.io/seeded';
+const SH = {img: null, blob: null, url: '', name: ''};
+const shFont = (w, px) => `${w} ${px}px Verdana, Arial, sans-serif`;
+function shFit(c, txt, w, px, max) { do { c.font = shFont(w, px); px -= 2; } while (c.measureText(txt).width > max && px > 20); }
+function shLogo() { return new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null);
+  im.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(LOGO_SVG); }); }
+async function shDraw(kind) {
+  const W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const c = cv.getContext('2d'), NAVY = '#1d3557', ACC = '#9fd36b', SOFT = '#eef2f7', LINE = '#d9e4f1', GREY = '#6f86a3';
+  c.fillStyle = '#fff'; c.fillRect(0, 0, W, H);
+  // en-tête : logo + SEEDED + circuit
+  c.fillStyle = NAVY; c.fillRect(0, 0, W, 150);
+  const lg = await shLogo(); if (lg) c.drawImage(lg, 60, 33, 84, 84);
+  c.font = shFont('bold', 60); c.fillStyle = '#fff'; c.textBaseline = 'middle'; c.fillText('SEED', 166, 77);
+  const sw = c.measureText('SEED').width; c.fillStyle = ACC; c.fillText('ED', 166 + sw, 77);
+  c.font = shFont('bold', 34); c.textAlign = 'right'; c.fillStyle = '#fff'; c.fillText(CIRCUIT === 'wta' ? 'WTA' : 'ATP', W - 60, 77); c.textAlign = 'left';
+  // pied : adresse + date
+  c.fillStyle = NAVY; c.fillRect(0, H - 110, W, 110);
+  c.font = shFont('bold', 34); c.fillStyle = '#fff'; c.fillText(SITE_URL, 60, H - 55);
+  c.font = shFont('normal', 26); c.textAlign = 'right'; c.fillStyle = '#d9e4f1';
+  c.fillText(new Date().toLocaleDateString(L === 'fr' ? 'fr-FR' : 'en-GB', {day: 'numeric', month: 'long', year: 'numeric'}), W - 60, H - 55); c.textAlign = 'left';
+  const bar = (x, y, w, h, frac, col) => { c.fillStyle = SOFT; c.fillRect(x, y, w, h); c.fillStyle = col; c.fillRect(x, y, Math.max(0, Math.min(1, frac)) * w, h); };
+  const nr = L === 'fr' ? 'n°' : '#';
+  if (kind === 'player') {
+    const I = R[PL], P = window._curP || {};
+    SH.name = I.slug; SH.url = `#player/${I.slug}`;
+    c.fillStyle = NAVY; shFit(c, I.name, 'bold', 76, W - 120); c.fillText(I.name, 60, 235);
+    c.font = shFont('normal', 30); c.fillStyle = GREY;
+    c.fillText([I.ioc, P.bio && P.bio.age ? t('pl_age', P.bio.age) : ''].filter(Boolean).join('  ·  '), 60, 300);
+    c.fillStyle = NAVY; c.font = shFont('bold', 210); c.fillText(fmt(I.note), 52, 450);
+    const nw = c.measureText(fmt(I.note)).width;
+    c.font = shFont('bold', 34); c.fillText('Seeded Rating', 80 + nw, 410); c.font = shFont('normal', 30); c.fillStyle = GREY; c.fillText('/100', 80 + nw, 460);
+    c.fillStyle = NAVY; c.font = shFont('bold', 36); c.fillText(t('sh_rank', I.rank, I.atp).replace('ATP', TL), 60, 590);
+    c.font = shFont('bold', 32); c.fillText(t('sh_by'), 60, 690);
+    ['hard', 'clay', 'grass'].forEach((k, j) => { const y = 750 + j * 95, rk = R.filter(r => r[k] > I[k]).length + 1;
+      c.font = shFont('normal', 30); c.fillStyle = NAVY; c.fillText(t(k), 60, y);
+      bar(250, y - 24, 560, 48, (I[k] - 40) / 60, NAVY);
+      c.font = shFont('bold', 32); c.fillText(fmt(I[k]), 835, y); c.font = shFont('normal', 26); c.fillStyle = GREY; c.fillText(nr + rk, 935, y); });
+    const rc = P.record && P.record.all;
+    c.fillStyle = SOFT; c.fillRect(60, 1060, W - 120, 130);
+    c.fillStyle = NAVY; c.font = shFont('bold', 52);
+    c.fillText(rc ? `${rc[0]}-${rc[1]}` : '–', 100, 1125);
+    const rw = c.measureText(rc ? `${rc[0]}-${rc[1]}` : '–').width;
+    c.font = shFont('normal', 28); c.fillStyle = GREY; c.fillText(t('sh_12m'), 120 + rw, 1125);
+    if (P.titles != null) { c.textAlign = 'right'; c.font = shFont('bold', 40); c.fillStyle = NAVY; c.fillText(t('sh_titles', P.titles), W - 100, 1125); c.textAlign = 'left'; }
+  } else if (kind === 'match') {
+    const M = window._pred, A = R[M.a], B = R[M.b], pa = M.p;
+    SH.name = A.slug + '-vs-' + B.slug; SH.url = `#predictor/${A.slug}`;
+    c.font = shFont('normal', 30); c.fillStyle = GREY;
+    c.fillText(`${t('sh_surf', t(M.sf))}  ·  ${t('bo' + M.bo)}`, 60, 225);
+    const col = (P_, x, al, pr) => { c.textAlign = al;
+      c.fillStyle = NAVY; shFit(c, P_.name, 'bold', 58, 440); c.fillText(P_.name, x, 330);
+      c.font = shFont('normal', 28); c.fillStyle = GREY; c.fillText(`Seeded Rating ${fmt(P_[M.sf])}  ·  ${nr}${P_.rank}`, x, 385);
+      c.font = shFont('bold', 150); c.fillStyle = pr >= .5 ? NAVY : GREY; c.fillText(pct(100 * pr, 0), x, 560); c.textAlign = 'left'; };
+    col(A, 60, 'left', pa); col(B, W - 60, 'right', 1 - pa);
+    c.font = shFont('bold', 34); c.fillStyle = GREY; c.textAlign = 'center'; c.fillText(t('sh_win'), W / 2, 655); c.textAlign = 'left';
+    c.fillStyle = '#9fb3cc'; c.fillRect(60, 700, W - 120, 70); c.fillStyle = NAVY; c.fillRect(60, 700, (W - 120) * pa, 70);
+    let y = 880;
+    if (D.h2h && M.a !== M.b) { const key = Math.min(M.a, M.b) + '-' + Math.max(M.a, M.b), list = D.h2h[key] || [];
+      const wa = list.filter(m => (m[4] === 0 ? Math.min(M.a, M.b) : Math.max(M.a, M.b)) === M.a).length;
+      c.font = shFont('bold', 32); c.fillStyle = NAVY; c.fillText(t('sh_h2h'), 60, y);
+      c.textAlign = 'right'; c.font = shFont('bold', 44); c.fillText(`${last(A.name)} ${wa} – ${list.length - wa} ${last(B.name)}`, W - 60, y); c.textAlign = 'left'; y += 110; }
+    const fm = i => (D.form[i] || []).slice(0, 10).map(x => x[5]);
+    c.font = shFont('bold', 32); c.fillStyle = NAVY; c.fillText(t('form_t'), 60, y); y += 70;
+    [[A, M.a], [B, M.b]].forEach(([P_, i]) => { const f = fm(i);
+      c.font = shFont('normal', 28); c.fillStyle = NAVY; c.fillText(last(P_.name), 60, y);
+      f.reverse().forEach((r, k) => { c.fillStyle = r === 'W' ? NAVY : LINE; c.fillRect(330 + k * 66, y - 26, 56, 40);
+        c.fillStyle = r === 'W' ? '#fff' : NAVY; c.font = shFont('bold', 24); c.textAlign = 'center'; c.fillText(r === 'W' ? t('win') : t('loss'), 358 + k * 66, y - 5); c.textAlign = 'left'; });
+      y += 70; });
+    c.font = shFont('normal', 24); c.fillStyle = GREY; c.fillText(t('sh_est'), 60, H - 150);
+  } else if (kind === 'tour') {
+    const T_ = window._tshare; SH.name = T_.slug; SH.url = '#tournament';
+    c.fillStyle = NAVY; shFit(c, T_.name, 'bold', 64, W - 120); c.fillText(T_.name, 60, 230);
+    c.font = shFont('normal', 30); c.fillStyle = GREY; c.fillText(T_.state, 60, 290);
+    c.font = shFont('bold', 34); c.fillStyle = NAVY; c.fillText(T_.scen ? '🔮 ' + t('sh_scen') : t('sh_title_odds'), 60, 380);
+    const mx = Math.max(...T_.rows.map(r => r[1]), 1);
+    T_.rows.forEach(([n, v], j) => { const y = 460 + j * 90;
+      c.font = shFont('bold', 30); c.fillStyle = GREY; c.fillText(String(j + 1), 60, y);
+      c.fillStyle = NAVY; shFit(c, n, 'bold', 32, 330); c.fillText(n, 110, y);
+      bar(470, y - 24, 400, 46, v / mx, j === 0 ? NAVY : '#9fb3cc');
+      c.font = shFont('bold', 34); c.fillStyle = NAVY; c.textAlign = 'right'; c.fillText(pct(v, 1), W - 60, y); c.textAlign = 'left'; });
+    c.font = shFont('normal', 24); c.fillStyle = GREY; c.fillText(t('sh_est'), 60, H - 150);
+  }
+  return new Promise(res => cv.toBlob(b => res(b), 'image/png'));
+}
+async function shOpen(kind) {
+  $('#sh-ov').classList.add('on'); $('#sh-msg').textContent = t('sh_hint'); $('#sh-img').removeAttribute('src');
+  ['go', 'dl', 'cp'].forEach(k => $('#sh-' + k).textContent = t('sh_' + k));
+  SH.blob = await shDraw(kind);
+  if (SH.img) URL.revokeObjectURL(SH.img); SH.img = URL.createObjectURL(SH.blob); $('#sh-img').src = SH.img;
+  const file = new File([SH.blob], `seeded-${SH.name}.png`, {type: 'image/png'});
+  const can = navigator.canShare && navigator.canShare({files: [file]});
+  $('#sh-go').style.display = can ? '' : 'none';
+  $('#sh-go').onclick = () => navigator.share({files: [file], title: 'Seeded', text: SH.link()}).catch(() => {});
+  $('#sh-dl').onclick = () => { const a = document.createElement('a'); a.href = SH.img; a.download = file.name; document.body.appendChild(a); a.click(); a.remove(); };
+  $('#sh-cp').onclick = () => { (navigator.clipboard ? navigator.clipboard.writeText(SH.link()) : Promise.reject()).then(() => $('#sh-msg').textContent = t('sh_cpd'), () => $('#sh-msg').textContent = SH.link()); };
+}
+SH.link = () => `https://${SITE_URL}/${CIRCUIT === 'wta' ? 'wta.html' : ''}${SH.url}`;
+function shClose() { $('#sh-ov').classList.remove('on'); }
+document.addEventListener('click', e => { const b = e.target.closest('[data-share]'); if (b && !b.closest('#tour-app')) shOpen(b.dataset.share); });
+window.SEEDED_SHARE = data => { window._tshare = data; shOpen('tour'); };
+window.SEEDED_SHL = () => t('sh_btn');     // appelé par la page tournoi intégrée
 // ---- encadré d'avis (formulaire Tally ; la page et la langue sont transmises en champs cachés)
 const FB = '__FB__';
 function fbUrl(kind) {
@@ -997,7 +1123,7 @@ renderAll(); route();
 </script></body></html>"""
 
 def page(data_obj, facts, tour, circ="atp", files=True):
-    h = (HTML.replace("__FAV__", logo.favicon_links(files, circ)).replace("__LOGO__", logo.icon(bg=None))
+    h = (HTML.replace("__FAV__", logo.favicon_links(files, circ)).replace("__LOGO__", logo.icon(bg=None)).replace("__LOGO_SVG__", json.dumps(logo.icon(size=128)))
              .replace("__FB__", FEEDBACK_FORM).replace("__M_CSS__", methodo.CSS).replace("__M_EN__", methodo.render("en", facts_atp))
              .replace("__M_FR__", methodo.render("fr", facts_atp)).replace("__CIRCUIT__", circ)
              .replace("__TCSS__", T_CSS).replace("__TJS__", T_JS).replace("__FACTS__", json.dumps(facts))
