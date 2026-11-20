@@ -309,6 +309,45 @@ if f_on.exists():
     live.sort()
 nxt = next((t for t in CONFIG if t.get("next")), None)
 
+# ---- point 36b : favori du Calendrier, annoncé quelques jours avant le tournoi puis FIGÉ jusqu'à la fin
+# (il ne change jamais en cours de route ; les chances qui évoluent pendant le tournoi sont sur la page Tableaux).
+# Fichier public state/cal_favs*.json, jamais réécrit : sert de preuve, comme les Archives.
+# SEEDED_TODAY=AAAA-MM-JJ : date simulée pour un aperçu (rien n'est alors enregistré).
+import os
+from datetime import datetime, timezone
+FAV_DAYS = 7                                       # tous les tournois du calendrier, Challengers compris (décision de Cyrus, 20/11 ;
+                                                   # sans liste d'inscrits pour l'instant : point 29)
+_sim_day = os.environ.get("SEEDED_TODAY")
+_real_today = date.fromisoformat(_sim_day) if _sim_day else date.today()
+_ff = STATE / f"cal_favs{SUF}.json"
+CF = json.loads(_ff.read_text()) if _ff.exists() else {}
+_SK = {"H": "hard", "IH": "hard", "CL": "clay", "G": "grass"}
+_new = 0
+for e in CAL["events"] + CAL["ch"]:
+    k = f"{e['d'][:4]}-{_nrm(e['name'])}"
+    if k not in CF and 0 <= (date.fromisoformat(e["d"]) - _real_today).days <= FAV_DAYS:
+        s_ = _SK.get(e["surf"], "hard")
+        act = df[~df.inactive].sort_values(s_, ascending=False)        # joueurs en activité seulement
+        if len(act):
+            r_ = act.iloc[0]
+            CF[k] = {"name": e["name"], "d": e["d"], "cat": e["cat"], "surf": s_, "fav": r_["name"], "note": float(r_[s_]),
+                     "at": datetime.now(timezone.utc).isoformat(timespec="minutes") if not _sim_day else _real_today.isoformat() + "T08:00+00:00"}
+            _new += 1
+if _new and not _sim_day:
+    _ff.write_text(json.dumps(CF, ensure_ascii=False, indent=0))
+_seas = {(x["d"][:4], _nrm(x["name"])): x for x in season if "win" in x}
+cal_favs = []
+for e in CAL["events"] + CAL["ch"]:
+    k = f"{e['d'][:4]}-{_nrm(e['name'])}"
+    if k not in CF:
+        continue
+    f_ = CF[k]
+    w_ = next((x for (y, n), x in _seas.items() if y == e["d"][:4] and (n in _nrm(e["name"]) or _nrm(e["name"]) in n)), None)
+    e.update({"fav": f_["fav"], "fav_i": idx.get(by_norm.get(_nrm(f_["fav"]))), "fav_at": f_["at"],
+              "win": w_["win"] if w_ else None, "win_i": w_.get("win_i") if w_ else None})
+    cal_favs.append({k2: e[k2] for k2 in ("d", "name", "cat", "surf", "fav", "fav_i", "fav_at", "win", "win_i")})
+print("favoris du calendrier :", len(cal_favs), "(dont", _new, "nouveau(x))", "— date simulée " + _sim_day if _sim_day else "")
+
 # ---- point 16 : archives publiques des prédictions
 # Vraies archives (state/archive*.json, écrites par tournoi.py avant chaque match / tour) + matchs du bilan contre
 # le marché (notre proba enregistrée avant le match ; la proba du marché n'est pas reprise ici).
@@ -353,7 +392,7 @@ def _rec(ms):
 _rk = {r: i for i, r in enumerate(["R128", "R64", "R32", "R16", "QF", "SF", "F"])}
 a_matches = (sorted([m for m in a_matches if not m["demo"]], key=lambda m: m.get("time") or m["at"] or "", reverse=True)
              + sorted([m for m in a_matches if m["demo"]], key=lambda m: _rk.get(m["rd"], 9), reverse=True))
-archive_out = {"tours": a_tours, "matches": a_matches, "demo": use_demo,
+archive_out = {"tours": a_tours, "matches": a_matches, "demo": use_demo, "cal_favs": cal_favs,
                "rec": _rec([m for m in a_matches if not m["demo"]]), "rec_demo": _rec([m for m in a_matches if m["demo"]]) if use_demo else None}
 print("archives :", len(a_tours), "tournoi(s),", len(a_matches), "matchs", "(dont EXEMPLE AO 2026)" if use_demo else "")
 

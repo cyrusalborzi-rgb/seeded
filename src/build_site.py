@@ -101,6 +101,7 @@ a.pl{color:#1d3557}
 .sh-ov.on{display:flex} .sh-box{background:#fff;width:440px;max-width:100%;max-height:100%;display:flex;flex-direction:column}
 .sh-in{padding:10px;overflow:auto;text-align:center} #sh-img{width:100%;max-width:380px;border:1px solid #d5dde8;display:block;margin:0 auto 8px}
 .sh-act .btn{margin:3px}
+.calfav{font-size:12px;color:#555;margin-top:2px;white-space:normal}
 .ok{color:#1a7f37;font-weight:bold} .ko{color:#c0392b;font-weight:bold}
 .tag.dis{background:#fde2c4;color:#8a4b00;border-color:#f0c08a} .tag.demo{background:#c0392b;color:#fff;border-color:#c0392b}
 tr.click{cursor:pointer} tr.click:hover td{background:#eef4fb!important}
@@ -285,6 +286,7 @@ __TCSS__
 <div class="page" id="p-archives">
   <h1 data-i="nav_arch"></h1><div class="meta" id="arc-meta"></div>
   <div class="box" style="max-width:1000px"><h2 data-i="arc_rec_h"></h2><div class="boxin" id="arc-rec"></div></div>
+  <div class="box" style="max-width:1000px"><h2 data-i="arc_cf_h"></h2><div class="boxin" id="arc-cf"></div></div>
   <div class="box" style="max-width:1000px"><h2 data-i="arc_t_h"></h2><div class="boxin" id="arc-t"></div></div>
   <div class="box" style="max-width:1000px"><h2 data-i="arc_m_h"></h2><div class="boxin">
     <div style="margin:0 0 6px"><button class="btn" data-af="all"></button><button class="btn" data-af="pend"></button><button class="btn" data-af="done"></button></div>
@@ -347,7 +349,8 @@ const T = {
   orec_note: 'Both probabilities are recorded at the same moment, before the match. Retirements and walkovers excluded. The model never uses odds.',
   pl_search: () => `Find a player (top ${R.length})…`,
   nav_cal: 'Calendar', cal_h: y => `ATP calendar ${y}`, cal_res_h: y => `ATP ${y} — results`, cal_next: y => `${y} season`, cal_past: y => `${y} results`,
-  cal_meta: 'Date = start of the tournament week (official ATP calendar, January 2026).',
+  cal_meta: 'Date = start of the tournament week (official ATP calendar, January 2026). Favourite: our pick, announced 7 days before each tournament and then frozen until the end (the live title chances are on the Draws page).',
+  cal_fav: 'Favourite:',
   cal_res_meta: 'Every tournament of the season: champion, final, and where the champion stood among our pre-tournament favourites (rating + 14-day rhythm, exactly as in our predictions).',
   cc_all: 'All', cc_big: 'Slams &amp; Masters', h_cat: 'Category', h_surf2: 'Surface', h_favs: 'Seeded favourite (surface)', h_final: 'Final',
   h_ourfav: 'Our favourite', h_winrk: 'Champion\'s Seeded rank', tbc: 'TBC', cat: c => ({G: 'Grand Slam', M: 'Masters 1000', F: 'ATP Finals', '500': 'ATP 500', '250': 'ATP 250', C: 'Challenger'})[c] || c,
@@ -401,7 +404,7 @@ const T = {
   nav_arch: 'Archives', rec_arch: 'See every prediction archived before the matches →',
   arc_meta: 'Every Seeded prediction is saved <b>before</b> the match or the tournament, with its date, and never changed afterwards. Only the result is added once it is known.',
   arc_proof: u => ` Proof: the archive files are public, and their <a href="${u}" target="_blank" rel="noopener">history on GitHub</a> shows when each entry was saved.`,
-  arc_rec_h: 'Live record', arc_t_h: 'Tournaments — title odds before each round', arc_m_h: 'Matches — our pre-match probability',
+  arc_rec_h: 'Live record', arc_cf_h: 'Seeded favourites announced in the Calendar', arc_cf_none: 'The first favourites will be announced 7 days before the first tournaments of the 2027 season, then frozen until the end of each tournament.', arc_t_h: 'Tournaments — title odds before each round', arc_m_h: 'Matches — our pre-match probability',
   arc_rec: (n, acc, pend, since) => `Since ${since}: <b>${n}</b> finished match${n > 1 ? 'es' : ''} archived, our favourite won <b>${acc}</b>.` + (pend ? ` ${pend} waiting for a result.` : ''),
   arc_rec_none: (pend, since) => `No finished match yet${since ? ' (archive started on ' + since + ')' : ''}.` + (pend ? ` <b>${pend}</b> prediction${pend > 1 ? 's' : ''} waiting for a result.` : '') + ' Full tournaments are archived from the 2027 Australian Open draw onwards.',
   arc_small: 'Still very few matches: this percentage will only mean something after a few hundred.',
@@ -445,7 +448,8 @@ const T = {
   orec_note: 'Les deux probabilités sont enregistrées au même moment, avant le match. Abandons et forfaits exclus. Le modèle n\'utilise jamais les cotes.',
   pl_search: () => `Chercher un joueur (top ${R.length})…`,
   nav_cal: 'Calendrier', cal_h: y => `Calendrier ATP ${y}`, cal_res_h: y => `ATP ${y} — résultats`, cal_next: y => `Saison ${y}`, cal_past: y => `Résultats ${y}`,
-  cal_meta: 'Date = début de la semaine du tournoi (calendrier officiel ATP, janvier 2026).',
+  cal_meta: 'Date = début de la semaine du tournoi (calendrier officiel ATP, janvier 2026). Favori : notre choix, annoncé 7 jours avant chaque tournoi puis figé jusqu\'à la fin (les chances qui évoluent sont sur la page Tableaux).',
+  cal_fav: 'Favori :',
   cal_res_meta: 'Tous les tournois de la saison : vainqueur, finale, et la place du vainqueur parmi nos favoris d\'avant-tournoi (note + rythme sur 14 jours, exactement comme dans nos prédictions).',
   cc_all: 'Tous', cc_big: 'Grands Chelems et Masters', h_cat: 'Catégorie', h_surf2: 'Surface', h_favs: 'Favori Seeded (surface)', h_final: 'Finale',
   h_ourfav: 'Notre favori', h_winrk: 'Rang Seeded du vainqueur', tbc: 'à confirmer', cat: c => ({G: 'Grand Chelem', M: 'Masters 1000', F: 'ATP Finals', '500': 'ATP 500', '250': 'ATP 250', C: 'Challenger'})[c] || c,
@@ -504,7 +508,7 @@ const T = {
   nav_arch: 'Archives', rec_arch: 'Voir toutes les prédictions archivées avant les matchs →',
   arc_meta: 'Chaque prédiction Seeded est enregistrée <b>avant</b> le match ou le tournoi, avec sa date, et n\'est jamais modifiée ensuite. Seul le résultat vient s\'ajouter une fois connu.',
   arc_proof: u => ` La preuve : les fichiers d'archives sont publics, et leur <a href="${u}" target="_blank" rel="noopener">historique sur GitHub</a> montre la date de chaque enregistrement.`,
-  arc_rec_h: 'Bilan en direct', arc_t_h: 'Tournois — chances de titre avant chaque tour', arc_m_h: 'Matchs — notre proba avant le match',
+  arc_rec_h: 'Bilan en direct', arc_cf_h: 'Favoris Seeded annoncés dans le Calendrier', arc_cf_none: 'Les premiers favoris seront annoncés 7 jours avant les premiers tournois de la saison 2027, puis figés jusqu\'à la fin de chaque tournoi.', arc_t_h: 'Tournois — chances de titre avant chaque tour', arc_m_h: 'Matchs — notre proba avant le match',
   arc_rec: (n, acc, pend, since) => `Depuis le ${since} : <b>${n}</b> match${n > 1 ? 's' : ''} terminé${n > 1 ? 's' : ''} archivé${n > 1 ? 's' : ''}, notre favori a gagné <b>${acc}</b>.` + (pend ? ` ${pend} en attente du résultat.` : ''),
   arc_rec_none: (pend, since) => `Pas encore de match terminé${since ? ' (archives ouvertes le ' + since + ')' : ''}.` + (pend ? ` <b>${pend}</b> prédiction${pend > 1 ? 's' : ''} en attente du résultat.` : '') + ' Les tournois complets sont archivés à partir du tirage de l\'Open d\'Australie 2027.',
   arc_small: 'Encore très peu de matchs : ce pourcentage ne voudra vraiment dire quelque chose qu\'après quelques centaines.',
@@ -643,9 +647,10 @@ function renderCalendar() {
     const rows = calCat === 'C' ? CH : calCat === 'all' ? [...D.cal.events, ...CH].sort((a, b) => a.d.localeCompare(b.d) || (a.cat === 'C') - (b.cat === 'C')) : D.cal.events.filter(e => catOk(e.cat));
     rows.forEach(e => {
       if (e.d.slice(0, 7) !== mo) { mo = e.d.slice(0, 7); h += `<tr class="mo"><td colspan="4">${monthName(e.d)}</td></tr>`; }
-      // point 36 : pas de favori affiché pour l'instant ; il reviendra seulement pour les tournois tout proches,
-      // calculé à une date fixe avant le tournoi (décision de Cyrus, 20/11)
-      h += `<tr class="${nx && e === nx ? 'nx' : ''}"><td class="${e.sure ? '' : 'tbc'}">${dfmt(e.d, e.sure)}</td><td>${['G', 'M', 'F'].includes(e.cat) ? '<b>' + t('tour', e.name) + '</b>' : t('tour', e.name)}${e.ctry ? ` <span class="meta" style="margin:0">${e.ctry}</span>` : ''}</td>
+      // point 36b : favori annoncé 7 jours avant chaque tournoi, puis figé jusqu'à la fin (✓ / ✗ une fois le vainqueur connu)
+      const fv = e.fav ? `<div class="calfav">${t('cal_fav')} ${e.fav_i != null ? plink(e.fav_i, e.fav) : e.fav}` +
+        (e.win ? (e.win === e.fav ? ' <span class="ok">✓</span>' : ' <span class="ko">✗</span>') : '') + '</div>' : '';
+      h += `<tr class="${nx && e === nx ? 'nx' : ''}"><td class="${e.sure ? '' : 'tbc'}">${dfmt(e.d, e.sure)}</td><td>${['G', 'M', 'F'].includes(e.cat) ? '<b>' + t('tour', e.name) + '</b>' : t('tour', e.name)}${e.ctry ? ` <span class="meta" style="margin:0">${e.ctry}</span>` : ''}${fv}</td>
         <td>${catChip(e.cat, e.lvl)}</td><td>${sfChip(e.surf)}</td></tr>`;
     });
     if (calCat === 'C' && !CH.length) h += `<tr><td colspan="4" class="z">${t('cal_noC')}</td></tr>`;
@@ -950,7 +955,11 @@ function renderArchives() {
               : `<p style="margin:0">${t('arc_rec_none', R.pending || 0, dd(R.since))}</p>`;
   if (A.demo && A.rec_demo) h += `<div class="note">${t('arc_demo', A.rec_demo.n, pct(100 * A.rec_demo.acc, 1))}</div>`;
   $('#arc-rec').innerHTML = h;
-  const pn = (i, n) => i == null ? n : plink(i, n);
+  const pn = (i, n) => i == null ? n : plink(i, n), CF = A.cal_favs || [];
+  $('#arc-cf').innerHTML = CF.length ? `<table><tr><th>${t('h_tourn')}</th><th>${t('h_ourfav')}</th><th>${t('h_saved')}</th><th>${t('h_winner')}</th><th>${t('h_res')}</th></tr>` +
+    CF.map(f => `<tr><td>${t('tour', f.name)} ${f.d.slice(0, 4)}</td><td><b>${pn(f.fav_i, f.fav)}</b></td><td>${dshort(f.fav_at)}</td><td>${f.win ? pn(f.win_i, f.win) : '–'}</td>` +
+      `<td style="text-align:center">${!f.win ? `<span class="meta" style="margin:0">${t('arc_pend')}</span>` : f.win === f.fav ? '<span class="ok">✓</span>' : '<span class="ko">✗</span>'}</td></tr>`).join('') + '</table>'
+    : `<p class="meta" style="margin:0">${t('arc_cf_none')}</p>`;
   $('#arc-t').innerHTML = A.tours.length ? A.tours.map(x => {
     const nm = (L === 'fr' ? x.name_fr : x.name), b0 = x.snaps[0];
     const wp = x.winner ? x.snaps.find(s => s.stage === 'before') : null;
