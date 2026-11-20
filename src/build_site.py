@@ -997,7 +997,7 @@ renderAll(); route();
 </script></body></html>"""
 
 def page(data_obj, facts, tour, circ="atp", files=True):
-    h = (HTML.replace("__FAV__", logo.favicon_links(files)).replace("__LOGO__", logo.icon(bg=None))
+    h = (HTML.replace("__FAV__", logo.favicon_links(files, circ)).replace("__LOGO__", logo.icon(bg=None))
              .replace("__FB__", FEEDBACK_FORM).replace("__M_CSS__", methodo.CSS).replace("__M_EN__", methodo.render("en", facts_atp))
              .replace("__M_FR__", methodo.render("fr", facts_atp)).replace("__CIRCUIT__", circ)
              .replace("__TCSS__", T_CSS).replace("__TJS__", T_JS).replace("__FACTS__", json.dumps(facts))
@@ -1025,6 +1025,6 @@ for circ, html_name, pdir, h2h_name, alone in (("atp", "index.html", "p", "h2h.j
     # 2) version tout-en-un (fichier unique, pour l'ouvrir sans serveur)
     (OUT / alone).write_text(page(site_data, facts, tour, circ, files=False), encoding="utf-8")
 (SITE / ".nojekyll").write_text("")
-for f in ("favicon-32.png", "apple-touch-icon.png", "favicon.svg"):       # icônes d'onglet / d'écran d'accueil
+for f in ("favicon-32.png", "apple-touch-icon.png", "favicon.svg", "favicon-32-wta.png", "apple-touch-icon-wta.png"):       # icônes d'onglet / d'écran d'accueil
     shutil.copy(ROOT / "assets" / f, SITE / f)
 print("Site écrit :", SITE / "index.html", "+", SITE / "wta.html", "| versions autonomes dans", OUT)

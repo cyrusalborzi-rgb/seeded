@@ -15,11 +15,13 @@ def icon(bg=NAVY, fg=WHITE, ball=GREEN, radius=6, size=None):
             f'<circle cx="25" cy="16" r="4" fill="{ball}"/></svg>')
 
 
-def favicon_links(with_files=True):
+def favicon_links(with_files=True, circ="atp"):
     """Balises <link> : icône SVG intégrée (marche partout, même dans le fichier autonome)
-    + PNG 32 px et icône d'écran d'accueil iPhone quand les fichiers sont publiés à côté."""
+    + PNG 32 px et icône d'écran d'accueil iPhone quand les fichiers sont publiés à côté.
+    circ="wta" : version rose (fichiers *-wta.png faits par tools/make_wta_logo.py, point 42)."""
+    sfx = "-wta" if circ == "wta" else ""
     tags = f'<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,{quote(icon())}">'
     if with_files:
-        tags += ('\n<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">'
-                 '\n<link rel="apple-touch-icon" href="apple-touch-icon.png">')
+        tags += (f'\n<link rel="icon" type="image/png" sizes="32x32" href="favicon-32{sfx}.png">'
+                 f'\n<link rel="apple-touch-icon" href="apple-touch-icon{sfx}.png">')
     return tags

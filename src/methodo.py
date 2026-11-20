@@ -101,6 +101,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 
 <h2>10. Version history</h2>
 <table class="ver">
+<tr><td>v0.20</td><td>WTA pages: pink browser-tab and iPhone home-screen icons</td></tr>
 <tr><td>v0.19</td><td>Calendar: no more favourites shown for tournaments months away; they will only come back for upcoming tournaments, set at a fixed date before each one</td></tr>
 <tr><td>v0.18</td><td>Archives page: every prediction saved before the match or the tournament, dated, never changed, with its result and a live record</td></tr>
 <tr><td>v0.17</td><td>WTA tour: a full women's version of the site (Seeded Rating, player pages, Australian Open 2026 draw, 2027 WTA calendar, model record, market odds), reached with the ATP / WTA switch at the top</td></tr>
@@ -208,6 +209,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 
 <h2>10. Historique des versions</h2>
 <table class="ver">
+<tr><td>v0.20</td><td>Pages WTA : icône d'onglet et icône d'écran d'accueil iPhone en rose</td></tr>
 <tr><td>v0.19</td><td>Calendrier : plus de favoris affichés pour des tournois dans plusieurs mois ; ils reviendront seulement pour les tournois à venir, fixés à une date précise avant chacun</td></tr>
 <tr><td>v0.18</td><td>Page Archives : chaque prédiction enregistrée avant le match ou le tournoi, datée, jamais modifiée, avec son résultat et un bilan en direct</td></tr>
 <tr><td>v0.17</td><td>Circuit WTA : une version féminine complète du site (Seeded Rating, pages joueuses, tableau de l'Open d'Australie 2026, calendrier WTA 2027, bilan du modèle, cotes du marché), accessible avec le bouton ATP / WTA en haut</td></tr>
