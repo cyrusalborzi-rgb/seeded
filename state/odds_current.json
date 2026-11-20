@@ -1,6 +1,6 @@
 {
-"updated": "2026-11-20T15:46+00:00",
-"remaining": 493,
+"updated": "2026-11-20T15:56+00:00",
+"remaining": 492,
 "events": [
 {
 "id": "1acdb2047defbe0439ef3b1961a60010",
@@ -9,7 +9,7 @@
 "time": "2026-11-20T19:30:00Z",
 "a": "Daniil Medvedev",
 "b": "Frances Tiafoe",
-"pa": 0.6833,
+"pa": 0.6846,
 "n": 17,
 "pin": 0.6822
 },
@@ -20,7 +20,7 @@
 "time": "2026-11-21T13:00:00Z",
 "a": "Carlos Alcaraz",
 "b": "Ben Shelton",
-"pa": 0.6832,
+"pa": 0.7102,
 "n": 6,
 "pin": null
 }
