@@ -87,7 +87,9 @@ tr.click{cursor:pointer} tr.click:hover td{background:#eef4fb!important}
 .ct{font-size:10.5px;font-weight:bold;padding:1px 5px;border:1px solid #bbb;background:#f6f6f6;white-space:nowrap}
 .ct.G{background:#1d3557;color:#fff;border-color:#1d3557} .ct.M{background:#d9e4f1;border-color:#9fb3cc;color:#1d3557} .ct.F{background:#9fd36b;border-color:#7fb34b;color:#1d3557} .ct.C{background:#fff;color:#777;border-color:#ddd;font-weight:normal}
 tr.mo td{background:#eef2f7!important;font-weight:bold;color:#1d3557;font-size:12px}
-tr.nx td{background:#fffbe6!important} td.tbc{color:#999} a.pl:hover{color:#1d4f91;text-decoration:underline}
+tr.nx td,tr.hl td{background:#fffbe6!important} td.tbc{color:#999} a.pl:hover{color:#1d4f91;text-decoration:underline}
+.ql{color:inherit;text-decoration:underline dotted #9aa8bb;text-underline-offset:3px} .ql:hover{color:#1d4f91;text-decoration:underline solid}
+a.ct{color:inherit;text-decoration:none} a.ct:hover{text-decoration:underline} a.ct.G:hover,a.ct.G{color:#fff} .card a.v,.card a.ql{color:inherit}
 .plnav{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:12px} .plnav input{width:240px}
 td.sp{padding:1px 4px;text-align:center}
 .tw{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%} svg{max-width:100%} #pl-chart{height:auto}
@@ -148,12 +150,12 @@ __TCSS__
     <div class="card"><div class="k" data-i="c4k"></div><div class="v" id="h4"></div><div id="h4s"></div></div>
   </div>
   <div class="grid"><div>
-    <div class="box"><h2 data-i="ao_mini_t"></h2><div class="boxin">
+    <div class="box"><h2><a class="ql" href="#tournament" data-i="ao_mini_t"></a></h2><div class="boxin">
       <table id="ao-mini"></table>
       <div style="margin-top:6px"><a href="#tournament" data-i="ao_more"></a></div></div></div>
-    <div class="box"><h2 data-i="top10_t"></h2><div class="boxin"><table id="r-mini"></table>
+    <div class="box"><h2><a class="ql" href="#rating" data-i="top10_t"></a></h2><div class="boxin"><table id="r-mini"></table>
       <div style="margin-top:6px"><a href="#rating" data-i="rank_more"></a></div></div></div>
-    <div class="box"><h2 data-i="movers_t"></h2><div class="boxin"><table id="movers"></table></div></div>
+    <div class="box"><h2><a class="ql" href="#rating" data-i="movers_t"></a></h2><div class="boxin"><table id="movers"></table></div></div>
   </div><div>
     <div class="ad mr" style="margin-top:0" data-i="ad_mr"></div>
     <div class="box"><h2 data-i="home_next_t"></h2><div class="boxin"><table id="home-next"></table>
@@ -276,7 +278,7 @@ const $ = s => document.querySelector(s);
 const T = {
  en: {
   nav_home: 'Home', nav_draws: 'Draws', nav_rating: 'Seeded Rating', nav_players: 'Players', nav_predictor: 'Match predictor', nav_record: 'Track record', nav_method: 'Methodology',
-  sub: () => (D.live.length ? `<b>Live:</b> ${D.live.join(', ')} · ` : '') + (D.next ? `<b>Next:</b> ${D.next.en} · ` : '') + 'Data through',
+  sub: () => (D.live.length ? `<b>Live:</b> ${D.live.join(', ')} · ` : '') + (D.next ? `<b>Next:</b> ${D.next.en.replace(/^([^—]+?)(\s*—|$)/, '<a class="ql" href="#calendar">$1</a>$2')} · ` : '') + 'Data through',
   upd_at: w => `site updated ${w}`,
   ad_lb: 'ADVERTISEMENT · 728×90', ad_mr: 'ADVERTISEMENT · 300×250',
   c1k: 'Seeded #1', c2k: () => `Model accuracy (ATP, ${F.first_test_year}–${String(F.last_year).slice(2)})`, c2s: () => `vs ${pct(F.main.atp)} for the ATP ranking`, c3k: () => `Last ${F.top3.n} Grand Slams`,
@@ -355,7 +357,7 @@ const T = {
  },
  fr: {
   nav_home: 'Accueil', nav_draws: 'Tableaux', nav_rating: 'Seeded Rating', nav_players: 'Joueurs', nav_predictor: 'Comparateur de match', nav_record: 'Bilan du modèle', nav_method: 'Méthodologie',
-  sub: () => (D.live.length ? `<b>En cours :</b> ${D.live.join(', ')} · ` : '') + (D.next ? `<b>À venir :</b> ${D.next.fr} · ` : '') + 'Données au',
+  sub: () => (D.live.length ? `<b>En cours :</b> ${D.live.join(', ')} · ` : '') + (D.next ? `<b>À venir :</b> ${D.next.fr.replace(/^([^—]+?)(\s*—|$)/, '<a class="ql" href="#calendar">$1</a>$2')} · ` : '') + 'Données au',
   upd_at: w => `site mis à jour le ${w}`,
   ad_lb: 'PUBLICITÉ · 728×90', ad_mr: 'PUBLICITÉ · 300×250',
   c1k: 'N°1 Seeded', c2k: () => `Précision du modèle (ATP, ${F.first_test_year}-${String(F.last_year).slice(2)})`, c2s: () => `contre ${pct(F.main.atp)} pour le classement ATP`, c3k: () => `${F.top3.n} derniers Grands Chelems`,
@@ -459,6 +461,7 @@ const SLUG = {}, BYNAME = {};
 R.forEach((r, i) => { let s = slug(r.name); if (SLUG[s] != null) s += '-' + (i + 1); r.slug = s; SLUG[s] = i; BYNAME[r.name] = i; });
 const plink = (i, txt) => i == null || !R[i] ? (txt ?? '') : `<a class="pl" href="#player/${R[i].slug}">${txt ?? R[i].name}</a>`;
 const nlink = name => plink(BYNAME[name], name);
+window.SEEDED_PLINK = nlink;                       // page tournoi intégrée : noms du tableau des chances -> pages joueurs
 
 // ------------------------------------------------------------ rendu
 function renderStatic() {
@@ -470,8 +473,8 @@ function renderStatic() {
   try { if (D.built) bw = new Date(D.built).toLocaleString(L === 'fr' ? 'fr-FR' : 'en-GB', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'}); } catch (e) {}
   $('#dd').textContent = dt(D.date) + (bw ? ' · ' + t('upd_at', bw) : '');
   $('#rq').placeholder = t('search');
-  $('#c2v').textContent = pct(F.main.seeded);
-  $('#c3v').textContent = `${F.top3.in_top3} / ${F.top3.n}`;
+  $('#c2v').innerHTML = `<a class="ql" href="#method/5">${pct(F.main.seeded)}</a>`;
+  $('#c3v').innerHTML = `<a class="ql" href="#method/5">${F.top3.in_top3} / ${F.top3.n}</a>`;
 }
 
 // ---- mini-courbe de tendance (note relevée chaque semaine sur 6 mois)
@@ -489,7 +492,7 @@ function spark(vals, w = 80, h = 20) {
 }
 
 function renderHome() {
-  $('#h1').textContent = R[0].name; $('#h1s').textContent = `${fmt(R[0].note)} / 100`;
+  $('#h1').innerHTML = plink(0); $('#h1s').textContent = `${fmt(R[0].note)} / 100`;
   const und = R.filter(r => r.rank <= 50 && r.atp).sort((a, b) => b.gap - a.gap)[0];
   $('#h4').innerHTML = plink(und.rank - 1); const nr = L === 'fr' ? 'n°' : '#';
   $('#h4s').textContent = `Seeded ${nr}${und.rank} · ATP ${nr}${und.atp}`;
@@ -509,17 +512,20 @@ function renderRating() {
   const q = $('#rq').value.toLowerCase();
   const rows = [...R].sort((a, b) => b[surf] - a[surf]).map((r, i) => ({...r, srank: i + 1}))
     .filter(r => r.name.toLowerCase().includes(q));
-  $('#r-full').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th><th>${t('h_rating')}</th><th>${t('h_trend')}</th><th>${t('hard')}</th><th>${t('clay')}</th><th>${t('grass')}</th><th>ATP</th><th>${t('h_gap')}</th><th>${t('h_30')}</th></tr>` +
+  const sh = (k, lab) => `<th><a class="ql" href="#rating/${k}">${lab}</a>${surf === k ? ' ▼' : ''}</th>`;
+  // la colonne triée passe juste après le nom (sur téléphone, c'est elle qu'on voit sans faire défiler)
+  const COLS = [surf, ...['note', 'hard', 'clay', 'grass'].filter(k => k !== surf)], lab = k => k === 'note' ? t('h_rating') : t(k);
+  $('#r-full').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th>${sh(COLS[0], lab(COLS[0]))}<th>${t('h_trend')}</th>${COLS.slice(1).map(k => sh(k, lab(k))).join('')}<th>ATP</th><th>${t('h_gap')}</th><th>${t('h_30')}</th></tr>` +
     rows.map(r => `<tr><td class="n">${r.srank}</td><td><b>${plink(r.rank - 1)}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td>
-    <td class="n ${surf === 'note' ? 'b' : ''}">${fmt(r.note)}</td><td class="sp">${spark(r.spark)}</td><td class="n ${surf === 'hard' ? 'b' : ''}">${fmt(r.hard)}</td>
-    <td class="n ${surf === 'clay' ? 'b' : ''}">${fmt(r.clay)}</td><td class="n ${surf === 'grass' ? 'b' : ''}">${fmt(r.grass)}</td>
+    <td class="n b">${fmt(r[COLS[0]])}</td><td class="sp">${spark(r.spark)}</td>${COLS.slice(1).map(k => `<td class="n">${fmt(r[k])}</td>`).join('')}
     <td class="n">${r.atp ?? ''}</td>${gapCell(r.gap)}<td class="n ${r.d30 > 0 ? 'up' : r.d30 < 0 ? 'down' : 'z'}">${r.d30 == null ? '–' : (r.d30 > 0 ? '+' : '') + fmt(r.d30)}</td></tr>`).join('');
 }
 
 // ------------------------------------------------------------ calendrier et pages surface
 const SFKEY = {H: 'hard', IH: 'hard', CL: 'clay', G: 'grass'}, SFCODE = {hard: 'H', clay: 'CL', grass: 'G'};
 const sfChip = c => `<a class="sf ${c}" href="#surface/${SFKEY[c]}">${t('surf2', c)}</a>`;
-const catChip = (c, lvl) => `<span class="ct ${c}">${t('cat', c)}${lvl ? ' ' + lvl : ''}</span>`;
+const CATF = {G: 'big', M: 'big', F: 'big', '500': '500', '250': '250', C: 'C'};
+const catChip = (c, lvl) => CATF[c] ? `<a class="ct ${c}" href="#calendar/${CATF[c]}">${t('cat', c)}${lvl ? ' ' + lvl : ''}</a>` : `<span class="ct ${c}">${t('cat', c)}${lvl ? ' ' + lvl : ''}</span>`;
 const dfmt = (iso, sure = true) => { const d = new Date(iso + 'T12:00:00');
   return sure ? d.toLocaleDateString(L === 'fr' ? 'fr-FR' : 'en-GB', {day: 'numeric', month: 'short'}) : t('tbc'); };
 const monthName = iso => { const s = new Date(iso + 'T12:00:00').toLocaleDateString(L === 'fr' ? 'fr-FR' : 'en-GB', {month: 'long', year: 'numeric'}); return s[0].toUpperCase() + s.slice(1); };
@@ -561,11 +567,11 @@ function renderSurface() {
   const sp = r => { const d = gain(r); return `<td class="n ${d >= 3 ? 'up' : d <= -3 ? 'down' : 'z'}">${d > 0 ? '+' : ''}${d}</td>`; };
   $('#sf-top').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th><th>${t('h_srt')}</th><th>${t('h_all')}</th><th>${t('h_allrk')}</th><th>${t('h_spec')}</th><th>ATP</th></tr>` +
     topOn(SF, 50).map((r, k) => `<tr><td class="n">${k + 1}</td><td><b>${plink(r.rank - 1)}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td>
-      <td class="n b">${fmt(r[SF])}</td><td class="n">${fmt(r.note)}</td><td class="n">${r.rank}</td>${sp(r)}<td class="n">${r.atp ?? ''}</td></tr>`).join('');
+      <td class="n b">${fmt(r[SF])}</td><td class="n">${fmt(r.note)}</td><td class="n"><a class="ql" href="#rating">${r.rank}</a></td>${sp(r)}<td class="n">${r.atp ?? ''}</td></tr>`).join('');
   $('#sf-spec').innerHTML = [...R.slice(0, 100)].sort((a, b) => gain(b) - gain(a)).slice(0, 8)
     .map(r => `<tr><td><b>${plink(r.rank - 1)}</b></td><td class="n">${nr}${r.rank} → ${nr}${srk[r.id]}</td>${sp(r)}</tr>`).join('');
   const up = D.cal.events.filter(e => SFKEY[e.surf] === SF && e.d >= today).slice(0, 6);
-  $('#sf-next').innerHTML = up.length ? up.map(e => `<tr><td class="${e.sure ? '' : 'tbc'}">${e.sure ? dfmt(e.d) : monthName(e.d)}</td><td>${t('tour', e.name)}</td><td>${catChip(e.cat)}</td></tr>`).join('') : `<tr><td>${t('sf_none')}</td></tr>`;
+  $('#sf-next').innerHTML = up.length ? up.map(e => `<tr><td class="${e.sure ? '' : 'tbc'}">${e.sure ? dfmt(e.d) : monthName(e.d)}</td><td><a class="ql" href="#calendar">${t('tour', e.name)}</a></td><td>${catChip(e.cat)}</td></tr>`).join('') : `<tr><td>${t('sf_none')}</td></tr>`;
   $('#sf-titles-t').textContent = t('sf_titles_t', D.season_year);
   const cnt = {}; D.season.filter(e => e.win && e.cat !== 'C' && SFKEY[e.surf] === SF).forEach(e => { (cnt[e.win] = cnt[e.win] || {n: 0, i: e.win_i, big: 0}).n++; if (['G', 'M', 'F'].includes(e.cat)) cnt[e.win].big++; });
   const tl = Object.entries(cnt).sort((a, b) => b[1].n - a[1].n || b[1].big - a[1].big).slice(0, 8);
@@ -573,10 +579,10 @@ function renderSurface() {
 }
 function renderHomeNext() {
   $('#home-next').innerHTML = D.cal.events.filter(e => e.d >= today).slice(0, 5).map(e =>
-    `<tr><td class="${e.sure ? '' : 'tbc'}">${e.sure ? dfmt(e.d) : monthName(e.d)}</td><td>${t('tour', e.name)}</td><td>${sfChip(e.surf)}</td></tr>`).join('');
+    `<tr><td class="${e.sure ? '' : 'tbc'}">${e.sure ? dfmt(e.d) : monthName(e.d)}</td><td><a class="ql" href="#calendar">${t('tour', e.name)}</a></td><td>${sfChip(e.surf)}</td></tr>`).join('');
   $('#r-sflinks').innerHTML = t('sf_links') + ' ' + ['hard', 'clay', 'grass'].map(k => `<a href="#surface/${k}">${t(k)}</a>`).join(' · ');
 }
-document.querySelectorAll('[data-cc]').forEach(b => b.onclick = () => { calCat = b.dataset.cc; renderCalendar(); });
+document.querySelectorAll('[data-cc]').forEach(b => b.onclick = () => { location.hash = '#calendar/' + b.dataset.cc; });
 
 function wrapTables() {
   document.querySelectorAll('table').forEach(tb => {
@@ -637,11 +643,11 @@ function renderPlayer() {
   $('#pl-name').textContent = I.name;
   $('#pl-note').textContent = fmt(I.note);
   const d30 = I.d30 == null ? '' : `<br><span class="meta">${t('pl_d30', `<b class="${I.d30 > 0 ? 'up' : I.d30 < 0 ? 'down' : ''}">${(I.d30 > 0 ? '+' : '') + fmt(I.d30)}</b>`)}</span>`;
-  $('#pl-rank').innerHTML = `Seeded <b>${nr}${I.rank}</b>` + (I.inactive ? `<span class="tag">${t('inactive')}</span>` : '') + d30;
+  $('#pl-rank').innerHTML = `<a class="ql" href="#rating/note/${I.slug}">Seeded <b>${nr}${I.rank}</b></a>` + (I.inactive ? `<span class="tag">${t('inactive')}</span>` : '') + d30;
   $('#pl-atp').textContent = I.atp ? nr + I.atp : '–';
   $('#pl-gap').innerHTML = I.gap == null ? '' : I.gap >= 3 ? `<span class="up">${t('under', I.gap)}</span>` : I.gap <= -3 ? `<span class="down">${t('over', -I.gap)}</span>` : t('inline');
   $('#pl-surf').innerHTML = ['hard', 'clay', 'grass'].map(s => { const rk = R.filter(r => r[s] > I[s]).length + 1;
-    return `<tr><td>${t(s)}</td><td class="n b">${fmt(I[s])}</td><td class="n meta" style="margin:0">${nr}${rk}</td></tr>`; }).join('');
+    return `<tr><td><a class="ql" href="#rating/${s}/${I.slug}">${t(s)}</a></td><td class="n b">${fmt(I[s])}</td><td class="n meta" style="margin:0"><a class="ql" href="#rating/${s}/${I.slug}">${nr}${rk}</a></td></tr>`; }).join('');
   $('#pl-cmp').textContent = t('pl_cmp'); $('#pl-cmp').href = `#predictor/${I.slug}`;
   ['#pl-wl', '#pl-wls', '#pl-recent', '#pl-rec', '#pl-dur', '#pl-best', '#pl-chart'].forEach(s => $(s).innerHTML = '');
   $('#pl-meta').textContent = I.ioc;
@@ -650,14 +656,14 @@ function renderPlayer() {
 function fillPlayer(I, P) {
   const nr = L === 'fr' ? 'n°' : '#', b = P.bio || {}, sep = ' · ';
   $('#pl-meta').innerHTML = [I.ioc, b.age && t('pl_age', b.age), b.ht && num((b.ht / 100).toFixed(2)) + ' m', b.hand && t('pl_hand', b.hand),
-    P.last_day && `${t('last_match')} ${dt(P.last_day)}`, I.n14 ? t('pl_rhythm', I.n14) : ''].filter(Boolean).join(sep);
+    P.last_day && `${t('last_match')} ${dt(P.last_day)}`, I.n14 ? `<a class="ql" href="#method/2">${t('pl_rhythm', I.n14)}</a>` : ''].filter(Boolean).join(sep);
   const rc = P.record, wl = x => `${x[0]}${L === 'fr' ? '-' : '–'}${x[1]}`;
   $('#pl-wl').textContent = wl(rc.all);
   $('#pl-wls').innerHTML = [t('pl_titles', P.titles), t('pl_vs10', ...rc.top10)].join(sep);
   const wp = x => x[0] + x[1] ? pct(100 * x[0] / (x[0] + x[1]), 0) : '–';
   $('#pl-rec').innerHTML = `<tr><th></th><th>${t('h_wl')}</th><th>${t('h_wpct')}</th></tr>` +
     [['pl_all', rc.all], ['hard', rc.hard], ['clay', rc.clay], ['grass', rc.grass], ['pl_main', rc.main], ['pl_top10', rc.top10]]
-      .map(([k, x], j) => `<tr><td style="white-space:normal">${j === 0 ? '<b>' + t(k) + '</b>' : t(k)}</td><td class="n">${wl(x)}</td><td class="n${j === 0 ? ' b' : ''}">${wp(x)}</td></tr>`).join('');
+      .map(([k, x], j) => `<tr><td style="white-space:normal">${j === 0 ? '<b>' + t(k) + '</b>' : ['hard', 'clay', 'grass'].includes(k) ? `<a class="ql" href="#surface/${k}">${t(k)}</a>` : t(k)}</td><td class="n">${wl(x)}</td><td class="n${j === 0 ? ' b' : ''}">${wp(x)}</td></tr>`).join('');
   const bw = P.best;
   $('#pl-best').innerHTML = bw ? t('pl_best_txt', `<b>${plink(bw.opp_i, bw.opp)}</b>`, fmt(bw.opp_note), t('tour', bw.t), t('round', bw.rd), dt(bw.date)) + ` · <b>${bw.score}</b>` : t('pl_nobest');
   $('#pl-recent').innerHTML = `<tr><th>${t('h_date')}</th><th>${t('h_tourn')}</th><th>${t('h_rd')}</th><th>${t('h_opp')}</th><th>${t('h_opprt')}</th><th></th><th>${t('h_score')}</th><th>${t('h_dur')}</th><th>${t('h_pts')}</th></tr>` +
@@ -722,11 +728,11 @@ function card(i, sf) {
   const r = R[i], f = D.form[i] || [], w = f.filter(x => x[5] === 'W').length;
   const nr = L === 'fr' ? 'n°' : '#';
   const sq = f.slice().reverse().map(x => `<span class="sq ${x[5]}" title="${monthYear(x[0])} · ${t('tour', x[1])} ${t('round', x[2])} · ${x[4]} · ${x[6]}">${x[5] === 'W' ? t('win') : t('loss')}</span>`).join('');
-  return `<div style="display:flex;align-items:flex-end;gap:12px"><div><div class="big">${fmt(r.note)}</div><div class="meta">Seeded Rating /100</div></div>
+  return `<div style="display:flex;align-items:flex-end;gap:12px"><div><div class="big">${fmt(r.note)}</div><div class="meta"><a class="ql" href="#method/2">Seeded Rating</a> /100</div></div>
     <div style="margin-bottom:10px">${spark(r.spark, 150, 38)}<div class="meta" style="margin:0;text-align:center">${t('h_trend')}</div></div></div>
-    <div class="kv"><span>${t('srank')}</span><b>${nr}${r.rank}</b></div>
+    <div class="kv"><span>${t('srank')}</span><b><a class="ql" href="#rating">${nr}${r.rank}</a></b></div>
     <div class="kv"><span>${t('atprank')}</span><b>${r.atp ? nr + r.atp : '–'}</b></div>
-    <div class="kv"><span>${t('surf_rt', t(sf))}</span><b>${fmt(r[sf])}</b></div>
+    <div class="kv"><span><a class="ql" href="#rating/${sf}">${t('surf_rt', t(sf))}</a></span><b>${fmt(r[sf])}</b></div>
     <div class="kv"><span>${t('cmp_dur', $('#pbo').value)}</span><b>${dur(r['m' + $('#pbo').value]) || '–'}</b></div>
     <div class="kv"><span>${t('trend')}</span><b class="${r.d30 > 0 ? 'up' : r.d30 < 0 ? 'down' : ''}">${r.d30 == null ? '–' : (r.d30 > 0 ? '+' : '') + fmt(r.d30)}</b></div>
     <div style="margin-top:8px"><b>${t('form_t')}</b> <span class="meta">(${t('rec', w, f.length - w)})</span></div><div style="margin-top:4px">${sq}</div>`;
@@ -751,7 +757,7 @@ function renderCompare(a, b, sf) {
     <div class="h2hsub">${t('on_surf', t(sf))}${L === 'fr' ? ' :' : ':'} <b>${sa} – ${onS.length - sa}</b> · ${t('last_meet')}${L === 'fr' ? ' :' : ':'} ${t('tour', last[1])} ${last[0].slice(0, 4)} (${t('round', last[2])}), ${t('won', R[lw].name)} ${last[5]}</div>
     <table><tr><th>${t('h_date2')}</th><th>${t('h_tourn')}</th><th>${t('h_rd')}</th><th>${t('h_surf')}</th><th>${t('h_winner')}</th><th>${t('h_score')}</th></tr>` +
     list.slice(0, 12).map(m => { const w = winnerIdx(m);
-      return `<tr><td>${monthYear(m[0])}</td><td>${t('tour', m[1])}</td><td>${t('round', m[2])}</td><td>${t(SURF_KEY[m[3]] || 'hard')}</td>
+      return `<tr><td>${monthYear(m[0])}</td><td>${t('tour', m[1])}</td><td>${t('round', m[2])}</td><td><a class="ql" href="#surface/${SURF_KEY[m[3]] || 'hard'}">${t(SURF_KEY[m[3]] || 'hard')}</a></td>
       <td class="${w === a ? 'wa' : ''}">${ln(R[w].name)}</td><td>${m[5]}</td></tr>`; }).join('') + '</table>' +
     (list.length > 12 ? `<div class="meta" style="margin-top:4px">${t('more', list.length - 12)}</div>` : '');
   $('#ch').innerHTML = h;
@@ -841,22 +847,29 @@ function renderAll() { renderFeedback(); renderStatic(); renderHome(); renderHom
 // ------------------------------------------------------------ interactions
 document.querySelectorAll('[data-lang]').forEach(a => a.onclick = () => {
   L = a.dataset.lang; try { localStorage.setItem('seeded_lang', L); } catch (e) {} renderAll(); });
-document.querySelectorAll('[data-s]').forEach(b => b.onclick = () => {
-  document.querySelectorAll('[data-s]').forEach(x => x.classList.remove('on')); b.classList.add('on'); surf = b.dataset.s; renderRating(); });
+document.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { location.hash = '#rating/' + b.dataset.s; });
 $('#rq').oninput = renderRating;
 ['#pa', '#pb', '#ps', '#pbo'].forEach(s => $(s).onchange = renderPredictor);
 $('#ps').value = 'clay';
 
 function route() {
-  let [id, arg] = (location.hash || '#home').slice(1).split('/');
+  let [id, arg, arg2] = (location.hash || '#home').slice(1).split('/');
   if (!document.getElementById('p-' + id)) id = 'home';
   if (id === 'player') { if (arg && SLUG[arg] != null) PL = SLUG[arg]; renderPlayer(); }
   if (id === 'surface') { if (['hard', 'clay', 'grass'].includes(arg)) SF = arg; renderSurface(); }
+  if (id === 'rating') { surf = ['hard', 'clay', 'grass'].includes(arg) ? arg : 'note';
+    document.querySelectorAll('[data-s]').forEach(x => x.classList.toggle('on', x.dataset.s === surf)); renderRating(); }
+  if (id === 'calendar') { calCat = ['big', '500', '250', 'C'].includes(arg) ? arg : 'all'; renderCalendar(); }
   if (id === 'predictor' && arg && SLUG[arg] != null) {           // « Comparer » depuis une page joueur
     const k = SLUG[arg]; $('#pa').value = k; if (+$('#pb').value === k) $('#pb').value = k === 0 ? 1 : 0; renderPredictor(); }
   document.querySelectorAll('.page').forEach(p => p.style.display = p.id === 'p-' + id ? 'block' : 'none');
   document.querySelectorAll('.nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + (id === 'surface' ? 'calendar' : id)));
   window.scrollTo(0, 0);
+  if (id === 'rating' && arg2 && SLUG[arg2] != null) {          // #rating/clay/carlos-alcaraz : surligne le joueur dans le classement
+    const a = document.querySelector(`#r-full a[href="#player/${arg2}"]`), tr = a && a.closest('tr');
+    if (tr) { tr.classList.add('hl'); tr.scrollIntoView({block: 'center'}); } }
+  if (id === 'method' && /^\d+$/.test(arg || '')) {            // #method/2 : va directement à la section 2 de la méthodologie
+    const h = document.querySelectorAll(`[data-mlang="${L}"] h2`)[+arg - 1]; if (h) h.scrollIntoView(); }
 }
 window.onhashchange = route;
 renderAll(); route();

@@ -98,6 +98,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 
 <h2>10. Version history</h2>
 <table class="ver">
+<tr><td>v0.16</td><td>Many more links: surfaces, ranks, categories, upcoming tournaments, key figures and methodology terms now lead to the matching page</td></tr>
 <tr><td>v0.15</td><td>2027 Challenger calendar in the Calendar (with categories 50 to 175, added as the ATP releases it)</td></tr>
 <tr><td>v0.14</td><td>Seeded logo (a mini-draw that ends on the winning ball), tab and phone icons; the logo now takes you home</td></tr>
 <tr><td>v0.13</td><td>Time on court as raw information: per tournament, per match and on average (tournament pages, player pages, comparator)</td></tr>
@@ -198,6 +199,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 
 <h2>10. Historique des versions</h2>
 <table class="ver">
+<tr><td>v0.16</td><td>Beaucoup plus de liens : surfaces, rangs, catégories, prochains tournois, chiffres clés et termes de la méthodologie mènent à la bonne page</td></tr>
 <tr><td>v0.15</td><td>Calendrier Challenger 2027 dans le Calendrier (avec les catégories 50 à 175, ajouté au fur et à mesure des publications ATP)</td></tr>
 <tr><td>v0.14</td><td>Logo Seeded (un mini-tableau qui finit sur la balle du vainqueur), icônes d'onglet et de téléphone ; le logo ramène à l'accueil</td></tr>
 <tr><td>v0.13</td><td>Temps passé sur le court en info brute : par tournoi, par match et en moyenne (pages tournoi, pages joueurs, comparateur)</td></tr>

@@ -207,7 +207,7 @@ function SeededTournament(root, D, lang) {
       const dc = (d == null || o.out || Math.abs(d) < .1) ? `<td class="n z">${o.out || d == null ? '–' : '='}</td>` :
         `<td class="n ${d > 0 ? 'up' : 'down'}">${d > 0 ? '+' : ''}${nf(d)}</td>`;
       const cls = o.out ? 'out' : o.wout ? 'wout' : FW[o.i] > RW[o.i] ? 'pick' : '';
-      return `<tr class="${cls}"><td class="n">${n}</td><td class="pl">${o.p.name}${FW[o.i] > RW[o.i] ? ' 🔮' : ''}</td><td>${o.p.ioc || ''}</td>
+      return `<tr class="${cls}"><td class="n">${n}</td><td class="pl">${window.SEEDED_PLINK ? window.SEEDED_PLINK(o.p.name) : o.p.name}${FW[o.i] > RW[o.i] ? ' 🔮' : ''}</td><td>${o.p.ioc || ''}</td>
         <td class="n">${o.p.atp ?? ''}</td><td class="n">${nf(o.p.note ?? (o.p.level - 1000) / 15)}${noteDelta(o.p)}</td>` +
         cols.map(k => o.out ? '<td class="n z">–</td>' : cell(o.r[k])).join('') + dc +
         (showCourt ? `<td class="n st-ct">${dur(o.p.court) || '–'}</td>` : '') + '</tr>';
