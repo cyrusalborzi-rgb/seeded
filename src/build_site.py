@@ -337,9 +337,9 @@ const T = {
   orec_note: 'Both probabilities are recorded at the same moment, before the match. Retirements and walkovers excluded. The model never uses odds.',
   pl_search: () => `Find a player (top ${R.length})…`,
   nav_cal: 'Calendar', cal_h: y => `ATP calendar ${y}`, cal_res_h: y => `ATP ${y} — results`, cal_next: y => `${y} season`, cal_past: y => `${y} results`,
-  cal_meta: 'Date = start of the tournament week (official ATP calendar, January 2026). Seeded favourites = our top 3 on the surface today, updated every night and after each new result.',
+  cal_meta: 'Date = start of the tournament week (official ATP calendar, January 2026).',
   cal_res_meta: 'Every tournament of the season: champion, final, and where the champion stood among our pre-tournament favourites (rating + 14-day rhythm, exactly as in our predictions).',
-  cc_all: 'All', cc_big: 'Slams &amp; Masters', h_cat: 'Category', h_surf2: 'Surface', h_favs: 'Seeded favourites (surface)', h_final: 'Final',
+  cc_all: 'All', cc_big: 'Slams &amp; Masters', h_cat: 'Category', h_surf2: 'Surface', h_favs: 'Seeded favourite (surface)', h_final: 'Final',
   h_ourfav: 'Our favourite', h_winrk: 'Champion\'s Seeded rank', tbc: 'TBC', cat: c => ({G: 'Grand Slam', M: 'Masters 1000', F: 'ATP Finals', '500': 'ATP 500', '250': 'ATP 250', C: 'Challenger'})[c] || c,
   cal_noC: 'The 2027 Challenger calendar is released by the ATP in several parts: coming soon.',
   cal_none: 'The 2027 calendar is coming very soon.',
@@ -430,9 +430,9 @@ const T = {
   orec_note: 'Les deux probabilités sont enregistrées au même moment, avant le match. Abandons et forfaits exclus. Le modèle n\'utilise jamais les cotes.',
   pl_search: () => `Chercher un joueur (top ${R.length})…`,
   nav_cal: 'Calendrier', cal_h: y => `Calendrier ATP ${y}`, cal_res_h: y => `ATP ${y} — résultats`, cal_next: y => `Saison ${y}`, cal_past: y => `Résultats ${y}`,
-  cal_meta: 'Date = début de la semaine du tournoi (calendrier officiel ATP, janvier 2026). Favoris Seeded = notre top 3 actuel sur la surface, mis à jour chaque nuit et après chaque nouveau résultat.',
+  cal_meta: 'Date = début de la semaine du tournoi (calendrier officiel ATP, janvier 2026).',
   cal_res_meta: 'Tous les tournois de la saison : vainqueur, finale, et la place du vainqueur parmi nos favoris d\'avant-tournoi (note + rythme sur 14 jours, exactement comme dans nos prédictions).',
-  cc_all: 'Tous', cc_big: 'Grands Chelems et Masters', h_cat: 'Catégorie', h_surf2: 'Surface', h_favs: 'Favoris Seeded (surface)', h_final: 'Finale',
+  cc_all: 'Tous', cc_big: 'Grands Chelems et Masters', h_cat: 'Catégorie', h_surf2: 'Surface', h_favs: 'Favori Seeded (surface)', h_final: 'Finale',
   h_ourfav: 'Notre favori', h_winrk: 'Rang Seeded du vainqueur', tbc: 'à confirmer', cat: c => ({G: 'Grand Chelem', M: 'Masters 1000', F: 'ATP Finals', '500': 'ATP 500', '250': 'ATP 250', C: 'Challenger'})[c] || c,
   cal_noC: 'Le calendrier Challenger 2027 est publié par l\'ATP en plusieurs fois : bientôt ici.',
   cal_none: 'Le calendrier 2027 arrive très bientôt.',
@@ -618,17 +618,18 @@ function renderCalendar() {
   const nx = nextEv();
   {
     $('#cal-h').textContent = t('cal_h', CALY); $('#cal-meta').textContent = t('cal_meta');
-    let mo = '', h = `<tr><th>${t('h_date')}</th><th>${t('h_tourn')}</th><th>${t('h_cat')}</th><th>${t('h_surf2')}</th><th>${t('h_favs')}</th></tr>`;
+    let mo = '', h = `<tr><th>${t('h_date')}</th><th>${t('h_tourn')}</th><th>${t('h_cat')}</th><th>${t('h_surf2')}</th></tr>`;
     const CH = D.cal.ch || [];
     const rows = calCat === 'C' ? CH : calCat === 'all' ? [...D.cal.events, ...CH].sort((a, b) => a.d.localeCompare(b.d) || (a.cat === 'C') - (b.cat === 'C')) : D.cal.events.filter(e => catOk(e.cat));
     rows.forEach(e => {
-      if (e.d.slice(0, 7) !== mo) { mo = e.d.slice(0, 7); h += `<tr class="mo"><td colspan="5">${monthName(e.d)}</td></tr>`; }
-      const favs = ['G', 'M', 'F'].includes(e.cat) ? topOn(SFKEY[e.surf], 3).map(r => plink(r.rank - 1, last(r.name)) + (r.inactive ? `<span class="tag">${t('inactive')}</span>` : '')).join(' · ') : '';
+      if (e.d.slice(0, 7) !== mo) { mo = e.d.slice(0, 7); h += `<tr class="mo"><td colspan="4">${monthName(e.d)}</td></tr>`; }
+      // point 36 : pas de favori affiché pour l'instant ; il reviendra seulement pour les tournois tout proches,
+      // calculé à une date fixe avant le tournoi (décision de Cyrus, 20/11)
       h += `<tr class="${nx && e === nx ? 'nx' : ''}"><td class="${e.sure ? '' : 'tbc'}">${dfmt(e.d, e.sure)}</td><td>${['G', 'M', 'F'].includes(e.cat) ? '<b>' + t('tour', e.name) + '</b>' : t('tour', e.name)}${e.ctry ? ` <span class="meta" style="margin:0">${e.ctry}</span>` : ''}</td>
-        <td>${catChip(e.cat, e.lvl)}</td><td>${sfChip(e.surf)}</td><td>${favs}</td></tr>`;
+        <td>${catChip(e.cat, e.lvl)}</td><td>${sfChip(e.surf)}</td></tr>`;
     });
-    if (calCat === 'C' && !CH.length) h += `<tr><td colspan="5" class="z">${t('cal_noC')}</td></tr>`;
-    if (!rows.length && calCat !== 'C') h += `<tr><td colspan="5" class="z" style="white-space:normal">${t('cal_none')}</td></tr>`;
+    if (calCat === 'C' && !CH.length) h += `<tr><td colspan="4" class="z">${t('cal_noC')}</td></tr>`;
+    if (!rows.length && calCat !== 'C') h += `<tr><td colspan="4" class="z" style="white-space:normal">${t('cal_none')}</td></tr>`;
     $('#cal-t').innerHTML = h;
     const ev = rows;
     const chNote = CH.length && ['all', 'C'].includes(calCat) ? '<br><span class="meta">' + t('cal_chNote', dfmt(CH[CH.length - 1].d), D.cal.ch_asof ? dfmt(D.cal.ch_asof) : '') + '</span>' : '';
