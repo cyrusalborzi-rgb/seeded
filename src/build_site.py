@@ -43,7 +43,10 @@ a{color:#1d4f91;text-decoration:none} a:hover{text-decoration:underline}
 .logo{font-weight:bold;font-size:17px;letter-spacing:1px;color:#fff;display:inline-flex;align-items:center;gap:7px;flex:0 0 auto}
 .logo:hover{text-decoration:none;color:#fff} .logo:hover svg circle{fill:#c5ef93} .logo svg{width:22px;height:22px;display:block}
 .logo i{font-style:normal;color:#9fd36b}
-.nav a{color:#dfe7f2;padding:12px 8px;display:inline-block;font-size:12.5px}
+/* point 47 : le menu tient sur une ligne ; s'il manque de place, il défile au lieu de passer à la ligne */
+.nav{display:flex;flex:0 1 auto;min-width:0;overflow-x:auto;white-space:nowrap;scrollbar-width:none} .nav::-webkit-scrollbar{display:none}
+.nav a{color:#dfe7f2;padding:12px 7px;display:inline-block;font-size:12.5px;flex:0 0 auto}
+@media(min-width:761px) and (max-width:1120px){.nav a{padding:12px 5px;font-size:12px} .topin{gap:10px}}
 .nav a.on{background:#2c4a73;color:#fff;font-weight:bold}
 .sp{flex:1}
 .lang{font-size:11px;color:#6f86a3} .lang a{color:#9fb3cc;padding:2px 3px;cursor:pointer} .lang a.on{color:#fff;font-weight:bold}
@@ -101,6 +104,16 @@ a.pl{color:#1d3557}
 .sh-ov.on{display:flex} .sh-box{background:#fff;width:440px;max-width:100%;max-height:100%;display:flex;flex-direction:column}
 .sh-in{padding:10px;overflow:auto;text-align:center} #sh-img{width:100%;max-width:380px;border:1px solid #d5dde8;display:block;margin:0 auto 8px}
 .sh-act .btn{margin:3px}
+.ct-m{border:1px solid #d5dde8;padding:8px 10px;margin-bottom:8px} .ct-n{display:flex;justify-content:space-between;gap:8px;font-weight:bold;color:#1d3557}
+.ct-n .pc{font-size:18px} .ct-pk{display:flex;gap:8px;margin:6px 0 4px} .ct-pk button{flex:1;font:inherit;font-weight:bold;color:#1d3557;background:#fff;border:1px solid #9fb3cc;padding:8px 6px;cursor:pointer;text-align:center}
+.ct-pk button small{display:block;font-weight:normal;font-size:11px;color:#6f86a3} .ct-pk button.on{background:#1d3557;color:#fff;border-color:#1d3557} .ct-pk button.on small{color:#dfe7f2}
+.ct-f{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px;font-size:11px;color:#6f86a3}
+.ct-bar{position:relative;height:8px;background:#9fb3cc;margin:8px 0 4px} .ct-bar .f{position:absolute;left:0;top:0;bottom:0;background:#1d3557}
+.ct-bar .sd{position:absolute;top:-6px;bottom:-6px;width:3px;background:#9fd36b;margin-left:-1px}
+.ct-sc{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px} .ct-sc div{flex:1;min-width:110px;border:1px solid #d5dde8;padding:6px;text-align:center}
+.ct-sc b{display:block;font-size:22px;color:#1d3557} .ct-sc .me{background:#1d3557;color:#fff} .ct-sc .me b{color:#fff}
+.ct-lead tr.bot td{background:#f3f9ec;font-weight:bold} .ct-lead tr.me td{background:#eef2f7;font-weight:bold} .ct-lead a{cursor:pointer}
+.ct-ok{color:#1a7f37} .ct-err{color:#c0392b}
 .calfav{font-size:12px;color:#555;margin-top:2px;white-space:normal}
 .ok{color:#1a7f37;font-weight:bold} .ko{color:#c0392b;font-weight:bold}
 .tag.dis{background:#fde2c4;color:#8a4b00;border-color:#f0c08a} .tag.demo{background:#c0392b;color:#fff;border-color:#c0392b}
@@ -153,7 +166,7 @@ __TCSS__
   <a class="logo" href="#home" data-i-title="nav_home">__LOGO__<span>SEED<i>ED</i></span></a>
   <span class="nav">
     <a href="#tournament" data-i="nav_draws"></a><a href="#calendar" data-i="nav_cal"></a><a href="#rating" data-i="nav_rating"></a>
-    <a href="#player" data-i="nav_players"></a><a href="#predictor" data-i="nav_predictor"></a><a href="#record" data-i="nav_record"></a><a href="#archives" data-i="nav_arch"></a><a href="#method" data-i="nav_method"></a>
+    <a href="#player" data-i="nav_players"></a><a href="#predictor" data-i="nav_predictor"></a><a href="#contest" data-i="nav_contest"></a><a href="#record" data-i="nav_record"></a><a href="#archives" data-i="nav_arch"></a><a href="#method" data-i="nav_method"></a>
   </span>
   <span class="sp"></span>
   <span class="circ"><a href="index.html" data-circ="atp">ATP</a><a href="wta.html" data-circ="wta">WTA</a></span>
@@ -282,6 +295,20 @@ __TCSS__
   <div class="box" style="max-width:1000px"><h2 id="orec-h"></h2><div class="boxin" id="orec"></div></div>
 </div>
 
+<!-- ================= CONCOURS « BATTEZ LE MODÈLE » (point 15a) ================= -->
+<div class="page" id="p-contest">
+  <h1 data-i="ct_h"></h1><div class="meta" data-i="ct_meta"></div>
+  <div class="grid"><div>
+    <div class="note" style="margin-top:0" data-i="ct_how"></div>
+    <div id="ct-me"></div>
+    <div class="box"><h2 data-i="ct_open_h"></h2><div class="boxin" id="ct-open"></div></div>
+    <div class="box"><h2 data-i="ct_done_h"></h2><div class="boxin" id="ct-done"></div></div>
+  </div><div>
+    <div class="box"><h2 data-i="ct_lead_h"></h2><div class="boxin" id="ct-lead"></div></div>
+    <div class="box" id="ct-pl-box" style="display:none"><h2 id="ct-pl-h"></h2><div class="boxin" id="ct-pl"></div></div>
+  </div></div>
+</div>
+
 <!-- ================= ARCHIVES (point 16) ================= -->
 <div class="page" id="p-archives">
   <h1 data-i="nav_arch"></h1><div class="meta" id="arc-meta"></div>
@@ -317,7 +344,7 @@ const $ = s => document.querySelector(s);
 // ------------------------------------------------------------ traductions
 const T = {
  en: {
-  nav_home: 'Home', nav_draws: 'Draws', nav_rating: 'Seeded Rating', nav_players: 'Players', nav_predictor: 'Match predictor', nav_record: 'Track record', nav_method: 'Methodology',
+  nav_home: 'Home', nav_draws: 'Draws', nav_rating: 'Seeded Rating', nav_players: 'Players', nav_predictor: 'Predictor', nav_record: 'Track record', nav_method: 'Methodology',
   sub: () => (D.live.length ? `<b>Live:</b> ${D.live.join(', ')} · ` : '') + (D.next ? `<b>Next:</b> ${D.next.en.replace(/^([^—]+?)(\s*—|$)/, '<a class="ql" href="#calendar">$1</a>$2')} · ` : '') + 'Data through',
   upd_at: w => `site updated ${w}`,
   ad_lb: 'ADVERTISEMENT · 728×90', ad_mr: 'ADVERTISEMENT · 300×250',
@@ -396,6 +423,18 @@ const T = {
   form_t: 'Last 10 matches', rec: (w, l) => `${w}–${l}`, trend: 'Last 30 days', srank: 'Seeded rank', atprank: 'ATP rank', surf_rt: s => `${s} rating`,
   won: n => `${n} won`, all_meet: 'All meetings', h_date2: 'Date', h_surf: 'Surface', h_winner: 'Winner', more: n => `+ ${n} older`,
   tour: x => x, round: x => x,
+  nav_contest: 'Contest', ct_h: 'Beat the model', ct_meta: 'Pick the winner of each match. The less Seeded believed in your player, the more points you score.',
+  ct_how: `<b>How to play</b><ol style="margin:4px 0 0 18px;padding:0"><li>Click the player you think will win (you can change until the match starts).</li><li>Right pick: you score the points shown on the button. The bigger the underdog for Seeded, the more it pays (favourite at 80% → 13 pts, underdog at 20% → 50 pts).</li><li>Wrong pick: 0 point. Seeded always plays its favourite: finish above it!</li></ol>`,
+  ct_open_h: 'Open matches', ct_done_h: 'Started and finished matches', ct_lead_h: 'Leaderboard',
+  ct_off: 'The contest will open soon.', ct_err: 'Could not reach the contest right now. Try again in a moment.',
+  ct_pseudo: 'Pick a nickname to play (3 to 20 letters, digits, . _ -). No account, no email.', ct_go: 'Play', ct_you: n => `You play as <b>${n}</b>`, ct_change: 'change',
+  ct_taken: 'This nickname is already taken.', ct_reserved: '“Seeded” is the model\'s name: pick another nickname.', ct_badpseudo: '3 to 20 characters: letters, digits, . _ -',
+  ct_none_open: 'No match open right now. Matches appear as soon as bookmakers price them (Grand Slams, 1000 and 500 events, usually 1–2 days before). Next: the 2027 season, early January.',
+  ct_none_done: 'No match played yet.', ct_closes: d => `🔒 closes ${d}`, ct_save: 'Save', ct_saved: '✓ saved', ct_pick: 'Your pick', ct_tap: 'Click your winner', ct_closed: 'This match has started: picks are closed.', ct_need: 'Pick a nickname first (above).',
+  ct_mine: (p, s) => `You: ${p}` + (s ? ` · Seeded: ${s}` : ''), ct_res: w => `${w} won`, ct_pts: (m, s) => `you <b>${m}</b> · Seeded <b>${s}</b>`, ct_nopick: 'no pick',
+  ct_all: 'See everyone\'s picks', ct_nobody: 'Nobody played this match.', ct_live: 'in progress', ct_void: 'cancelled (walkover / retirement): does not count',
+  ct_avg: 'Your points', ct_model: '🤖 Seeded', ct_n: 'Matches', ct_rank: 'Your rank', ct_lead_none: 'The leaderboard starts with the first finished match.', ct_lead_note: 'Total points on finished matches. Click a nickname to see their picks.',
+  ct_pl_h: n => `${n}'s picks`, ct_pl_none: 'No pick on a started match yet.',
   sh_btn: '📤 Share this visual', sh_t: 'Share this visual', sh_go: 'Share…', sh_dl: 'Download the image', sh_cp: 'Copy the link', sh_cpd: 'Link copied ✓',
   sh_hint: 'Post the image on Instagram, X, WhatsApp… The link brings people straight back to this page.', sh_win: 'chance of winning',
   sh_surf: s => `On ${s.toLowerCase()}`, sh_rank: (s, a) => `Seeded #${s}` + (a ? `  ·  ATP #${a}` : ''), sh_12m: 'last 12 months', sh_titles: n => `${n} title${n === 1 ? '' : 's'}`,
@@ -416,7 +455,7 @@ const T = {
   arc_live: 'In progress', arc_leg: 'Seeded = the chances of our favourite (in bold). ✓ = our favourite won, ✗ = it lost.', af_all: 'All', af_pend: 'Waiting', af_done: 'Finished', arc_more: n => `Show ${n} more`, arc_none_t: 'No tournament archived yet.',
  },
  fr: {
-  nav_home: 'Accueil', nav_draws: 'Tableaux', nav_rating: 'Seeded Rating', nav_players: 'Joueurs', nav_predictor: 'Comparateur de match', nav_record: 'Bilan du modèle', nav_method: 'Méthodologie',
+  nav_home: 'Accueil', nav_draws: 'Tableaux', nav_rating: 'Seeded Rating', nav_players: 'Joueurs', nav_predictor: 'Comparateur', nav_record: 'Bilan', nav_method: 'Méthodologie',
   sub: () => (D.live.length ? `<b>En cours :</b> ${D.live.join(', ')} · ` : '') + (D.next ? `<b>À venir :</b> ${D.next.fr.replace(/^([^—]+?)(\s*—|$)/, '<a class="ql" href="#calendar">$1</a>$2')} · ` : '') + 'Données au',
   upd_at: w => `site mis à jour le ${w}`,
   ad_lb: 'PUBLICITÉ · 728×90', ad_mr: 'PUBLICITÉ · 300×250',
@@ -500,6 +539,18 @@ const T = {
                'Vienna': 'Vienne', 'Brussels': 'Bruxelles', 'Basel': 'Bâle', 'Beijing': 'Pékin', 'Kitzbuhel': 'Kitzbühel', 'Bastad': 'Båstad',
                'Mallorca': 'Majorque', "'s-Hertogenbosch": 'Bois-le-Duc', 'Queen\'s Club': 'Queen\'s', 'Washington': 'Washington'})[x] || x,
   round: x => ({R128: '64es', R64: '32es', R32: '16es', R16: '8es', QF: 'QF', SF: 'DF', F: 'F', RR: 'Poules', BR: '3e place'})[x] || x,
+  nav_contest: 'Concours', ct_h: 'Battez le modèle', ct_meta: "Trouve le vainqueur de chaque match. Moins Seeded croyait en ton joueur, plus ça rapporte.",
+  ct_how: `<b>Comment jouer</b><ol style="margin:4px 0 0 18px;padding:0"><li>Clique sur le joueur que tu vois gagner (modifiable jusqu'au début du match).</li><li>Bon choix : tu gagnes les points affichés sur le bouton. Plus ton joueur était outsider pour Seeded, plus ça rapporte (favori à 80 % → 13 pts, outsider à 20 % → 50 pts).</li><li>Mauvais choix : 0 point. Seeded joue toujours son favori : finis devant lui !</li></ol>`,
+  ct_open_h: 'Matchs ouverts', ct_done_h: 'Matchs commencés et terminés', ct_lead_h: 'Classement',
+  ct_off: 'Le concours ouvre bientôt.', ct_err: 'Impossible de joindre le concours pour le moment. Réessaie dans un instant.',
+  ct_pseudo: 'Choisis un pseudo pour jouer (3 à 20 lettres, chiffres, . _ -). Pas de compte, pas d\'e-mail.', ct_go: 'Jouer', ct_you: n => `Tu joues sous le pseudo <b>${n}</b>`, ct_change: 'changer',
+  ct_taken: 'Ce pseudo est déjà pris.', ct_reserved: '« Seeded » est le nom du modèle : choisis un autre pseudo.', ct_badpseudo: '3 à 20 caractères : lettres, chiffres, . _ -',
+  ct_none_open: "Aucun match ouvert pour l'instant. Les matchs apparaissent dès que les bookmakers les cotent (Grands Chelems, 1000 et 500, en général 1 à 2 jours avant). Prochain rendez-vous : la saison 2027, début janvier.",
+  ct_none_done: 'Aucun match joué pour l\'instant.', ct_closes: d => `🔒 ferme ${d}`, ct_save: 'Enregistrer', ct_saved: '✓ enregistré', ct_pick: 'Ton choix', ct_tap: 'Clique sur ton vainqueur', ct_closed: 'Ce match a commencé : les pronostics sont fermés.', ct_need: 'Choisis d\'abord un pseudo (au-dessus).',
+  ct_mine: (p, s) => `Toi : ${p}` + (s ? ` · Seeded : ${s}` : ''), ct_res: w => `Victoire ${/^[AEIOUYÉÈH]/i.test(w) ? "d'" : 'de '}${w}`, ct_pts: (m, s) => `toi <b>${m}</b> · Seeded <b>${s}</b>`, ct_nopick: 'pas de pronostic',
+  ct_all: 'Voir les pronostics de tous', ct_nobody: 'Personne n\'a joué ce match.', ct_live: 'en cours', ct_void: 'annulé (forfait / abandon) : ne compte pas',
+  ct_avg: 'Tes points', ct_model: '🤖 Seeded', ct_n: 'Matchs', ct_rank: 'Ton rang', ct_lead_none: 'Le classement démarre avec le premier match terminé.', ct_lead_note: 'Total des points sur les matchs terminés. Clique sur un pseudo pour voir ses pronostics.',
+  ct_pl_h: n => `Pronostics de ${n}`, ct_pl_none: 'Aucun pronostic sur un match commencé pour l\'instant.',
   sh_btn: '📤 Partager ce visuel', sh_t: 'Partager ce visuel', sh_go: 'Partager…', sh_dl: "Télécharger l'image", sh_cp: 'Copier le lien', sh_cpd: 'Lien copié ✓',
   sh_hint: "Poste l'image sur Instagram, X, WhatsApp… Le lien ramène directement sur cette page.", sh_win: 'de chances de gagner',
   sh_surf: s => `Sur ${s.toLowerCase()}`, sh_rank: (s, a) => `Seeded n°${s}` + (a ? `  ·  ATP n°${a}` : ''), sh_12m: 'sur 12 mois', sh_titles: n => `${n} titre${n > 1 ? 's' : ''}`,
@@ -531,7 +582,7 @@ if (CIRCUIT === 'wta') {
     fr: x => x.replace(/Grands Chelems et Masters( 1000)?/g, 'Grands Chelems et WTA 1000').replace(/Masters 1000/g, 'WTA 1000').replace(/\bATP\b/g, 'WTA')
               .replace(/Le plus sous-coté/g, 'La plus sous-cotée').replace(/Ceux qui/g, 'Celles qui').replace(/le mieux classé\b/g, 'la mieux classée')
               .replace(/un autre joueur/g, 'une autre joueuse').replace(/le 1er joueur/g, 'la 1re joueuse').replace(/du joueur/g, 'de la joueuse')
-              .replace(/au joueur/g, 'à la joueuse').replace(/\b([Ll])e joueur\b/g, (m, l) => (l === 'L' ? 'L' : 'l') + 'a joueuse')
+              .replace(/\b([Tt])on joueur\b/g, (m, x) => x + 'a joueuse').replace(/\b([Ss])on favori\b/g, (m, x) => x + 'a favorite').replace(/au joueur/g, 'à la joueuse').replace(/\b([Ll])e joueur\b/g, (m, l) => (l === 'L' ? 'L' : 'l') + 'a joueuse')
               .replace(/\b([Uu])n joueur\b/g, (m, u) => u + 'ne joueuse').replace(/\bjoueurs\b/g, 'joueuses').replace(/\bJoueurs\b/g, 'Joueuses')
               .replace(/\bjoueur\b/g, 'joueuse').replace(/\bJoueur\b/g, 'Joueuse')
               .replace(/\b([Ll])e favori\b/g, (m, l) => (l === 'L' ? 'L' : 'l') + 'a favorite').replace(/\bun favori\b/g, 'une favorite')
@@ -699,7 +750,7 @@ wrapTables();
 // ------------------------------------------------------------ Seeded contre les bookmakers (affichage seulement)
 const OD = (D.odds && D.odds.events) || [];
 const oName = (i, n) => i == null ? n : plink(i, n);
-const oTour = x => t('tour', /^ATP Finals/i.test(x) ? 'ATP Finals' : x.replace(/^ATP\s+/, '').replace(/\s+-\s+.*$/, ''));
+const oTour = x => t('tour', /^(ATP|WTA) Finals/i.test(x) ? x.slice(0, 3).toUpperCase() + ' Finals' : x.replace(/^(ATP|WTA)\s+/, '').replace(/\s+-\s+.*$/, ''));
 const oWhen = iso => new Date(iso).toLocaleString(L === 'fr' ? 'fr-FR' : 'en-GB', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'});
 const oGap = e => e.ps == null ? null : Math.round(100 * (e.ps - e.pm));
 function oddsRows(list, withTour) {
@@ -1083,7 +1134,100 @@ SH.link = () => `https://${SITE_URL}/${CIRCUIT === 'wta' ? 'wta.html' : ''}${SH.
 function shClose() { $('#sh-ov').classList.remove('on'); }
 document.addEventListener('click', e => { const b = e.target.closest('[data-share]'); if (b && !b.closest('#tour-app')) shOpen(b.dataset.share); });
 window.SEEDED_SHARE = data => { window._tshare = data; shOpen('tour'); };
-window.SEEDED_SHL = () => t('sh_btn');     // appelé par la page tournoi intégrée
+window.SEEDED_SHL = () => t('sh_btn');
+
+// ---- point 15a : concours « Battez le modèle » (duel des pourcentages) — données dans Supabase
+// Le navigateur n'utilise que la clé publique (publishable) et des fonctions qui vérifient tout côté serveur :
+// pronostic refusé après l'heure du match, pronostics des autres visibles seulement une fois le match commencé.
+const SB = __SUPABASE__;
+const CT = {loaded: false, loading: false, err: false, matches: [], mine: {}, lead: [], open: {}};
+const ctStore = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return CT['_' + k] = v ?? CT['_' + k]; } };
+const ctPid = () => { let id = ctStore('seeded_pid'); if (!id) { id = (crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g, () => (Math.random() * 16 | 0).toString(16))); ctStore('seeded_pid', id); } return id; };
+// règle « bonus outsider » : bon choix = 10 ÷ chance Seeded du joueur choisi (arrondi, 100 max) ; mauvais choix = 0 (même calcul que Supabase)
+const ctWin = (side, sp) => Math.min(100, Math.round(10 / Math.max(0.1, +((side === 'a' ? (sp ?? .5) : 1 - (sp ?? .5))).toFixed(4))));
+const ctPts = (pick, w, sp) => pick === w ? ctWin(pick, sp) : 0;
+const ctSide = pa => pa >= .5 ? 'a' : 'b';
+async function sb(path, body) {
+  const r = await fetch(SB.url + '/rest/v1/' + path, body === undefined ? {headers: {apikey: SB.key}} :
+    {method: 'POST', headers: {apikey: SB.key, 'Content-Type': 'application/json'}, body: JSON.stringify(body)});
+  const txt = await r.text(), j = txt ? JSON.parse(txt) : null;
+  if (!r.ok) throw new Error((j && j.message) || r.status);
+  return j;
+}
+async function ctLoad() {
+  if (!SB || CT.loading) return; CT.loading = true;
+  try {
+    const since = new Date(Date.now() - 4 * 864e5).toISOString();
+    CT.matches = await sb(`contest_matches?circuit=eq.${CIRCUIT}&starts_at=gte.${since}&order=starts_at.asc`);
+    CT.mine = {}; (await sb('rpc/my_picks', {p_player: ctPid()}) || []).forEach(p => CT.mine[p.match_id] = p);
+    CT.lead = await sb('rpc/leaderboard', {p_circuit: CIRCUIT}) || [];
+    CT.loaded = true; CT.err = false;
+  } catch (e) { CT.err = true; }
+  CT.loading = false; renderContest();
+}
+function renderContest() {
+  const pg = $('#p-contest'); if (!pg) return;
+  const fr = L === 'fr', P = v => pct(100 * v, 0);
+  if (!SB) { $('#ct-open').innerHTML = `<p class="meta" style="margin:0">${t('ct_off')}</p>`; $('#ct-done').innerHTML = ''; $('#ct-lead').innerHTML = ''; $('#ct-me').innerHTML = ''; return; }
+  if (!CT.loaded) { $('#ct-open').innerHTML = CT.err ? `<p class="ct-err" style="margin:0">${t('ct_err')}</p>` : '…'; if (!CT.err) ctLoad(); }
+  const me = ctStore('seeded_pseudo');
+  // pseudo + score
+  const L_ = CT.lead, myRow = L_.find(r => !r.is_model && r.pseudo === me), bot = L_.find(r => r.is_model);
+  $('#ct-me').innerHTML = (me ? `<p style="margin:0 0 8px">${t('ct_you', me)} · <a class="ql" href="javascript:ctRename()">${t('ct_change')}</a></p>` :
+    `<div class="box"><div class="boxin"><p style="margin:0 0 6px">${t('ct_pseudo')}</p><input id="ct-ps" maxlength="20" style="font:inherit;padding:4px 6px;width:180px">
+      <button class="btn shb" onclick="ctSetPseudo()">${t('ct_go')}</button> <span id="ct-ps-msg" class="ct-err"></span></div></div>`) +
+    (me && myRow ? `<div class="ct-sc"><div class="me">${t('ct_avg')}<b>${num(Math.round(myRow.total))}</b></div><div>${t('ct_model')}<b>${bot ? num(Math.round(bot.total)) : '–'}</b></div>
+      <div>${t('ct_n')}<b>${myRow.n}</b></div><div>${t('ct_rank')}<b>${L_.filter(r => r.total > myRow.total).length + 1}</b></div></div>` : '');
+  if (!CT.loaded) return;
+  const now = Date.now(), open = CT.matches.filter(m => new Date(m.starts_at) > now && !m.void), done = CT.matches.filter(m => new Date(m.starts_at) <= now).reverse();
+  const when = iso => new Date(iso).toLocaleString(fr ? 'fr-FR' : 'en-GB', {weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'});
+  $('#ct-open').innerHTML = open.length ? open.map(m => { const my = CT.mine[m.id] ? ctSide(CT.mine[m.id].pa) : null, sp = m.seeded_pa;
+    const btn = side => `<button class="${my === side ? 'on' : ''}" onclick="ctSave('${m.id}', '${side}', this)">${side === 'a' ? m.a : m.b}<small>+${ctWin(side, sp)} pts · Seeded ${pct(100 * (side === 'a' ? (sp ?? .5) : 1 - (sp ?? .5)), 0)}</small></button>`;
+    return `<div class="ct-m" data-ct="${m.id}"><div class="ct-pk">${btn('a')}${btn('b')}</div>
+      <div class="ct-f"><span>${oTour(m.tourney)} · ${t('ct_closes', when(m.starts_at))}</span><span data-msg class="ct-ok">${my ? t('ct_saved') : t('ct_tap')}</span></div></div>`; }).join('')
+    : `<p class="meta" style="margin:0">${t('ct_none_open')}</p>`;
+  $('#ct-done').innerHTML = done.length ? done.map(m => { const my = CT.mine[m.id] ? ctSide(CT.mine[m.id].pa) : null, sp = m.seeded_pa, w = m.winner, sd = sp == null ? null : ctSide(sp);
+    const nm = side => side === 'a' ? m.a : m.b, mark = side => !w || m.void ? '' : side === w ? ' <span class="ct-ok">✓</span>' : ' <span class="ct-err">✗</span>';
+    const res = m.void ? t('ct_void') : w ? t('ct_res', nm(w)) : t('ct_live');
+    return `<div class="ct-m"><div class="ct-n"><span>${nlink(m.a)}</span><span>${nlink(m.b)}</span></div>
+      <div class="ct-f" style="margin-top:4px"><span>${oTour(m.tourney)} · ${my ? t('ct_mine', nm(my) + mark(my), sd ? nm(sd) + mark(sd) : null) : t('ct_nopick') + (sd ? ' · Seeded : ' + nm(sd) + mark(sd) : '')}</span>
+      <span>${res}${w && !m.void ? ' · ' + t('ct_pts', my ? ctPts(my, w, sp) + ' pts' : '–', sd ? ctPts(sd, w, sp) + ' pts' : '–') : ''}</span></div>
+      <div class="ct-f"><a class="ql" href="javascript:ctAll('${m.id}')">${t('ct_all')}</a></div><div data-all="${m.id}"></div></div>`; }).join('')
+    : `<p class="meta" style="margin:0">${t('ct_none_done')}</p>`;
+  $('#ct-lead').innerHTML = L_.length ? `<table class="ct-lead"><tr><th>#</th><th>Pseudo</th><th>${t('ct_n')}</th><th>Pts</th></tr>` +
+    L_.map((r, i) => `<tr class="${r.is_model ? 'bot' : r.pseudo === me ? 'me' : ''}"><td>${i + 1}</td><td>${r.is_model ? t('ct_model') : `<a class="ql" onclick="ctPlayer(this.textContent)">${r.pseudo}</a>`}</td><td class="n">${r.n}</td><td class="n b">${num(Math.round(r.total))}</td></tr>`).join('') +
+    `</table><div class="meta" style="margin:6px 0 0">${t('ct_lead_note')}</div>` : `<p class="meta" style="margin:0">${t('ct_lead_none')}</p>`;
+}
+async function ctSave(id, side, btn) {
+  const b = btn.closest('[data-ct]'), msg = b.querySelector('[data-msg]'), v = side === 'a' ? 1 : 0;
+  if (!ctStore('seeded_pseudo')) { msg.className = 'ct-err'; msg.textContent = t('ct_need'); return; }
+  try { await sb('rpc/submit_pick', {p_player: ctPid(), p_match: id, p_pa: v}); CT.mine[id] = {match_id: id, pa: v}; b.querySelectorAll('.ct-pk button').forEach((x, k) => x.classList.toggle('on', k === (v ? 0 : 1))); msg.className = 'ct-ok'; msg.textContent = t('ct_saved'); }
+  catch (e) { msg.className = 'ct-err'; msg.textContent = /match_ferme/.test(e.message) ? t('ct_closed') : t('ct_err'); }
+}
+async function ctSetPseudo() {
+  const v = ($('#ct-ps').value || '').trim(), m = $('#ct-ps-msg');
+  if (!/^[A-Za-z0-9_.-]{3,20}$/.test(v)) { m.textContent = t('ct_badpseudo'); return; }
+  try { await sb('rpc/set_pseudo', {p_player: ctPid(), p_pseudo: v}); ctStore('seeded_pseudo', v); renderContest(); }
+  catch (e) { m.textContent = /pseudo_pris/.test(e.message) ? t('ct_taken') : /pseudo_reserve/.test(e.message) ? t('ct_reserved') : t('ct_err'); }
+}
+function ctRename() { try { localStorage.removeItem('seeded_pseudo'); } catch (e) { CT._seeded_pseudo = null; } renderContest(); }
+async function ctAll(id) {
+  const box = document.querySelector(`[data-all="${id}"]`); if (box.innerHTML) { box.innerHTML = ''; return; }
+  const m = CT.matches.find(x => x.id === id) || {};
+  try { const rows = await sb('rpc/match_picks', {p_match: id}) || [];
+    box.innerHTML = rows.length ? '<table class="ct-lead" style="margin-top:6px">' + rows.map(r => `<tr><td><a class="ql" onclick="ctPlayer(this.textContent)">${r.pseudo}</a></td><td>${r.pa >= .5 ? m.a : m.b}</td><td class="n">${r.points == null ? '' : Math.round(r.points) + ' pts'}</td></tr>`).join('') + '</table>'
+      : `<div class="meta" style="margin:4px 0 0">${t('ct_nobody')}</div>`; }
+  catch (e) { box.innerHTML = `<div class="ct-err">${t('ct_err')}</div>`; }
+}
+async function ctPlayer(name) {
+  $('#ct-pl-box').style.display = ''; $('#ct-pl-h').textContent = t('ct_pl_h', name); $('#ct-pl').innerHTML = '…';
+  try { const rows = await sb('rpc/player_picks', {p_pseudo: name}) || [];
+    $('#ct-pl').innerHTML = rows.length ? '<table class="ct-lead">' + rows.map(r => `<tr><td>${nlink(r.a)} – ${nlink(r.b)}</td><td><b>${r.pa >= .5 ? r.a : r.b}</b></td><td class="n">${r.points == null ? '' : Math.round(r.points) + ' pts'}</td></tr>`).join('') + '</table>'
+      : `<p class="meta" style="margin:0">${t('ct_pl_none')}</p>`; }
+  catch (e) { $('#ct-pl').innerHTML = `<div class="ct-err">${t('ct_err')}</div>`; }
+  $('#ct-pl-box').scrollIntoView({block: 'nearest'});
+}
+     // appelé par la page tournoi intégrée
 // ---- encadré d'avis (formulaire Tally ; la page et la langue sont transmises en champs cachés)
 const FB = '__FB__';
 function fbUrl(kind) {
@@ -1097,7 +1241,7 @@ function fbToggle(force) {
 }
 function renderFeedback() { $('#fb-btn').textContent = t('fb_btn'); $('#fb-title').textContent = t('fb_title'); }
 
-function renderAll() { renderFeedback(); renderStatic(); renderHome(); renderHomeNext(); renderOdds(); renderRating(); renderCalendar(); renderSurface(); renderPlayer(); renderPredictor(); renderRecord(); renderArchives(); renderMethod();
+function renderAll() { renderFeedback(); renderStatic(); renderHome(); renderHomeNext(); renderOdds(); renderRating(); renderCalendar(); renderSurface(); renderPlayer(); renderPredictor(); renderRecord(); renderArchives(); renderContest(); renderMethod();
   if (TOUR) TOUR.setLang(L); else TOUR = SeededTournament($('#tour-app'), DT, L); }
 
 // ------------------------------------------------------------ interactions
@@ -1115,6 +1259,7 @@ function route() {
   if (id === 'surface') { if (['hard', 'clay', 'grass'].includes(arg)) SF = arg; renderSurface(); }
   if (id === 'rating') { surf = ['hard', 'clay', 'grass'].includes(arg) ? arg : 'note';
     document.querySelectorAll('[data-s]').forEach(x => x.classList.toggle('on', x.dataset.s === surf)); renderRating(); }
+  if (id === 'contest' && CT.loaded) ctLoad();                       // rafraîchit en revenant sur la page
   if (id === 'calendar') { calCat = ['big', '500', '250', 'C'].includes(arg) ? arg : 'all'; renderCalendar(); }
   if (id === 'predictor' && arg && SLUG[arg] != null) {           // « Comparer » depuis une page joueur
     const k = SLUG[arg]; $('#pa').value = k; if (+$('#pb').value === k) $('#pb').value = k === 0 ? 1 : 0; renderPredictor(); }
@@ -1131,8 +1276,13 @@ window.onhashchange = route;
 renderAll(); route();
 </script></body></html>"""
 
+import os
+# point 15a : adresse + clé PUBLIQUE de Supabase (secrets GitHub SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY) ; jamais la clé secrète
+_sb_url, _sb_key = os.environ.get("SUPABASE_URL", "").rstrip("/"), os.environ.get("SUPABASE_PUBLISHABLE_KEY", "")
+SUPABASE_JS = json.dumps({"url": _sb_url, "key": _sb_key}) if (_sb_url and _sb_key.startswith("sb_publishable_")) else "null"
+
 def page(data_obj, facts, tour, circ="atp", files=True):
-    h = (HTML.replace("__FAV__", logo.favicon_links(files, circ)).replace("__LOGO__", logo.icon(bg=None)).replace("__LOGO_SVG__", json.dumps(logo.icon(size=128)))
+    h = (HTML.replace("__FAV__", logo.favicon_links(files, circ)).replace("__LOGO__", logo.icon(bg=None)).replace("__LOGO_SVG__", json.dumps(logo.icon(size=128))).replace("__SUPABASE__", SUPABASE_JS)
              .replace("__FB__", FEEDBACK_FORM).replace("__M_CSS__", methodo.CSS).replace("__M_EN__", methodo.render("en", facts_atp))
              .replace("__M_FR__", methodo.render("fr", facts_atp)).replace("__CIRCUIT__", circ)
              .replace("__TCSS__", T_CSS).replace("__TJS__", T_JS).replace("__FACTS__", json.dumps(facts))

@@ -44,6 +44,9 @@ jobs:
           echo "deploy=$(cat outputs/deploy.txt)" >> "$GITHUB_OUTPUT"
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}                       # point 15a : concours (vide = pas de concours)
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}   # publique par nature : mise dans la page
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}         # secrète : seulement pour le robot
       - name: Sauvegarder l'historique
         run: |
           git config user.name "seeded-bot"

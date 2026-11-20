@@ -93,6 +93,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 <b>Which players have a page?</b>Every player in the Seeded top 300 (15+ matches in the last 12 months). Each page shows his rating over the last 24 months, his rating and rank on each surface, his record over the last 12 months and his recent matches. Click any name on the site to open it.
 <b>Is there a women's version?</b>Yes: click “WTA” at the top of any page. Same method and same settings as for the men (we checked them on WTA data only: no variant did better). The WTA ranking covers about 115 players, because our source does not include WTA 125 and ITF events: fewer players reach the 15 matches needed. The 2027 WTA calendar comes from the official WTA calendar (October 2026).
 <b>Can you change a prediction after the match?</b>No. Every prediction is saved before the match (or before each round for title odds), with its date, and never edited: only the result is added. The archive files are public on GitHub, whose history shows when each line was written. Everything is on the Archives page.
+<b>How does the “Beat the model” contest work?</b>For each match, you pick the winner before it starts. Right pick: 10 ÷ the chance Seeded gave your player (favourite at 80% → 13 points, underdog at 20% → 50, 100 at most). Wrong pick: 0. Seeded always plays its favourite, and the leaderboard ranks everyone by total points. You only need a nickname (no account, no email); it is kept in your browser. Everyone's picks become visible once the match has started.
 <b>How often is it updated?</b>A full refresh every night. On top of that, a robot checks ongoing tournaments every 30 minutes: as soon as a new result appears in our source, ratings, draws and pages are recalculated and republished (usually within the hour). The limit is our source: when it publishes a result late, Seeded is late too.
 </div>
 
@@ -101,6 +102,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 
 <h2>10. Version history</h2>
 <table class="ver">
+<tr><td>v0.23</td><td>“Beat the model” contest (pick the winner, more points for underdogs Seeded did not believe in, leaderboard, everyone's picks visible once the match has started) · the top menu stays on one line</td></tr>
 <tr><td>v0.22</td><td>Calendar: a Seeded favourite for every tournament, announced 7 days before it starts and frozen until the end (kept in the Archives)</td></tr>
 <tr><td>v0.21</td><td>“Share this visual” button on player pages, the match comparator and draws: a ready-to-post image (1080×1350) with a link back to the page</td></tr>
 <tr><td>v0.20</td><td>WTA pages: pink browser-tab and iPhone home-screen icons</td></tr>
@@ -203,6 +205,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <b>Quels joueurs ont une page ?</b>Tous les joueurs du top 300 Seeded (15 matchs ou plus sur 12 mois). Chaque page montre l'évolution de sa note sur 24 mois, sa note et son rang sur chaque surface, son bilan sur 12 mois et ses derniers matchs. Clique sur n'importe quel nom du site pour l'ouvrir.
 <b>Y a-t-il une version féminine ?</b>Oui : clique sur « WTA » en haut de n'importe quelle page. Même méthode et mêmes réglages que chez les hommes (vérifiés sur les seules données WTA : aucune variante ne faisait mieux). Le classement WTA compte environ 115 joueuses, car notre source n'inclut pas les tournois WTA 125 et ITF : moins de joueuses atteignent les 15 matchs nécessaires. Le calendrier WTA 2027 vient du calendrier officiel de la WTA (octobre 2026).
 <b>Pouvez-vous modifier une prédiction après le match ?</b>Non. Chaque prédiction est enregistrée avant le match (ou avant chaque tour pour les chances de titre), avec sa date, et n'est jamais retouchée : seul le résultat est ajouté. Les fichiers d'archives sont publics sur GitHub, dont l'historique montre quand chaque ligne a été écrite. Tout est sur la page Archives.
+<b>Comment marche le concours « Battez le modèle » ?</b>Pour chaque match, tu choisis le vainqueur avant le début. Bon choix : 10 ÷ la chance que Seeded donnait à ton joueur (favori à 80 % → 13 points, outsider à 20 % → 50, 100 au maximum). Mauvais choix : 0. Seeded joue toujours son favori, et le classement range tout le monde par total de points. Il suffit d'un pseudo (pas de compte, pas d'e-mail), gardé dans ton navigateur. Les pronostics de tous deviennent visibles dès que le match commence.
 <b>À quelle fréquence c'est mis à jour ?</b>Une mise à jour complète chaque nuit. En plus, un robot vérifie les tournois en cours toutes les 30 minutes : dès qu'un nouveau résultat apparaît dans notre source, les notes, les tableaux et les pages sont recalculés et republiés (en général dans l'heure). La limite, c'est notre source : quand elle publie un résultat en retard, Seeded l'est aussi.
 </div>
 
@@ -211,6 +214,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 
 <h2>10. Historique des versions</h2>
 <table class="ver">
+<tr><td>v0.23</td><td>Concours « Battez le modèle » (trouve le vainqueur, plus de points pour les outsiders auxquels Seeded ne croyait pas, classement, pronostics de tous visibles dès le début du match) · le menu du haut tient sur une ligne</td></tr>
 <tr><td>v0.22</td><td>Calendrier : un favori Seeded pour chaque tournoi, annoncé 7 jours avant son début et figé jusqu'à la fin (gardé dans les Archives)</td></tr>
 <tr><td>v0.21</td><td>Bouton « Partager ce visuel » sur les pages joueurs, le comparateur et les tableaux : une image prête à poster (1080×1350) avec un lien vers la page</td></tr>
 <tr><td>v0.20</td><td>Pages WTA : icône d'onglet et icône d'écran d'accueil iPhone en rose</td></tr>
