@@ -204,9 +204,7 @@ __TCSS__
 <!-- ================= CALENDAR ================= -->
 <div class="page" id="p-calendar">
   <h1 id="cal-h"></h1><div class="meta" id="cal-meta"></div>
-  <div style="margin:6px 0"><button class="btn" data-cv="next"></button><button class="btn" data-cv="past"></button>
-    <span style="margin-left:14px"></span>
-    <button class="btn" data-cc="all"></button><button class="btn" data-cc="big"></button><button class="btn" data-cc="500"></button><button class="btn" data-cc="250"></button><button class="btn" data-cc="C"></button></div>
+  <div style="margin:6px 0"><button class="btn" data-cc="all"></button><button class="btn" data-cc="big"></button><button class="btn" data-cc="500"></button><button class="btn" data-cc="250"></button><button class="btn" data-cc="C"></button></div>
   <div class="note" id="cal-sum" style="max-width:1000px"></div>
   <table id="cal-t" style="max-width:1000px"></table>
 </div>
@@ -313,7 +311,9 @@ const T = {
   cal_res_meta: 'Every tournament of the season: champion, final, and where the champion stood among our pre-tournament favourites (rating + 14-day rhythm, exactly as in our predictions).',
   cc_all: 'All', cc_big: 'Slams &amp; Masters', h_cat: 'Category', h_surf2: 'Surface', h_favs: 'Seeded favourites (surface)', h_final: 'Final',
   h_ourfav: 'Our favourite', h_winrk: 'Champion\'s Seeded rank', tbc: 'TBC', cat: c => ({G: 'Grand Slam', M: 'Masters 1000', F: 'ATP Finals', '500': 'ATP 500', '250': 'ATP 250', C: 'Challenger'})[c] || c,
-  cal_noC: 'The 2027 Challenger calendar is released by the ATP in several parts: coming soon. Switch to “2026 results” to see this season\'s Challengers.',
+  cal_noC: 'The 2027 Challenger calendar is released by the ATP in several parts: coming soon.',
+  cal_chNote: (upto, v) => `The ATP releases the 2027 Challenger calendar in several parts: tournaments up to the week of ${upto} so far${v ? ' (ATP version of ' + v + ')' : ''}. More will be added as they are announced. No favourites are shown for Challengers: the top players never play them.`,
+  cal_sum_ch: n => `<b>${n}</b> Challengers announced so far for 2027.`,
   surf2: c => ({H: 'Hard', IH: 'Hard (indoor)', CL: 'Clay', G: 'Grass'})[c], cal_more: 'Full calendar →', home_next_t: 'Next tournaments',
   cal_sum_next: (n, b, nx) => `<b>${n}</b> tournaments, including <b>${b}</b> Grand Slams &amp; Masters 1000.` + (nx ? `<br>Next: <b>${nx}</b>.` : '') + '<br>Seeded title odds are published as soon as each draw is out.',
   cal_sum_past: (n, f, t3) => `<b>${n}</b> tournaments completed.<br>Our pre-tournament favourite won <b>${f}</b> of them; the champion was in our top 3 in <b>${t3}</b>.<br><span class="meta">A 250 or 500 favourite usually has only a 20–35% title chance: a few wins out of many is expected.</span>`,
@@ -390,7 +390,9 @@ const T = {
   cal_res_meta: 'Tous les tournois de la saison : vainqueur, finale, et la place du vainqueur parmi nos favoris d\'avant-tournoi (note + rythme sur 14 jours, exactement comme dans nos prédictions).',
   cc_all: 'Tous', cc_big: 'Grands Chelems et Masters', h_cat: 'Catégorie', h_surf2: 'Surface', h_favs: 'Favoris Seeded (surface)', h_final: 'Finale',
   h_ourfav: 'Notre favori', h_winrk: 'Rang Seeded du vainqueur', tbc: 'à confirmer', cat: c => ({G: 'Grand Chelem', M: 'Masters 1000', F: 'ATP Finals', '500': 'ATP 500', '250': 'ATP 250', C: 'Challenger'})[c] || c,
-  cal_noC: 'Le calendrier Challenger 2027 est publié par l\'ATP en plusieurs fois : bientôt ici. Passe sur « Résultats 2026 » pour voir les Challengers de cette saison.',
+  cal_noC: 'Le calendrier Challenger 2027 est publié par l\'ATP en plusieurs fois : bientôt ici.',
+  cal_chNote: (upto, v) => `L'ATP publie le calendrier Challenger 2027 en plusieurs fois : pour l'instant, les tournois jusqu'à la semaine du ${upto}${v ? ' (version ATP du ' + v + ')' : ''}. La suite sera ajoutée au fur et à mesure. Pas de favoris pour les Challengers : les meilleurs joueurs n'y jouent pas.`,
+  cal_sum_ch: n => `<b>${n}</b> Challengers annoncés pour l'instant en 2027.`,
   surf2: c => ({H: 'Dur', IH: 'Dur (salle)', CL: 'Terre battue', G: 'Gazon'})[c], cal_more: 'Tout le calendrier →', home_next_t: 'Prochains tournois',
   cal_sum_next: (n, b, nx) => `<b>${n}</b> tournois, dont <b>${b}</b> Grands Chelems et Masters 1000.` + (nx ? `<br>Prochain : <b>${nx}</b>.` : '') + '<br>Les chances de titre Seeded sont publiées dès la sortie de chaque tableau.',
   cal_sum_past: (n, f, t3) => `<b>${n}</b> tournois terminés.<br>Notre favori d\'avant-tournoi en a gagné <b>${f}</b> ; le vainqueur était dans notre top 3 pour <b>${t3}</b> d\'entre eux.<br><span class="meta">Le favori d\'un 250 ou d\'un 500 n\'a souvent que 20 à 35 % de chances de titre : quelques victoires sur beaucoup de tournois, c\'est normal.</span>`,
@@ -517,7 +519,7 @@ function renderRating() {
 // ------------------------------------------------------------ calendrier et pages surface
 const SFKEY = {H: 'hard', IH: 'hard', CL: 'clay', G: 'grass'}, SFCODE = {hard: 'H', clay: 'CL', grass: 'G'};
 const sfChip = c => `<a class="sf ${c}" href="#surface/${SFKEY[c]}">${t('surf2', c)}</a>`;
-const catChip = c => `<span class="ct ${c}">${t('cat', c)}</span>`;
+const catChip = (c, lvl) => `<span class="ct ${c}">${t('cat', c)}${lvl ? ' ' + lvl : ''}</span>`;
 const dfmt = (iso, sure = true) => { const d = new Date(iso + 'T12:00:00');
   return sure ? d.toLocaleDateString(L === 'fr' ? 'fr-FR' : 'en-GB', {day: 'numeric', month: 'short'}) : t('tbc'); };
 const monthName = iso => { const s = new Date(iso + 'T12:00:00').toLocaleDateString(L === 'fr' ? 'fr-FR' : 'en-GB', {month: 'long', year: 'numeric'}); return s[0].toUpperCase() + s.slice(1); };
@@ -525,37 +527,27 @@ const last = n => n.split(' ').slice(-1)[0];
 const topOn = (sk, k) => [...R].sort((a, b) => b[sk] - a[sk]).slice(0, k);
 const CALY = +D.cal.events[0].d.slice(0, 4), today = new Date().toISOString().slice(0, 10);
 const nextEv = () => D.cal.events.find(e => e.d >= today);
-let calView = 'next', calCat = 'all';
-const catOk = c => calCat === 'all' ? c !== 'C' : calCat === 'big' ? ['G', 'M', 'F'].includes(c) : c === calCat;
+let calCat = 'all';
+const catOk = c => calCat === 'all' ? true : calCat === 'big' ? ['G', 'M', 'F'].includes(c) : c === calCat;
 function renderCalendar() {
-  document.querySelectorAll('[data-cv]').forEach(b => { b.classList.toggle('on', b.dataset.cv === calView); b.innerHTML = t(b.dataset.cv === 'next' ? 'cal_next' : 'cal_past', b.dataset.cv === 'next' ? CALY : D.season_year); });
   document.querySelectorAll('[data-cc]').forEach(b => { b.classList.toggle('on', b.dataset.cc === calCat); b.innerHTML = /^\d+$/.test(b.dataset.cc) ? 'ATP ' + b.dataset.cc : b.dataset.cc === 'C' ? 'Challenger' : t('cc_' + b.dataset.cc); });
   const nx = nextEv();
-  if (calView === 'next') {
+  {
     $('#cal-h').textContent = t('cal_h', CALY); $('#cal-meta').textContent = t('cal_meta');
     let mo = '', h = `<tr><th>${t('h_date')}</th><th>${t('h_tourn')}</th><th>${t('h_cat')}</th><th>${t('h_surf2')}</th><th>${t('h_favs')}</th></tr>`;
-    D.cal.events.filter(e => catOk(e.cat)).forEach(e => {
+    const CH = D.cal.ch || [];
+    const rows = calCat === 'C' ? CH : calCat === 'all' ? [...D.cal.events, ...CH].sort((a, b) => a.d.localeCompare(b.d) || (a.cat === 'C') - (b.cat === 'C')) : D.cal.events.filter(e => catOk(e.cat));
+    rows.forEach(e => {
       if (e.d.slice(0, 7) !== mo) { mo = e.d.slice(0, 7); h += `<tr class="mo"><td colspan="5">${monthName(e.d)}</td></tr>`; }
       const favs = ['G', 'M', 'F'].includes(e.cat) ? topOn(SFKEY[e.surf], 3).map(r => plink(r.rank - 1, last(r.name)) + (r.inactive ? `<span class="tag">${t('inactive')}</span>` : '')).join(' · ') : '';
-      h += `<tr class="${nx && e === nx ? 'nx' : ''}"><td class="${e.sure ? '' : 'tbc'}">${dfmt(e.d, e.sure)}</td><td>${['G', 'M', 'F'].includes(e.cat) ? '<b>' + t('tour', e.name) + '</b>' : t('tour', e.name)}</td>
-        <td>${catChip(e.cat)}</td><td>${sfChip(e.surf)}</td><td>${favs}</td></tr>`;
+      h += `<tr class="${nx && e === nx ? 'nx' : ''}"><td class="${e.sure ? '' : 'tbc'}">${dfmt(e.d, e.sure)}</td><td>${['G', 'M', 'F'].includes(e.cat) ? '<b>' + t('tour', e.name) + '</b>' : t('tour', e.name)}${e.ctry ? ` <span class="meta" style="margin:0">${e.ctry}</span>` : ''}</td>
+        <td>${catChip(e.cat, e.lvl)}</td><td>${sfChip(e.surf)}</td><td>${favs}</td></tr>`;
     });
-    if (calCat === 'C') h += `<tr><td colspan="5" class="z">${t('cal_noC')}</td></tr>`;
+    if (calCat === 'C' && !CH.length) h += `<tr><td colspan="5" class="z">${t('cal_noC')}</td></tr>`;
     $('#cal-t').innerHTML = h;
-    const ev = D.cal.events;
-    $('#cal-sum').innerHTML = t('cal_sum_next', ev.length, ev.filter(e => ['G', 'M'].includes(e.cat)).length, nx ? `${t('tour', nx.name)} (${nx.sure ? dfmt(nx.d) : monthName(nx.d)})` : '');
-  } else {
-    $('#cal-h').textContent = t('cal_res_h', D.season_year); $('#cal-meta').textContent = t('cal_res_meta');
-    let mo = '', h = `<tr><th>${t('h_date')}</th><th>${t('h_tourn')}</th><th>${t('h_cat')}</th><th>${t('h_surf2')}</th><th>${t('h_champ')}</th><th>${t('h_final')}</th><th>${t('h_ourfav')}</th><th>${t('h_winrk')}</th></tr>`;
-    [...D.season].reverse().filter(e => catOk(e.cat)).forEach(e => {
-      if (e.d.slice(0, 7) !== mo) { mo = e.d.slice(0, 7); h += `<tr class="mo"><td colspan="8">${monthName(e.d)}</td></tr>`; }
-      h += `<tr><td>${dfmt(e.d)}</td><td>${['G', 'M', 'F'].includes(e.cat) ? '<b>' + t('tour', e.name) + '</b>' : t('tour', e.name)}</td><td>${catChip(e.cat)}</td><td>${sfChip(e.surf)}</td>` +
-        (e.win ? `<td><b>${plink(e.win_i, e.win)}</b></td><td>${plink(e.fin_i, last(e.fin))} <span class="meta">${e.score}</span></td>` : `<td colspan="2" class="z">${t('live_t')}</td>`) +
-        `<td>${e.fav ? plink(e.fav_i, last(e.fav)) : ''}</td><td>${e.win ? t('wrk', e.win_rk, e.n) : ''}</td></tr>`;
-    });
-    $('#cal-t').innerHTML = h;
-    const done = D.season.filter(e => e.win && e.cat !== 'F' && (calCat === 'C') === (e.cat === 'C'));
-    $('#cal-sum').innerHTML = t('cal_sum_past', done.length, done.filter(e => e.win_rk === 1).length, done.filter(e => e.win_rk && e.win_rk <= 3).length);
+    const ev = rows;
+    const chNote = CH.length && ['all', 'C'].includes(calCat) ? '<br><span class="meta">' + t('cal_chNote', dfmt(CH[CH.length - 1].d), D.cal.ch_asof ? dfmt(D.cal.ch_asof) : '') + '</span>' : '';
+    $('#cal-sum').innerHTML = calCat === 'C' ? t('cal_sum_ch', CH.length) + chNote : t('cal_sum_next', ev.length, ev.filter(e => ['G', 'M'].includes(e.cat)).length, nx ? `${t('tour', nx.name)} (${nx.sure ? dfmt(nx.d) : monthName(nx.d)})` : '') + chNote;
   }
 }
 let SF = 'hard';
@@ -584,7 +576,6 @@ function renderHomeNext() {
     `<tr><td class="${e.sure ? '' : 'tbc'}">${e.sure ? dfmt(e.d) : monthName(e.d)}</td><td>${t('tour', e.name)}</td><td>${sfChip(e.surf)}</td></tr>`).join('');
   $('#r-sflinks').innerHTML = t('sf_links') + ' ' + ['hard', 'clay', 'grass'].map(k => `<a href="#surface/${k}">${t(k)}</a>`).join(' · ');
 }
-document.querySelectorAll('[data-cv]').forEach(b => b.onclick = () => { calView = b.dataset.cv; renderCalendar(); });
 document.querySelectorAll('[data-cc]').forEach(b => b.onclick = () => { calCat = b.dataset.cc; renderCalendar(); });
 
 function wrapTables() {

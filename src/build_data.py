@@ -188,6 +188,13 @@ for tid, g in cur.groupby("tourney_id"):
     season.append(row)
 season.sort(key=lambda x: x["d"])
 CAL = json.loads((TOURNAMENTS / "calendar_2027.json").read_text())
+# point 30 : Challengers 2027, publiés par l'ATP en plusieurs fois (tools/import_challengers.py)
+_chf = TOURNAMENTS / "challenger_2027.json"
+_ch = json.loads(_chf.read_text()) if _chf.exists() else {"events": [], "asof": None}
+CAL["ch"], CAL["ch_asof"] = _ch["events"], _ch.get("asof")
+for e in CAL["ch"]:
+    e["cat"] = "C"
+
 for c in ("ATP", "C"):
     ss = [x for x in season if (x["cat"] == "C") == (c == "C") and "win" in x]
     print(f"saison {c} :", len(ss), "terminés ; favori vainqueur :", sum(x.get("win_rk") == 1 for x in ss), "; top 3 :", sum((x.get("win_rk") or 99) <= 3 for x in ss))

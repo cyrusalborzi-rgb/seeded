@@ -1,0 +1,182 @@
+{
+ "source": "Calendrier Challenger officiel ATP (PDF « 2026-27 ATP Challenger calendar », pages 2027 publiées le 2026-11-13). L'ATP le publie en plusieurs fois : relancer tools/import_challengers.py avec chaque nouvelle version.",
+ "asof": "2026-11-13",
+ "events": [
+  {
+   "d": "2027-01-04",
+   "name": "Bengaluru",
+   "ctry": "IND",
+   "lvl": 125,
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-01-04",
+   "name": "Canberra",
+   "ctry": "AUS",
+   "lvl": 125,
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-01-04",
+   "name": "Noumea",
+   "ctry": "NCL",
+   "lvl": 75,
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-01-04",
+   "name": "Los Angeles",
+   "ctry": "CHI",
+   "lvl": 50,
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-01-04",
+   "name": "Nottingham 1",
+   "ctry": "GBR",
+   "lvl": 50,
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-01-11",
+   "name": "Glasgow",
+   "ctry": "GBR",
+   "lvl": 75,
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-01-11",
+   "name": "Baton Rouge",
+   "ctry": "USA",
+   "lvl": 50,
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-01-11",
+   "name": "Tigre",
+   "ctry": "ARG",
+   "lvl": 50,
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-01-18",
+   "name": "Itajai",
+   "ctry": "BRA",
+   "lvl": 75,
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-01-18",
+   "name": "Lyon (Decines-Charpieu)",
+   "ctry": "FRA",
+   "lvl": 75,
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-01-18",
+   "name": "Koblenz",
+   "ctry": "GER",
+   "lvl": 75,
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-01-18",
+   "name": "San Diego 1",
+   "ctry": "USA",
+   "lvl": 75,
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-01-25",
+   "name": "Quimper",
+   "ctry": "FRA",
+   "lvl": 125,
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-01-25",
+   "name": "Concepcion",
+   "ctry": "CHI",
+   "lvl": 100,
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-01-25",
+   "name": "Oeiras 1",
+   "ctry": "POR",
+   "lvl": 75,
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-01-25",
+   "name": "San Diego 2",
+   "ctry": "USA",
+   "lvl": 75,
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-01-25",
+   "name": "Trnava",
+   "ctry": "SVK",
+   "lvl": 50,
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-01-25",
+   "name": "Cesenatico",
+   "ctry": "ITA",
+   "lvl": 50,
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-02-01",
+   "name": "Bergamo",
+   "ctry": "ITA",
+   "lvl": 125,
+   "surf": "IH",
+   "sure": true
+  },
+  {
+   "d": "2027-02-01",
+   "name": "Rosario",
+   "ctry": "ARG",
+   "lvl": 125,
+   "surf": "CL",
+   "sure": true
+  },
+  {
+   "d": "2027-02-01",
+   "name": "Brisbane 1",
+   "ctry": "AUS",
+   "lvl": 75,
+   "surf": "H",
+   "sure": true
+  },
+  {
+   "d": "2027-02-01",
+   "name": "Cleveland",
+   "ctry": "USA",
+   "lvl": 75,
+   "surf": "IH",
+   "sure": true
+  }
+ ]
+}
