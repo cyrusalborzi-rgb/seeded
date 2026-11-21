@@ -1,28 +1,28 @@
 {
-"updated": "2026-11-20T16:02+00:00",
-"remaining": 491,
+"updated": "2026-11-21T00:30+00:00",
+"remaining": 490,
 "events": [
-{
-"id": "1acdb2047defbe0439ef3b1961a60010",
-"t": "ATP Finals",
-"key": "tennis_atp_finals",
-"time": "2026-11-20T19:30:00Z",
-"a": "Daniil Medvedev",
-"b": "Frances Tiafoe",
-"pa": 0.6846,
-"n": 17,
-"pin": 0.6822
-},
 {
 "id": "81c3faeaadd3d42734cd831b32b32597",
 "t": "ATP Finals",
 "key": "tennis_atp_finals",
-"time": "2026-11-21T13:00:00Z",
+"time": "2026-11-21T13:30:00Z",
 "a": "Carlos Alcaraz",
 "b": "Ben Shelton",
-"pa": 0.7194,
-"n": 6,
-"pin": null
+"pa": 0.7637,
+"n": 15,
+"pin": 0.7702
+},
+{
+"id": "32e23a0b745bed6c0a23f60fab451adb",
+"t": "ATP Finals",
+"key": "tennis_atp_finals",
+"time": "2026-11-21T19:30:00Z",
+"a": "Alexander Zverev",
+"b": "Daniil Medvedev",
+"pa": 0.6172,
+"n": 15,
+"pin": 0.6146
 }
 ]
 }
