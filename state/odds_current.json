@@ -1,6 +1,6 @@
 {
-"updated": "2026-11-21T00:37+00:00",
-"remaining": 488,
+"updated": "2026-11-21T03:17+00:00",
+"remaining": 487,
 "events": [
 {
 "id": "81c3faeaadd3d42734cd831b32b32597",
@@ -9,9 +9,9 @@
 "time": "2026-11-21T13:30:00Z",
 "a": "Carlos Alcaraz",
 "b": "Ben Shelton",
-"pa": 0.7637,
+"pa": 0.759,
 "n": 15,
-"pin": 0.7702
+"pin": 0.75
 },
 {
 "id": "32e23a0b745bed6c0a23f60fab451adb",
@@ -20,9 +20,9 @@
 "time": "2026-11-21T19:30:00Z",
 "a": "Alexander Zverev",
 "b": "Daniil Medvedev",
-"pa": 0.6172,
+"pa": 0.619,
 "n": 15,
-"pin": 0.6146
+"pin": 0.6346
 }
 ]
 }
