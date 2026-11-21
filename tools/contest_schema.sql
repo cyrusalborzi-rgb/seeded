@@ -42,6 +42,8 @@ alter table contest_picks   enable row level security;
 drop policy if exists "matchs lisibles" on contest_matches;
 create policy "matchs lisibles" on contest_matches for select to anon, authenticated using (true);
 grant select on contest_matches to anon, authenticated;
+-- le robot GitHub (clé secrète = rôle service_role) écrit les matchs et les résultats
+grant select, insert, update on contest_matches to service_role;
 
 -- Règle « bonus outsider » (choix de Cyrus, 20/11) : on choisit le vainqueur (pa = 1 → « a », pa = 0 → « b »).
 -- Bon choix = 10 ÷ (chance que Seeded donnait à ce joueur), arrondi, 100 au maximum ; mauvais choix = 0.

@@ -25,6 +25,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main          # dernière version au moment où le robot démarre (deux robots peuvent s'enchaîner)
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -49,7 +51,7 @@ jobs:
           git config user.name "seeded-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add state/
-          git diff --cached --quiet || (git commit -m "state: mise à jour du $(date -u +%F)" && git push)
+          git diff --cached --quiet || (git commit -m "state: mise à jour du $(date -u +%F)" && git pull --rebase -X theirs -q && git push)
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
