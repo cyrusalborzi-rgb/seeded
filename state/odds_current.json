@@ -1,17 +1,5 @@
 {
-"updated": "2026-11-21T14:56+00:00",
-"remaining": 484,
-"events": [
-{
-"id": "32e23a0b745bed6c0a23f60fab451adb",
-"t": "ATP Finals",
-"key": "tennis_atp_finals",
-"time": "2026-11-21T19:30:00Z",
-"a": "Alexander Zverev",
-"b": "Daniil Medvedev",
-"pa": 0.6005,
-"n": 15,
-"pin": 0.5906
-}
-]
+"updated": "2026-11-21T21:01+00:00",
+"remaining": 483,
+"events": []
 }
