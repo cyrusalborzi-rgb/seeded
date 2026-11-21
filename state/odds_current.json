@@ -1,18 +1,7 @@
 {
-"updated": "2026-11-21T11:17+00:00",
-"remaining": 485,
+"updated": "2026-11-21T14:56+00:00",
+"remaining": 484,
 "events": [
-{
-"id": "81c3faeaadd3d42734cd831b32b32597",
-"t": "ATP Finals",
-"key": "tennis_atp_finals",
-"time": "2026-11-21T13:30:00Z",
-"a": "Carlos Alcaraz",
-"b": "Ben Shelton",
-"pa": 0.787,
-"n": 15,
-"pin": 0.7919
-},
 {
 "id": "32e23a0b745bed6c0a23f60fab451adb",
 "t": "ATP Finals",
@@ -20,9 +9,9 @@
 "time": "2026-11-21T19:30:00Z",
 "a": "Alexander Zverev",
 "b": "Daniil Medvedev",
-"pa": 0.6176,
+"pa": 0.6005,
 "n": 15,
-"pin": 0.6103
+"pin": 0.5906
 }
 ]
 }
