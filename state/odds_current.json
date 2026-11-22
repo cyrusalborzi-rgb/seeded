@@ -1,6 +1,6 @@
 {
-"updated": "2026-11-22T03:01+00:00",
-"remaining": 482,
+"updated": "2026-11-22T03:17+00:00",
+"remaining": 481,
 "events": [
 {
 "id": "61fd3eff03d345615f08909e038728e7",
@@ -9,7 +9,7 @@
 "time": "2026-11-22T17:00:00Z",
 "a": "Alexander Zverev",
 "b": "Carlos Alcaraz",
-"pa": 0.3367,
+"pa": 0.3365,
 "n": 15,
 "pin": 0.3395
 }
