@@ -174,6 +174,14 @@ for r in top.itertuples(index=False):
         "best": None if best is None else fmt_m(best),
         "last_day": date.fromordinal(max(x["day"] for x in pm)).strftime("%d %b %Y") if pm else None,
         "recent": [fmt_m(x) for x in rec]})
+# ---- point 6a : Service / Retour (12 mois, corrigés du niveau de l'adversaire ; hors note Seeded)
+import skills
+_skf = [f for y in (YEAR - 1, YEAR) for f in RAW_FILES(y)] + ONGOING
+SK, _skr = skills.compute(_skf, today, list(top.id), scale=0.8 if TOUR == "wta" else 1.0)
+_SKK = ("sv", "rt", "bps", "bpc")
+def _skrow(pid):          # compact pour le classement : {surface: [service, retour, balles de break sauvées, converties]}
+    return {sk: [v.get(k) for k in _SKK] for sk, v in SK.get(pid, {}).items()} or None
+print("compartiments :", len(SK), "joueurs classés (service/retour)")
 print("pages joueurs :", len(players), "| ex.", top.iloc[0]["name"], players[0]["record"], "titres", players[0]["titles"])
 
 # ---- saison en cours : vainqueurs et place du vainqueur dans nos favoris d'avant-tournoi
@@ -399,7 +407,7 @@ print("archives :", len(a_tours), "tournoi(s),", len(a_matches), "matchs", "(don
 out = {"date": date.fromordinal(today).strftime("%d %b %Y"), "live": live,
        "built": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(timespec="minutes"),
        "next": {"en": nxt["next"]["en"], "fr": nxt["next"]["fr"]} if nxt else None,
-       "ranking": json.loads(top.to_json(orient="records")),
+       "ranking": [{**r_, "sk": _skrow(r_["id"])} for r_ in json.loads(top.to_json(orient="records"))],
        "circuit": TOUR, "players": players, "season": season, "season_year": YEAR, "cal": CAL, "odds": odds_out, "odds_record": odds_record, "archive": archive_out,
        "ao": json.loads(ao.to_json(orient="records")),
        "bilan": json.loads(bilan.to_json(orient="records")),

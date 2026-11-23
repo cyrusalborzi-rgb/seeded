@@ -77,6 +77,10 @@ tr:nth-child(even) td{background-color:#fafafa} tr:nth-child(even) td.b{backgrou
 .lock{color:#999;background:#f7f7f7!important;text-align:center}
 .btn{font:inherit;font-size:12px;padding:4px 10px;border:1px solid #bbb;background:#f6f6f6;cursor:pointer;margin-right:3px}
 .btn.on{background:#d9e4f1;border-color:#1d3557;font-weight:bold}
+.rviews{margin:8px 0 2px;display:flex;flex-wrap:wrap;gap:0}
+.rviews .btn{font-size:13px;padding:5px 12px;border-radius:0;margin:0 -1px 0 0}
+.rviews .btn:first-child{border-radius:4px 0 0 4px}.rviews .btn:last-child{border-radius:0 4px 4px 0}
+
 .hero{display:flex;gap:14px;align-items:stretch;margin-bottom:14px}
 .card{flex:1;border:1px solid #ccc;padding:10px;background:#fbfcfe}
 .card .k{font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.5px}
@@ -206,10 +210,12 @@ __TCSS__
 
 <!-- ================= RATING ================= -->
 <div class="page" id="p-rating">
-  <h1 data-i="rating_t"></h1><div class="meta" data-i="rating_meta"></div>
+  <h1 data-i="rating_t"></h1><div class="meta" data-i="rating_meta" id="r-meta"></div>
+  <div class="rviews"><button class="btn on" data-v="gen" data-i="v_gen"></button><button class="btn" data-v="sv" data-i="v_sv"></button><button class="btn" data-v="rt" data-i="v_rt"></button></div>
   <div style="margin:6px 0"><button class="btn on" data-s="note" data-i="all_surf"></button><button class="btn" data-s="hard" data-i="hard"></button>
   <button class="btn" data-s="clay" data-i="clay"></button><button class="btn" data-s="grass" data-i="grass"></button>
   <input id="rq" style="margin-left:10px"> <span class="meta" id="r-sflinks" style="margin-left:10px"></span></div>
+  <div class="meta" id="r-skn" style="display:none"></div>
   <table id="r-full"></table>
 </div>
 
@@ -225,6 +231,7 @@ __TCSS__
     <div class="card"><div class="k">Seeded Rating</div><div class="big" id="pl-note"></div><div id="pl-rank" style="margin-top:4px"></div></div>
     <div class="card"><div class="k" data-i="atp_rk"></div><div class="v" id="pl-atp"></div><div id="pl-gap"></div></div>
     <div class="card"><div class="k" data-i="by_surf"></div><table id="pl-surf" style="margin-top:4px"></table></div>
+    <div class="card"><div class="k" data-i="sk_t"></div><table id="pl-sk" style="margin-top:4px"></table><div class="meta" id="pl-skn" style="margin:4px 0 0;font-size:11px"></div></div>
     <div class="card"><div class="k" data-i="pl_12m"></div><div class="v" id="pl-wl"></div><div id="pl-wls"></div></div>
   </div>
   <div class="grid"><div>
@@ -356,6 +363,13 @@ const T = {
   plus_txt: 'Unlimited "what if" draw simulator, round-by-round odds for every tournament, upset alerts, full player stats.<br><b>€3 / month</b> · or €5 per Grand Slam',
   pred_teaser: 'Who wins Sinner vs Alcaraz on clay? <a href="#predictor">Try it →</a>',
   rating_t: 'Seeded Rating — ATP', rating_meta: 'Real level out of 100 · 10 points ≈ 70% chance to win · 15+ matches in the last 12 months · <a href="#method">How is it calculated?</a>',
+  v_gen: 'Overall', v_sv: 'Serve', v_rt: 'Return', sk_t: 'Serve & return (12 months)',
+  rmeta_sv: 'Share of service points won against an average returner on the tour (adjusted for the level of opponents) · last 12 months · <a href="#method/7">How is it calculated?</a>',
+  rmeta_rt: 'Share of return points won against an average server on the tour (adjusted for the level of opponents) · last 12 months · <a href="#method/7">How is it calculated?</a>',
+  sk_miss: n => `${n} player${n > 1 ? 's' : ''} of the ranking not shown here: not enough points played with stats on this surface in 12 months.`,
+  h_sv: 'Serve', h_rt: 'Return', h_bps: 'Break points<br>saved', h_bpc: 'Break points<br>converted',
+  sk_none: 'Not enough matches with stats in the last 12 months.',
+  sk_pl_note: 'Against an average opponent · <a href="#method/7">how?</a>',
   all_surf: 'All surfaces', hard: 'Hard', clay: 'Clay', grass: 'Grass', search: 'Search a player…',
   t_title: 'Australian Open 2026 — title &amp; round probabilities', t_meta: 'Replay demo · state after the round of 16 · 50,000 simulated draws',
   t_note: 'On the real site this page has two tabs (<b>Title odds</b> | <b>Draw · What if?</b>): click any player in the draw to make him win and the whole tournament is replayed instantly — open <a href="australian-open-2026.html">australian-open-2026.html</a> to try it.',
@@ -467,6 +481,13 @@ const T = {
   plus_txt: 'Simulateur « Et si ? » illimité, probabilités tour par tour pour chaque tournoi, alertes surprises, stats complètes des joueurs.<br><b>3 € / mois</b> · ou 5 € par Grand Chelem',
   pred_teaser: 'Qui gagne Sinner contre Alcaraz sur terre ? <a href="#predictor">Essaie →</a>',
   rating_t: 'Seeded Rating — ATP', rating_meta: 'Le vrai niveau, noté sur 100 · 10 points d\'écart ≈ 70 % de chances de gagner · 15 matchs ou plus sur 12 mois · <a href="#method">Comment c\'est calculé ?</a>',
+  v_gen: 'Général', v_sv: 'Service', v_rt: 'Retour', sk_t: 'Service et retour (12 mois)',
+  rmeta_sv: 'Part des points gagnés au service face à un retour moyen du circuit (corrigée du niveau des adversaires) · 12 derniers mois · <a href="#method/7">Comment c\'est calculé ?</a>',
+  rmeta_rt: 'Part des points gagnés au retour face à un service moyen du circuit (corrigée du niveau des adversaires) · 12 derniers mois · <a href="#method/7">Comment c\'est calculé ?</a>',
+  sk_miss: n => `${n} joueur${n > 1 ? 's' : ''} du classement n'apparai${n > 1 ? 'ssent' : 't'} pas ici : pas assez de points joués avec statistiques sur cette surface en 12 mois.`,
+  h_sv: 'Service', h_rt: 'Retour', h_bps: 'Balles de break<br>sauvées', h_bpc: 'Balles de break<br>converties',
+  sk_none: 'Pas assez de matchs avec statistiques sur les 12 derniers mois.',
+  sk_pl_note: 'Face à un adversaire moyen · <a href="#method/7">comment&nbsp;?</a>',
   all_surf: 'Toutes surfaces', hard: 'Dur', clay: 'Terre battue', grass: 'Gazon', search: 'Chercher un joueur…',
   t_title: 'Open d\'Australie 2026 — probabilités par tour et de titre', t_meta: 'Démo rejouée · état après les huitièmes de finale · 50 000 tableaux simulés',
   t_note: 'Sur le vrai site, cette page a deux onglets (<b>Chances de titre</b> | <b>Tableau · Et si ?</b>) : clique sur n\'importe quel joueur du tableau pour le faire gagner, et tout le tournoi est rejoué instantanément — ouvre <a href="australian-open-2026.html">australian-open-2026.html</a> pour l\'essayer (en anglais pour l\'instant).',
@@ -660,9 +681,31 @@ function renderHome() {
     <td><b>${plink(downs[i].rank - 1)}</b></td><td class="n">${fmt(downs[i].note)}</td><td class="n down">${fmt(downs[i].d30)}</td></tr>`).join('');
 }
 
-let surf = 'note';
+let surf = 'note', rview = 'gen';
+// point 6a : service et retour. R[i].sk[surface] = [service, retour, balles de break sauvées, balles de break converties]
+const SKI = {sv: 0, rt: 1}, skS = s => s === 'note' ? 'all' : s;
+const skv = (r, v, s) => { const a = r.sk && r.sk[skS(s)]; return a ? a[SKI[v]] : null; };
+const skList = (v, s) => R.filter(r => skv(r, v, s) != null).sort((a, b) => skv(b, v, s) - skv(a, v, s));
+const skRank = (r, v, s) => { const x = skv(r, v, s); return x == null ? null : R.filter(o => skv(o, v, s) > x).length + 1; };
+const rHash = (v, s) => '#rating/' + (v === 'gen' ? s : v + '-' + s);
 function renderRating() {
   const q = $('#rq').value.toLowerCase();
+  document.querySelectorAll('[data-v]').forEach(x => x.classList.toggle('on', x.dataset.v === rview));
+  $('#r-meta').innerHTML = t(rview === 'gen' ? 'rating_meta' : 'rmeta_' + rview);
+  if (rview !== 'gen') {
+    const sk = skS(surf), list = skList(rview, surf), miss = R.length - list.length;
+    $('#r-skn').style.display = miss ? '' : 'none';
+    $('#r-skn').textContent = t('sk_miss', miss);
+    const A = r => r.sk[sk], th = k => `<th>${t(k)}</th>`;
+    const head = rview === 'sv' ? th('h_sv') + th('h_bps') + th('h_rating') : th('h_rt') + th('h_bpc') + th('h_rating');
+    const cells = r => { const a = A(r), j = rview === 'sv' ? 0 : 1;
+      return `<td class="n b">${pct(a[j])}</td><td class="n">${a[j + 2] == null ? '–' : pct(a[j + 2], 0)}</td><td class="n">${fmt(r[surf])}</td>`; };
+    $('#r-full').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th>${head}</tr>` +
+      list.map((r, i) => ({r, k: i + 1})).filter(x => x.r.name.toLowerCase().includes(q)).map(({r, k}) =>
+        `<tr><td class="n">${k}</td><td><b>${plink(r.rank - 1)}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td>${cells(r)}</tr>`).join('');
+    return;
+  }
+  $('#r-skn').style.display = 'none';
   const rows = [...R].sort((a, b) => b[surf] - a[surf]).map((r, i) => ({...r, srank: i + 1}))
     .filter(r => r.name.toLowerCase().includes(q));
   const sh = (k, lab) => `<th><a class="ql" href="#rating/${k}">${lab}</a>${surf === k ? ' ▼' : ''}</th>`;
@@ -804,6 +847,10 @@ function renderPlayer() {
   $('#pl-gap').innerHTML = I.gap == null ? '' : I.gap >= 3 ? `<span class="up">${t('under', I.gap)}</span>` : I.gap <= -3 ? `<span class="down">${t('over', -I.gap)}</span>` : t('inline');
   $('#pl-surf').innerHTML = ['hard', 'clay', 'grass'].map(s => { const rk = R.filter(r => r[s] > I[s]).length + 1;
     return `<tr><td><a class="ql" href="#rating/${s}/${I.slug}">${t(s)}</a></td><td class="n b">${fmt(I[s])}</td><td class="n meta" style="margin:0"><a class="ql" href="#rating/${s}/${I.slug}">${nr}${rk}</a></td></tr>`; }).join('');
+  // point 6a : service et retour sur 12 mois, toutes surfaces (rang parmi le classement)
+  $('#pl-sk').innerHTML = !I.sk || !I.sk.all ? '' : ['sv', 'rt'].map(v =>
+    `<tr><td><a class="ql" href="${rHash(v, 'note')}/${I.slug}">${t('v_' + v)}</a></td><td class="n b">${pct(skv(I, v, 'note'))}</td><td class="n meta" style="margin:0"><a class="ql" href="${rHash(v, 'note')}/${I.slug}">${nr}${skRank(I, v, 'note')}</a></td></tr>`).join('');
+  $('#pl-skn').innerHTML = !I.sk || !I.sk.all ? t('sk_none') : t('sk_pl_note');
   $('#pl-cmp').textContent = t('pl_cmp'); $('#pl-cmp').href = `#predictor/${I.slug}`;
   ['#pl-wl', '#pl-wls', '#pl-recent', '#pl-rec', '#pl-dur', '#pl-best', '#pl-chart'].forEach(s => $(s).innerHTML = '');
   $('#pl-meta').textContent = I.ioc;
@@ -891,6 +938,8 @@ function card(i, sf) {
     <div class="kv"><span>${t('srank')}</span><b><a class="ql" href="#rating">${nr}${r.rank}</a></b></div>
     <div class="kv"><span>${t('atprank')}</span><b>${r.atp ? nr + r.atp : '–'}</b></div>
     <div class="kv"><span><a class="ql" href="#rating/${sf}">${t('surf_rt', t(sf))}</a></span><b>${fmt(r[sf])}</b></div>
+    ${['sv', 'rt'].map(v => { const val = skv(r, v, sf);
+      return `<div class="kv"><span><a class="ql" href="${rHash(v, sf)}">${t('v_' + v)}</a> <span class="meta" style="margin:0">(${t(sf).toLowerCase()})</span></span><b>${val == null ? '–' : pct(val) + ` <span class="meta" style="margin:0;font-weight:normal">${nr}${skRank(r, v, sf)}</span>`}</b></div>`; }).join('')}
     <div class="kv"><span>${t('cmp_dur', $('#pbo').value)}</span><b>${dur(r['m' + $('#pbo').value]) || '–'}</b></div>
     <div class="kv"><span>${t('trend')}</span><b class="${r.d30 > 0 ? 'up' : r.d30 < 0 ? 'down' : ''}">${r.d30 == null ? '–' : (r.d30 > 0 ? '+' : '') + fmt(r.d30)}</b></div>
     <div style="margin-top:8px"><b>${t('form_t')}</b> <span class="meta">(${t('rec', w, f.length - w)})</span></div><div style="margin-top:4px">${sq}</div>`;
@@ -1247,7 +1296,8 @@ function renderAll() { renderFeedback(); renderStatic(); renderHome(); renderHom
 // ------------------------------------------------------------ interactions
 document.querySelectorAll('[data-lang]').forEach(a => a.onclick = () => {
   L = a.dataset.lang; try { localStorage.setItem('seeded_lang', L); } catch (e) {} renderAll(); });
-document.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { location.hash = '#rating/' + b.dataset.s; });
+document.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { location.hash = rHash(rview, b.dataset.s); });
+document.querySelectorAll('[data-v]').forEach(b => b.onclick = () => { location.hash = rHash(b.dataset.v, surf); });
 $('#rq').oninput = renderRating;
 ['#pa', '#pb', '#ps', '#pbo'].forEach(s => $(s).onchange = renderPredictor);
 $('#ps').value = 'clay';
@@ -1257,7 +1307,8 @@ function route() {
   if (!document.getElementById('p-' + id)) id = 'home';
   if (id === 'player') { if (arg && SLUG[arg] != null) PL = SLUG[arg]; renderPlayer(); }
   if (id === 'surface') { if (['hard', 'clay', 'grass'].includes(arg)) SF = arg; renderSurface(); }
-  if (id === 'rating') { surf = ['hard', 'clay', 'grass'].includes(arg) ? arg : 'note';
+  if (id === 'rating') { const [v0, s0] = (arg || '').split('-'), isV = ['sv', 'rt'].includes(v0);
+    rview = isV ? v0 : 'gen'; const sa = isV ? s0 : v0; surf = ['hard', 'clay', 'grass'].includes(sa) ? sa : 'note';
     document.querySelectorAll('[data-s]').forEach(x => x.classList.toggle('on', x.dataset.s === surf)); renderRating(); }
   if (id === 'contest' && CT.loaded) ctLoad();                       // rafraîchit en revenant sur la page
   if (id === 'calendar') { calCat = ['big', '500', '250', 'C'].includes(arg) ? arg : 'all'; renderCalendar(); }

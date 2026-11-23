@@ -76,7 +76,13 @@ to turn that level into probabilities. Every number on the site is measured and 
 <li><b>No betting advice.</b> These are probabilities from our own model, not tips. For big tournaments we show the bookmakers' average probability next to ours, for comparison only: <b>the model never uses odds</b>.</li>
 <li>Seeded is an independent project, not affiliated with the ATP.</li></ul>
 
-<h2>7. Known limits</h2>
+<h2>7. Serve and return</h2>
+<p>On the Seeded Rating page (and on each player page and in the comparator), two extra rankings look at <b>how</b> a player wins his points, over the last 12 months, from the statistics of each match (main tour, Challengers and qualifying; about 98% of matches have them).</p>
+<ul><li><b>Serve</b>: share of service points won. <b>Return</b>: share of return points won. A raw percentage depends on who you played: 70% of service points won against Challenger returners is not the same as against the best returners on tour. So we correct it for the level of opponents: we fit “service points won = average on the surface + server's serve level − returner's return level” on every match, weighted by the number of points, with a pull towards the average for small samples. The figure shown is what the player would win <b>against an average returner</b> (or server) on the tour. Next to it: break points saved (Serve view) and converted (Return view), as they are.</li>
+<li>To be ranked: at least 1,200 service points and as many return points with stats in 12 months (700 on hard, 500 on clay, 300 on grass; 80% of that for the WTA, where matches are shorter).</li>
+<li>These rankings are <b>for information only</b>: they are not used in the Seeded Rating or in the probabilities. Forehand and backhand: no public data exists for every match, so we do not rank them.</li></ul>
+
+<h2>8. Known limits</h2>
 <ul><li>Ratings are frozen at the start of a tournament (in-tournament updates are coming).</li>
 <li>Fatigue is not modelled: our tests found no reliable effect.</li>
 <li>Results arrive with about one day of delay.</li>
@@ -84,7 +90,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 <li>2027 calendar: dates come from the official ATP calendar (January 2026). If the ATP moves a tournament, we update it by hand.</li>
 <li>Young players and comebacks have little data: their rating moves fast and is less certain.</li></ul>
 
-<h2>8. FAQ</h2>
+<h2>9. FAQ</h2>
 <div class="faq">
 <b>Why is a player rated above his ATP ranking?</b>The ATP ranking adds up points from tournaments over 52 weeks: it rewards playing (and winning) a lot. The Seeded Rating measures how well you play, whatever your schedule. A player back from injury, or who plays few events, can be much better than his ranking.
 <b>Why is a player still #1 if he hasn't played for months?</b>His matches from the last 12 months still count. The "inactive" badge flags it, and his rating updates as soon as he plays again.
@@ -94,14 +100,16 @@ to turn that level into probabilities. Every number on the site is measured and 
 <b>Is there a women's version?</b>Yes: click “WTA” at the top of any page. Same method and same settings as for the men (we checked them on WTA data only: no variant did better). The WTA ranking covers about 115 players, because our source does not include WTA 125 and ITF events: fewer players reach the 15 matches needed. The 2027 WTA calendar comes from the official WTA calendar (October 2026).
 <b>Can you change a prediction after the match?</b>No. Every prediction is saved before the match (or before each round for title odds), with its date, and never edited: only the result is added. The archive files are public on GitHub, whose history shows when each line was written. Everything is on the Archives page.
 <b>How does the “Beat the model” contest work?</b>For each match, you pick the winner before it starts. Right pick: 10 ÷ the chance Seeded gave your player (favourite at 80% → 13 points, underdog at 20% → 50, 100 at most). Wrong pick: 0. Seeded always plays its favourite, and the leaderboard ranks everyone by total points. You only need a nickname (no account, no email); it is kept in your browser. Everyone's picks become visible once the match has started.
+<b>What are the Serve and Return rankings?</b>Two extra views of the Seeded Rating page: the share of service points and return points won over 12 months, corrected for the level of opponents. They are for information only and do not change the Seeded Rating. Details in section 7.
 <b>How often is it updated?</b>A full refresh every night. On top of that, a robot checks ongoing tournaments every 30 minutes: as soon as a new result appears in our source, ratings, draws and pages are recalculated and republished (usually within the hour). The limit is our source: when it publishes a result late, Seeded is late too.
 </div>
 
-<h2>9. Data &amp; credits</h2>
+<h2>10. Data &amp; credits</h2>
 <p>Match data: <b>TennisMyLife</b> (stats.tennismylife.org), used for non-commercial purposes. Thanks to everyone who keeps tennis data open.</p>
 
-<h2>10. Version history</h2>
+<h2>11. Version history</h2>
 <table class="ver">
+<tr><td>v0.24</td><td>Seeded Rating page: Serve and Return rankings (12 months, corrected for the level of opponents, by surface), also on player pages and in the comparator</td></tr>
 <tr><td>v0.23</td><td>“Beat the model” contest (pick the winner, more points for underdogs Seeded did not believe in, leaderboard, everyone's picks visible once the match has started) · the top menu stays on one line</td></tr>
 <tr><td>v0.22</td><td>Calendar: a Seeded favourite for every tournament, announced 7 days before it starts and frozen until the end (kept in the Archives)</td></tr>
 <tr><td>v0.21</td><td>“Share this visual” button on player pages, the match comparator and draws: a ready-to-post image (1080×1350) with a link back to the page</td></tr>
@@ -188,7 +196,13 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <li><b>Pas de conseils de paris.</b> Ce sont les probabilités de notre propre modèle, pas des pronostics à jouer. Pour les gros tournois, on affiche à côté la probabilité moyenne des bookmakers, pour comparer : <b>le modèle n'utilise jamais les cotes</b>.</li>
 <li>Seeded est un projet indépendant, sans lien avec l'ATP.</li></ul>
 
-<h2>7. Limites connues</h2>
+<h2>7. Service et retour</h2>
+<p>Sur la page Seeded Rating (et sur chaque page joueur et dans le comparateur), deux classements en plus regardent <b>comment</b> un joueur gagne ses points, sur les 12 derniers mois, à partir des statistiques de chaque match (circuit principal, Challengers et qualifs ; environ 98 % des matchs en ont).</p>
+<ul><li><b>Service</b> : part des points gagnés au service. <b>Retour</b> : part des points gagnés au retour. Un pourcentage brut dépend de qui on a joué : gagner 70 % de ses points de service face à des relanceurs de Challenger, ce n'est pas pareil que face aux meilleurs relanceurs du circuit. On le corrige donc du niveau des adversaires : on ajuste « points gagnés au service = moyenne de la surface + niveau de service du serveur − niveau de retour du relanceur » sur tous les matchs, pondéré par le nombre de points, avec un rappel vers la moyenne pour les petits échantillons. Le chiffre affiché, c'est ce que le joueur gagnerait <b>face à un retour moyen</b> (ou un service moyen) du circuit. À côté : les balles de break sauvées (vue Service) et converties (vue Retour), telles quelles.</li>
+<li>Pour être classé : au moins 1 200 points au service et autant au retour avec statistiques sur 12 mois (700 sur dur, 500 sur terre, 300 sur gazon ; 80 % de ces seuils pour la WTA, où les matchs sont plus courts).</li>
+<li>Ces classements sont <b>pour information</b> : ils n'entrent ni dans le Seeded Rating ni dans les probabilités. Coup droit et revers : il n'existe pas de données publiques pour chaque match, donc on ne les classe pas.</li></ul>
+
+<h2>8. Limites connues</h2>
 <ul><li>Les notes sont figées au début du tournoi (la mise à jour pendant le tournoi arrive).</li>
 <li>La fatigue n'est pas prise en compte : nos tests n'ont trouvé aucun effet fiable.</li>
 <li>Les résultats arrivent avec environ un jour de décalage.</li>
@@ -196,7 +210,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <li>Calendrier 2027 : dates issues du calendrier officiel ATP (janvier 2026). Si l'ATP déplace un tournoi, on le met à jour à la main.</li>
 <li>Les jeunes joueurs et les retours de blessure ont peu de données : leur note bouge vite et est moins sûre.</li></ul>
 
-<h2>8. FAQ</h2>
+<h2>9. FAQ</h2>
 <div class="faq">
 <b>Pourquoi un joueur est-il mieux noté que son classement ATP ?</b>Le classement ATP additionne les points des tournois sur 52 semaines : il récompense le fait de jouer (et gagner) beaucoup. Le Seeded Rating mesure ton niveau de jeu, quel que soit ton calendrier. Un joueur qui revient de blessure, ou qui joue peu, peut valoir bien mieux que son classement.
 <b>Pourquoi un joueur reste-t-il n°1 alors qu'il n'a pas joué depuis des mois ?</b>Ses matchs des 12 derniers mois comptent toujours. Le badge « inactif » le signale, et sa note se met à jour dès qu'il rejoue.
@@ -206,14 +220,16 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <b>Y a-t-il une version féminine ?</b>Oui : clique sur « WTA » en haut de n'importe quelle page. Même méthode et mêmes réglages que chez les hommes (vérifiés sur les seules données WTA : aucune variante ne faisait mieux). Le classement WTA compte environ 115 joueuses, car notre source n'inclut pas les tournois WTA 125 et ITF : moins de joueuses atteignent les 15 matchs nécessaires. Le calendrier WTA 2027 vient du calendrier officiel de la WTA (octobre 2026).
 <b>Pouvez-vous modifier une prédiction après le match ?</b>Non. Chaque prédiction est enregistrée avant le match (ou avant chaque tour pour les chances de titre), avec sa date, et n'est jamais retouchée : seul le résultat est ajouté. Les fichiers d'archives sont publics sur GitHub, dont l'historique montre quand chaque ligne a été écrite. Tout est sur la page Archives.
 <b>Comment marche le concours « Battez le modèle » ?</b>Pour chaque match, tu choisis le vainqueur avant le début. Bon choix : 10 ÷ la chance que Seeded donnait à ton joueur (favori à 80 % → 13 points, outsider à 20 % → 50, 100 au maximum). Mauvais choix : 0. Seeded joue toujours son favori, et le classement range tout le monde par total de points. Il suffit d'un pseudo (pas de compte, pas d'e-mail), gardé dans ton navigateur. Les pronostics de tous deviennent visibles dès que le match commence.
+<b>Que sont les classements Service et Retour ?</b>Deux vues en plus sur la page Seeded Rating : la part des points gagnés au service et au retour sur 12 mois, corrigée du niveau des adversaires. Ils sont là pour information et ne changent pas le Seeded Rating. Détails en partie 7.
 <b>À quelle fréquence c'est mis à jour ?</b>Une mise à jour complète chaque nuit. En plus, un robot vérifie les tournois en cours toutes les 30 minutes : dès qu'un nouveau résultat apparaît dans notre source, les notes, les tableaux et les pages sont recalculés et republiés (en général dans l'heure). La limite, c'est notre source : quand elle publie un résultat en retard, Seeded l'est aussi.
 </div>
 
-<h2>9. Données et crédits</h2>
+<h2>10. Données et crédits</h2>
 <p>Données des matchs : <b>TennisMyLife</b> (stats.tennismylife.org), utilisées à des fins non commerciales. Merci à tous ceux qui gardent les données du tennis ouvertes.</p>
 
-<h2>10. Historique des versions</h2>
+<h2>11. Historique des versions</h2>
 <table class="ver">
+<tr><td>v0.24</td><td>Page Seeded Rating : classements Service et Retour (12 mois, corrigés du niveau des adversaires, par surface), aussi sur les pages joueurs et dans le comparateur</td></tr>
 <tr><td>v0.23</td><td>Concours « Battez le modèle » (trouve le vainqueur, plus de points pour les outsiders auxquels Seeded ne croyait pas, classement, pronostics de tous visibles dès le début du match) · le menu du haut tient sur une ligne</td></tr>
 <tr><td>v0.22</td><td>Calendrier : un favori Seeded pour chaque tournoi, annoncé 7 jours avant son début et figé jusqu'à la fin (gardé dans les Archives)</td></tr>
 <tr><td>v0.21</td><td>Bouton « Partager ce visuel » sur les pages joueurs, le comparateur et les tableaux : une image prête à poster (1080×1350) avec un lien vers la page</td></tr>
