@@ -101,7 +101,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 <b>Can you change a prediction after the match?</b>No. Every prediction is saved before the match (or before each round for title odds), with its date, and never edited: only the result is added. The archive files are public on GitHub, whose history shows when each line was written. Everything is on the Archives page.
 <b>How does the “Beat the model” contest work?</b>For each match, you pick the winner before it starts. Right pick: 10 ÷ the chance Seeded gave your player (favourite at 80% → 13 points, underdog at 20% → 50, 100 at most). Wrong pick: 0. Seeded always plays its favourite, and the leaderboard ranks everyone by total points. You only need a nickname (no account, no email); it is kept in your browser. Everyone's picks become visible once the match has started.
 <b>What are the Serve and Return rankings?</b>Two extra views of the Seeded Rating page: the share of service points and return points won over 12 months, corrected for the level of opponents. They are for information only and do not change the Seeded Rating. Details in section 7.
-<b>How often is it updated?</b>A full refresh every night. On top of that, a robot checks ongoing tournaments every 30 minutes: as soon as a new result appears in our source, ratings, draws and pages are recalculated and republished (usually within the hour). The limit is our source: when it publishes a result late, Seeded is late too.
+<b>How often is it updated?</b>A full refresh every night. On top of that, a robot checks ongoing tournaments every 30 minutes: as soon as a new result appears in our source, ratings, draws and pages are recalculated and republished (usually within the hour). The limit is our source: when it publishes a result late, Seeded is late too. In practice (measured in November 2026), our source adds results several times a day, usually within a few hours. If a tournament is in progress and no new result has arrived for more than 24 hours, a yellow warning appears in the bar at the top of the page.
 </div>
 
 <h2>10. Data &amp; credits</h2>
@@ -109,6 +109,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 
 <h2>11. Version history</h2>
 <table class="ver">
+<tr><td>v0.25</td><td>Warning in the top bar when no new result has arrived from our source for more than 24 hours during a tournament</td></tr>
 <tr><td>v0.24</td><td>Seeded Rating page: Serve and Return rankings (12 months, corrected for the level of opponents, by surface), also on player pages and in the comparator</td></tr>
 <tr><td>v0.23</td><td>“Beat the model” contest (pick the winner, more points for underdogs Seeded did not believe in, leaderboard, everyone's picks visible once the match has started) · the top menu stays on one line</td></tr>
 <tr><td>v0.22</td><td>Calendar: a Seeded favourite for every tournament, announced 7 days before it starts and frozen until the end (kept in the Archives)</td></tr>
@@ -221,7 +222,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <b>Pouvez-vous modifier une prédiction après le match ?</b>Non. Chaque prédiction est enregistrée avant le match (ou avant chaque tour pour les chances de titre), avec sa date, et n'est jamais retouchée : seul le résultat est ajouté. Les fichiers d'archives sont publics sur GitHub, dont l'historique montre quand chaque ligne a été écrite. Tout est sur la page Archives.
 <b>Comment marche le concours « Battez le modèle » ?</b>Pour chaque match, tu choisis le vainqueur avant le début. Bon choix : 10 ÷ la chance que Seeded donnait à ton joueur (favori à 80 % → 13 points, outsider à 20 % → 50, 100 au maximum). Mauvais choix : 0. Seeded joue toujours son favori, et le classement range tout le monde par total de points. Il suffit d'un pseudo (pas de compte, pas d'e-mail), gardé dans ton navigateur. Les pronostics de tous deviennent visibles dès que le match commence.
 <b>Que sont les classements Service et Retour ?</b>Deux vues en plus sur la page Seeded Rating : la part des points gagnés au service et au retour sur 12 mois, corrigée du niveau des adversaires. Ils sont là pour information et ne changent pas le Seeded Rating. Détails en partie 7.
-<b>À quelle fréquence c'est mis à jour ?</b>Une mise à jour complète chaque nuit. En plus, un robot vérifie les tournois en cours toutes les 30 minutes : dès qu'un nouveau résultat apparaît dans notre source, les notes, les tableaux et les pages sont recalculés et republiés (en général dans l'heure). La limite, c'est notre source : quand elle publie un résultat en retard, Seeded l'est aussi.
+<b>À quelle fréquence c'est mis à jour ?</b>Une mise à jour complète chaque nuit. En plus, un robot vérifie les tournois en cours toutes les 30 minutes : dès qu'un nouveau résultat apparaît dans notre source, les notes, les tableaux et les pages sont recalculés et republiés (en général dans l'heure). La limite, c'est notre source : quand elle publie un résultat en retard, Seeded l'est aussi. En pratique (mesuré en novembre 2026), notre source ajoute des résultats plusieurs fois par jour, en général dans les quelques heures. Si un tournoi est en cours et qu'aucun nouveau résultat n'est arrivé depuis plus de 24 h, un avertissement jaune s'affiche dans la barre en haut de la page.
 </div>
 
 <h2>10. Données et crédits</h2>
@@ -229,6 +230,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 
 <h2>11. Historique des versions</h2>
 <table class="ver">
+<tr><td>v0.25</td><td>Avertissement dans la barre du haut quand aucun nouveau résultat n'est arrivé de notre source depuis plus de 24 h pendant un tournoi</td></tr>
 <tr><td>v0.24</td><td>Page Seeded Rating : classements Service et Retour (12 mois, corrigés du niveau des adversaires, par surface), aussi sur les pages joueurs et dans le comparateur</td></tr>
 <tr><td>v0.23</td><td>Concours « Battez le modèle » (trouve le vainqueur, plus de points pour les outsiders auxquels Seeded ne croyait pas, classement, pronostics de tous visibles dès le début du match) · le menu du haut tient sur une ligne</td></tr>
 <tr><td>v0.22</td><td>Calendrier : un favori Seeded pour chaque tournoi, annoncé 7 jours avant son début et figé jusqu'à la fin (gardé dans les Archives)</td></tr>

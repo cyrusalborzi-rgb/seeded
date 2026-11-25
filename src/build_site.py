@@ -77,6 +77,8 @@ tr:nth-child(even) td{background-color:#fafafa} tr:nth-child(even) td.b{backgrou
 .lock{color:#999;background:#f7f7f7!important;text-align:center}
 .btn{font:inherit;font-size:12px;padding:4px 10px;border:1px solid #bbb;background:#f6f6f6;cursor:pointer;margin-right:3px}
 .btn.on{background:#d9e4f1;border-color:#1d3557;font-weight:bold}
+.lag{display:inline-block;margin-left:6px;background:#fff3cd;color:#6b4e00;border:1px solid #e8c766;border-radius:4px;padding:1px 7px;font-size:12px}
+.lag a{color:#6b4e00;text-decoration:underline}
 .rviews{margin:8px 0 2px;display:flex;flex-wrap:wrap;gap:0}
 .rviews .btn{font-size:13px;padding:5px 12px;border-radius:0;margin:0 -1px 0 0}
 .rviews .btn:first-child{border-radius:4px 0 0 4px}.rviews .btn:last-child{border-radius:0 4px 4px 0}
@@ -354,6 +356,7 @@ const T = {
   nav_home: 'Home', nav_draws: 'Draws', nav_rating: 'Seeded Rating', nav_players: 'Players', nav_predictor: 'Predictor', nav_record: 'Track record', nav_method: 'Methodology',
   sub: () => (D.live.length ? `<b>Live:</b> ${D.live.join(', ')} · ` : '') + (D.next ? `<b>Next:</b> ${D.next.en.replace(/^([^—]+?)(\s*—|$)/, '<a class="ql" href="#calendar">$1</a>$2')} · ` : '') + 'Data through',
   upd_at: w => `site updated ${w}`,
+  lag: (h, w) => `⚠ No new result from our data source for ${h} h (last one received ${w}): the latest matches may be missing. <a href="#method/9">Why?</a>`,
   ad_lb: 'ADVERTISEMENT · 728×90', ad_mr: 'ADVERTISEMENT · 300×250',
   c1k: 'Seeded #1', c2k: () => `Model accuracy (ATP, ${F.first_test_year}–${String(F.last_year).slice(2)})`, c2s: () => `vs ${pct(F.main.atp)} for the ATP ranking`, c3k: () => `Last ${F.top3.n} Grand Slams`,
   c3s: 'champion was in our pre-tournament top 3', c4k: 'Most underrated (top 50)',
@@ -472,6 +475,7 @@ const T = {
   nav_home: 'Accueil', nav_draws: 'Tableaux', nav_rating: 'Seeded Rating', nav_players: 'Joueurs', nav_predictor: 'Comparateur', nav_record: 'Bilan', nav_method: 'Méthodologie',
   sub: () => (D.live.length ? `<b>En cours :</b> ${D.live.join(', ')} · ` : '') + (D.next ? `<b>À venir :</b> ${D.next.fr.replace(/^([^—]+?)(\s*—|$)/, '<a class="ql" href="#calendar">$1</a>$2')} · ` : '') + 'Données au',
   upd_at: w => `site mis à jour le ${w}`,
+  lag: (h, w) => `⚠ Aucun nouveau résultat reçu de notre source depuis ${h} h (dernier reçu le ${w}) : les derniers matchs peuvent manquer. <a href="#method/9">Pourquoi ?</a>`,
   ad_lb: 'PUBLICITÉ · 728×90', ad_mr: 'PUBLICITÉ · 300×250',
   c1k: 'N°1 Seeded', c2k: () => `Précision du modèle (ATP, ${F.first_test_year}-${String(F.last_year).slice(2)})`, c2s: () => `contre ${pct(F.main.atp)} pour le classement ATP`, c3k: () => `${F.top3.n} derniers Grands Chelems`,
   c3s: 'le vainqueur était dans notre top 3 avant le tournoi', c4k: 'Le plus sous-coté (top 50)',
@@ -646,6 +650,10 @@ function renderStatic() {
   let bw = '';
   try { if (D.built) bw = new Date(D.built).toLocaleString(L === 'fr' ? 'fr-FR' : 'en-GB', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'}); } catch (e) {}
   $('#dd').textContent = dt(D.date) + (bw ? ' · ' + t('upd_at', bw) : '');
+  // point 12 : tournoi en cours mais aucun nouveau résultat reçu de la source depuis plus de 24 h → on prévient
+  try { const h = D.fresh && D.live.length ? (Date.now() - Date.parse(D.fresh)) / 36e5 : 0;
+    if (h > 24) { const w = new Date(D.fresh).toLocaleString(L === 'fr' ? 'fr-FR' : 'en-GB', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'});
+      $('#dd').insertAdjacentHTML('beforeend', ` <span class="lag">${t('lag', Math.round(h), w)}</span>`); } } catch (e) {}
   $('#rq').placeholder = t('search');
   $('#c2v').innerHTML = `<a class="ql" href="#method/5">${pct(F.main.seeded)}</a>`;
   $('#c3v').innerHTML = `<a class="ql" href="#method/5">${F.top3.in_top3} / ${F.top3.n}</a>`;

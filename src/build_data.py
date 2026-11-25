@@ -404,7 +404,13 @@ archive_out = {"tours": a_tours, "matches": a_matches, "demo": use_demo, "cal_fa
                "rec": _rec([m for m in a_matches if not m["demo"]]), "rec_demo": _rec([m for m in a_matches if m["demo"]]) if use_demo else None}
 print("archives :", len(a_tours), "tournoi(s),", len(a_matches), "matchs", "(dont EXEMPLE AO 2026)" if use_demo else "")
 
-out = {"date": date.fromordinal(today).strftime("%d %b %Y"), "live": live,
+# point 12 : heure du dernier nouveau résultat reçu de la source (fichiers « en cours » du circuit), cf. fetch_live.py
+try:
+    _fr = json.loads((STATE / "freshness.json").read_text())
+    fresh = _fr.get(ONGOING[0].name)          # même fichier que le bandeau « En cours » (circuit principal)
+except Exception:
+    fresh = None
+out = {"date": date.fromordinal(today).strftime("%d %b %Y"), "live": live, "fresh": fresh,
        "built": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(timespec="minutes"),
        "next": {"en": nxt["next"]["en"], "fr": nxt["next"]["fr"]} if nxt else None,
        "ranking": [{**r_, "sk": _skrow(r_["id"])} for r_ in json.loads(top.to_json(orient="records"))],

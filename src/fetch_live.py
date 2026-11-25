@@ -5,8 +5,11 @@ Passage « live » (toutes les 30 min) : ne retélécharge QUE les deux petits f
 Écrit dans data/ (jamais publié) et compare avec l'empreinte du passage précédent (state/live_hash.json).
 Sortie : affiche « NOUVEAUX RÉSULTATS » ou « rien de nouveau » ; code de sortie 0 dans les deux cas.
 Le résultat est aussi écrit dans outputs/live_changed.txt (« 1 » ou « 0 », jamais publié) pour run_all.py.
+Point 12 : state/freshness.json garde l'heure (UTC) du dernier changement de chaque fichier chez la source ;
+le site s'en sert pour prévenir quand aucun nouveau résultat n'est arrivé depuis longtemps pendant un tournoi.
 """
 import hashlib, json, sys, urllib.request
+from datetime import datetime, timezone
 from paths import DATA, STATE, OUT
 
 FILES = {"ongoing_tourneys.csv": "https://stats.tennismylife.org/data/ongoing_tourneys.csv",
@@ -18,6 +21,9 @@ def main():
     DATA.mkdir(exist_ok=True); STATE.mkdir(exist_ok=True)
     hpath = STATE / "live_hash.json"
     old = json.loads(hpath.read_text()) if hpath.exists() else {}
+    fpath = STATE / "freshness.json"
+    fresh = json.loads(fpath.read_text()) if fpath.exists() else {}
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     new, changed = {}, False
     for name, url in FILES.items():
         try:
@@ -36,8 +42,10 @@ def main():
         new[name] = hashlib.sha256(blob).hexdigest()
         if new[name] != old.get(name):
             changed = True
+            fresh[name] = now
             print(f"  {name} : modifié ({len(blob) / 1e3:.0f} ko)")
     hpath.write_text(json.dumps(new, indent=0))
+    fpath.write_text(json.dumps(fresh, indent=0))
     OUT.mkdir(exist_ok=True)
     (OUT / "live_changed.txt").write_text("1" if changed else "0")
     print("NOUVEAUX RÉSULTATS" if changed else "rien de nouveau dans les tournois en cours")
