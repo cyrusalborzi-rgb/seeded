@@ -21,7 +21,7 @@ c'est le mélange qui prédit le mieux les matchs (testé sur 2023-2026, voir ba
 from collections import deque
 import numpy as np
 import pandas as pd
-from seeded_model import EloModel, expected
+from seeded_model import EloModel, expected, is_indoor
 
 # ---- réglages (testés dans le backtest) ------------------------------------
 WINDOW_DAYS = 365          # fenêtre glissante
@@ -68,6 +68,8 @@ class SeededRating:
 
     # --- note actuelle d'un joueur -----------------------------------------
     def rating(self, pid, day, surface=None):
+        if surface == "Indoor":      # note de domination : la salle compte comme du dur (testé : pas mieux à part)
+            surface = "Hard"
         h = self.hist.get(pid)
         if h:
             vals, wts = [], []
@@ -146,7 +148,7 @@ class SeededRating:
             h = self.hist.setdefault(pid, deque(maxlen=self.max_matches))
             h.append((day, perf, w, surf))
             self.recent.setdefault(pid, deque(maxlen=25)).append((day, row.tourney_id))
-        self.elo.update(row.winner_id, row.loser_id, surf, self.elo.multiplier(row), day)
+        self.elo.update(row.winner_id, row.loser_id, surf, self.elo.multiplier(row), day, is_indoor(row))
 
 
 def fit_slope(matches, until=20190101, since=20100101):

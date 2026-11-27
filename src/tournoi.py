@@ -148,7 +148,7 @@ def main():
     ap = argparse.ArgumentParser(description="Seeded – page tournoi")
     ap.add_argument("--tableau", help="CSV position,joueur")
     ap.add_argument("--nom", default="Tournament")
-    ap.add_argument("--surface", default="Hard", choices=["Hard", "Clay", "Grass"])
+    ap.add_argument("--surface", default="Hard", choices=["Hard", "Clay", "Grass", "Indoor"])   # Indoor = dur en salle (point 26)
     ap.add_argument("--bo", type=int, default=3, choices=[3, 5])
     ap.add_argument("--id", help="identifiant TennisMyLife du tournoi (sinon détecté)")
     ap.add_argument("--tours-joues", help='démo : ne prendre que ces tours, ex. R128,R64 ("aucun" = avant tournoi)')

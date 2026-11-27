@@ -15,7 +15,7 @@ Lancer :  python3 backtest.py      (environ 1 minute)
 from pathlib import Path
 import numpy as np
 import pandas as pd
-from seeded_model import load_matches, build_bracket, simulate_draw, expected, bo3_to_bo5
+from seeded_model import load_matches, build_bracket, simulate_draw, expected, bo3_to_bo5, psurf
 from seeded_rating import SeededRating, to_100
 
 import json, sys
@@ -54,9 +54,9 @@ for row in matches.itertuples(index=False):
             snaps[row.tourney_id].rating(pid, row.surface)
             snaps[row.tourney_id].display_level(pid, row.surface)
     if row.tourney_date >= 20230101 and row.source == "main":
-        p_s = expected(model.level_match(row.winner_id, row.day, row.surface, row.tourney_id),
-                       model.level_match(row.loser_id, row.day, row.surface, row.tourney_id))
-        p_e = model.elo.prob(row.winner_id, row.loser_id, row.surface)
+        p_s = expected(model.level_match(row.winner_id, row.day, psurf(row), row.tourney_id),
+                       model.level_match(row.loser_id, row.day, psurf(row), row.tourney_id))
+        p_e = model.elo.prob(row.winner_id, row.loser_id, psurf(row))
         if row.best_of == 5:
             p_s, p_e = float(bo3_to_bo5(np.array([p_s]))[0]), float(bo3_to_bo5(np.array([p_e]))[0])
         preds.append((row.tourney_level, p_s, p_e, row.winner_rank, row.loser_rank))

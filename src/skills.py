@@ -20,7 +20,7 @@ import pandas as pd
 
 STAT = ["w_svpt", "w_1stWon", "w_2ndWon", "w_bpSaved", "w_bpFaced", "l_svpt", "l_1stWon", "l_2ndWon", "l_bpSaved", "l_bpFaced"]
 SURF = {"Hard": "hard", "Clay": "clay", "Grass": "grass", "Carpet": "hard"}
-MIN_PTS = {"all": 1200, "hard": 700, "clay": 500, "grass": 300}      # points au service pour être classé
+MIN_PTS = {"all": 1200, "hard": 700, "clay": 500, "grass": 300, "indoor": 300}      # points au service pour être classé
 MIN_BP = 30                                                          # balles de break (sauvées ET converties)
 
 
@@ -32,25 +32,32 @@ def load(files, today):
     for f in files:
         if not f.exists():
             continue
-        d = pd.read_csv(f, low_memory=False, usecols=lambda c: c in ["tourney_date", "tourney_name", "round", "surface", "winner_id", "loser_id"] + STAT,
+        d = pd.read_csv(f, low_memory=False, usecols=lambda c: c in ["tourney_date", "tourney_name", "round", "surface", "indoor", "winner_id", "loser_id"] + STAT,
                         dtype={"winner_id": str, "loser_id": str})
         if not set(STAT) <= set(d.columns):
             continue
         d = d[(pd.to_numeric(d.tourney_date, errors="coerce") >= lim)].dropna(subset=STAT + ["surface"])
-        d = d[(d.w_svpt > 10) & (d.l_svpt > 10)]
+        d = d[(d.w_svpt > 10) & (d.l_svpt > 10)].copy()
+        d["wta"] = "wta" in f.name
         out.append(d)
     if not out:
         return pd.DataFrame()
     d = pd.concat(out, ignore_index=True).drop_duplicates(["tourney_date", "tourney_name", "round", "winner_id", "loser_id"])
     d["surf"] = d.surface.map(SURF)
+    # point 26 : dur en salle (la source WTA n'a pas l'info → liste des tournois en salle, cf. seeded_model)
+    from seeded_model import WTA_INDOOR, WTA_INDOOR_YEARS
+    yr = pd.to_numeric(d.tourney_date, errors="coerce") // 10000
+    wta_in = d.tourney_name.isin(WTA_INDOOR) | pd.Series([n in WTA_INDOOR_YEARS and y in WTA_INDOOR_YEARS[n] for n, y in zip(d.tourney_name, yr)], index=d.index)
+    flag = (d["indoor"].astype(str).eq("I") if "indoor" in d else False) | (d["wta"] & wta_in)
+    d["ind"] = d.surface.isin(["Hard", "Carpet"]) & flag
     return d.dropna(subset=["surf"])
 
 
 def _serve_rows(d):
     """Une ligne par (serveur, relanceur, match) : points au service joués / gagnés, balles de break."""
-    w = pd.DataFrame({"srv": d.winner_id, "ret": d.loser_id, "surf": d.surf, "pts": d.w_svpt,
+    w = pd.DataFrame({"srv": d.winner_id, "ret": d.loser_id, "surf": d.surf, "ind": d.ind, "pts": d.w_svpt,
                       "won": d.w_1stWon + d.w_2ndWon, "bpf": d.w_bpFaced, "bps": d.w_bpSaved})
-    l = pd.DataFrame({"srv": d.loser_id, "ret": d.winner_id, "surf": d.surf, "pts": d.l_svpt,
+    l = pd.DataFrame({"srv": d.loser_id, "ret": d.winner_id, "surf": d.surf, "ind": d.ind, "pts": d.l_svpt,
                       "won": d.l_1stWon + d.l_2ndWon, "bpf": d.l_bpFaced, "bps": d.l_bpSaved})
     r = pd.concat([w, l], ignore_index=True)
     return r[(r.won >= 0) & (r.won <= r.pts)]
@@ -81,8 +88,8 @@ def compute(files, today, ids, scale=1.0):
         return {}, {}
     rows = _serve_rows(d)
     out, ranks = {}, {}
-    for sk in ("all", "hard", "clay", "grass"):
-        r = rows if sk == "all" else rows[rows.surf == sk]
+    for sk in ("all", "hard", "clay", "grass", "indoor"):
+        r = rows if sk == "all" else rows[rows.ind] if sk == "indoor" else rows[rows.surf == sk]
         if len(r) < 200:
             continue
         s, t, mu = _fit(r)

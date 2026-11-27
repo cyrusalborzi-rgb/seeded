@@ -5,7 +5,7 @@ from datetime import date
 from pathlib import Path
 import numpy as np
 import pandas as pd
-from seeded_model import load_matches, clean_minutes
+from seeded_model import load_matches, clean_minutes, psurf, is_indoor
 from seeded_rating import SeededRating, to_100, RELIABLE_MIN, PROVISIONAL_MIN
 
 from paths import STATE, DATA, OUT, YEAR, TOURNAMENTS
@@ -51,14 +51,14 @@ for r in m.itertuples(index=False):
         mi += 1
     if r.tourney_id in entrants and r.tourney_id not in season_snap and r.source != "quali":
         # même niveau que pour nos prédictions : note + bonus de rythme (matchs des 14 derniers jours)
-        season_snap[r.tourney_id] = {pid: sr.level_match(pid, r.day, r.surface) for pid in entrants[r.tourney_id]}
+        season_snap[r.tourney_id] = {pid: sr.level_match(pid, r.day, psurf(r)) for pid in entrants[r.tourney_id]}
     if snap30 is None and r.day >= today - 30:
         snap30 = {pid: sr.note(pid, r.day) for pid in sr.hist if sr.n_recent(pid, r.day) >= RELIABLE_MIN}
     if r.day >= today - 365:
         for me, opp, won, opp_name, opp_rank in ((r.winner_id, r.loser_id, True, r.loser_name, r.loser_rank),
                                                   (r.loser_id, r.winner_id, False, r.winner_name, r.winner_rank)):
             pmatches.setdefault(me, []).append({
-                "day": int(r.day), "t": r.tourney_name, "lvl": r.tourney_level, "rd": r.round, "surf": r.surface,
+                "day": int(r.day), "t": r.tourney_name, "lvl": r.tourney_level, "rd": r.round, "surf": r.surface, "in": is_indoor(r),
                 "opp_id": opp, "opp": opp_name, "opp_note": round(float(to_100(sr.level(opp, r.day))), 1),
                 "opp_atp": None if pd.isna(opp_rank) else int(opp_rank),
                 "res": "W" if won else "L", "score": r.score, "src": r.source, "dom": round(100 * (r.dom if won else 1 - r.dom), 1),
@@ -88,6 +88,7 @@ for pid in sr.hist:
     rows.append({"id": pid, "name": sr.names[pid], "ioc": str(last.at[pid, "ioc"]) if pid in last.index else "",
                  "note": round(sr.note(pid, today), 1), "hard": round(sr.note(pid, today, "Hard"), 1),
                  "clay": round(sr.note(pid, today, "Clay"), 1), "grass": round(sr.note(pid, today, "Grass"), 1),
+                 "indoor": round(sr.note(pid, today, "Indoor"), 1),      # point 26 : dur en salle
                  "atp": None if pid not in last.index or pd.isna(last.at[pid, "rank"]) else int(last.at[pid, "rank"]),
                  "d30": round(sr.note(pid, today) - snap30[pid], 1) if snap30 and pid in snap30 else None,
                  "inactive": bool(today - sr.last_day(pid) > 90),
@@ -106,7 +107,7 @@ calib = pd.read_csv(OUT / f"calibration_titres{SUF}.csv")
 
 # ---- comparateur : face-à-face (tous niveaux, abandons compris, forfaits exclus) + forme récente
 idx = {pid: i for i, pid in enumerate(top.id)}
-RAWCOLS = {"tourney_id", "tourney_name", "tourney_level", "surface", "tourney_date", "round", "winner_id", "loser_id", "score",
+RAWCOLS = {"tourney_id", "tourney_name", "tourney_level", "surface", "indoor", "tourney_date", "round", "winner_id", "loser_id", "score",
            "winner_age", "winner_hand", "winner_ht", "loser_age", "loser_hand", "loser_ht"}
 frames = []
 for y in range(1990, YEAR + 1):
@@ -117,6 +118,13 @@ for f in ONGOING:
     if f.exists():
         frames.append(pd.read_csv(f, usecols=lambda c: c in RAWCOLS, dtype={"winner_id": str, "loser_id": str}))
 allm = pd.concat(frames).drop_duplicates(["tourney_date", "tourney_name", "round", "winner_id", "loser_id"])
+# point 26 : « Indoor » pour le dur en salle (face-à-face et forme : la page compte le dur ET la salle sur « Dur »)
+from seeded_model import WTA_INDOOR, WTA_INDOOR_YEARS
+_yr = pd.to_numeric(allm.tourney_date, errors="coerce") // 10000
+_in = allm.get("indoor", pd.Series(None, index=allm.index)).astype(str).eq("I")
+if TOUR == "wta":
+    _in |= allm.tourney_name.isin(WTA_INDOOR) | pd.Series([n in WTA_INDOOR_YEARS and y in WTA_INDOOR_YEARS[n] for n, y in zip(allm.tourney_name, _yr)], index=allm.index)
+allm.loc[allm.surface.isin(["Hard", "Carpet"]) & _in, "surface"] = "Indoor"
 allm_all = allm.copy()                          # finales gagnées par abandon ou forfait comprises
 allm = allm[~allm.score.fillna("W/O").str.contains("W/O|unfinished")]
 both_top = allm[allm.winner_id.isin(idx) & allm.loser_id.isin(idx)].sort_values("tourney_date")
@@ -162,12 +170,12 @@ for r in top.itertuples(index=False):
     wins = [x for x in pm if x["res"] == "W"]
     best = max(wins, key=lambda x: x["opp_note"]) if wins else None
     rec = sorted(pm, key=lambda x: x["day"], reverse=True)[:15]
-    fmt_m = lambda x: {**{k: v for k, v in x.items() if k not in ("day", "opp_id", "lvl", "src", "bo")}, "date": date.fromordinal(x["day"]).strftime("%d %b %y"),
+    fmt_m = lambda x: {**{k: v for k, v in x.items() if k not in ("day", "opp_id", "lvl", "src", "bo", "in")}, "date": date.fromordinal(x["day"]).strftime("%d %b %y"),
                        "opp_i": idx.get(x["opp_id"])}
     players.append({
         "id": r.id, "bio": bio.get(r.id, {}),
         "history": [[lb, mm.get(r.id)] for lb, mm in zip(mlabels, monthly)] + [["Now", r.note]],
-        "record": {"all": wl(pm), **{s.lower(): wl([x for x in pm if x["surf"] == s]) for s in SURFS},
+        "record": {"all": wl(pm), **{s.lower(): wl([x for x in pm if x["surf"] == s]) for s in SURFS}, "indoor": wl([x for x in pm if x["in"]]),
                    "top10": wl([x for x in pm if x["opp_atp"] and x["opp_atp"] <= 10]),
                    "main": wl([x for x in pm if x["src"] == "main" and x["lvl"] != "D"])},
         "titles": sum(1 for x in pm if x["res"] == "W" and x["rd"] == "F"),
@@ -227,7 +235,7 @@ for pid in names:                                    # en cas d'homonymes, le jo
         by_norm[_nrm(names[pid])] = pid
 _BO = 3 if TOUR == "wta" else 5
 SLAMS = {"australianopen": ("Hard", _BO), "frenchopen": ("Clay", _BO), "rolandgarros": ("Clay", _BO), "wimbledon": ("Grass", _BO), "usopen": ("Hard", _BO)}
-SURF_OF = {"H": "Hard", "IH": "Hard", "CL": "Clay", "G": "Grass"}
+SURF_OF = {"H": "Hard", "IH": "Indoor", "CL": "Clay", "G": "Grass"}
 def odds_context(title):
     tn = _nrm(title)
     for k, v in SLAMS.items():
@@ -329,7 +337,7 @@ _sim_day = os.environ.get("SEEDED_TODAY")
 _real_today = date.fromisoformat(_sim_day) if _sim_day else date.today()
 _ff = STATE / f"cal_favs{SUF}.json"
 CF = json.loads(_ff.read_text()) if _ff.exists() else {}
-_SK = {"H": "hard", "IH": "hard", "CL": "clay", "G": "grass"}
+_SK = {"H": "hard", "IH": "indoor", "CL": "clay", "G": "grass"}
 _new = 0
 for e in CAL["events"] + CAL["ch"]:
     k = f"{e['d'][:4]}-{_nrm(e['name'])}"

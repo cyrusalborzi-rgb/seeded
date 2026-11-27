@@ -215,7 +215,7 @@ __TCSS__
   <h1 data-i="rating_t"></h1><div class="meta" data-i="rating_meta" id="r-meta"></div>
   <div class="rviews"><button class="btn on" data-v="gen" data-i="v_gen"></button><button class="btn" data-v="sv" data-i="v_sv"></button><button class="btn" data-v="rt" data-i="v_rt"></button></div>
   <div style="margin:6px 0"><button class="btn on" data-s="note" data-i="all_surf"></button><button class="btn" data-s="hard" data-i="hard"></button>
-  <button class="btn" data-s="clay" data-i="clay"></button><button class="btn" data-s="grass" data-i="grass"></button>
+  <button class="btn" data-s="clay" data-i="clay"></button><button class="btn" data-s="grass" data-i="grass"></button><button class="btn" data-s="indoor" data-i="indoor"></button>
   <input id="rq" style="margin-left:10px"> <span class="meta" id="r-sflinks" style="margin-left:10px"></span></div>
   <div class="meta" id="r-skn" style="display:none"></div>
   <table id="r-full"></table>
@@ -257,7 +257,7 @@ __TCSS__
   <table id="cal-t" style="max-width:1000px"></table>
 </div>
 
-<!-- ================= SURFACE (#surface/hard|clay|grass) ================= -->
+<!-- ================= SURFACE (#surface/hard|clay|grass|indoor) ================= -->
 <div class="page" id="p-surface">
   <h1 id="sf-h"></h1><div class="meta" id="sf-meta"></div>
   <div style="margin:6px 0" id="sf-tabs"></div>
@@ -275,7 +275,7 @@ __TCSS__
   <h1 data-i="nav_predictor"></h1><div class="meta" data-i="pred_meta"></div>
   <div class="boxin" style="max-width:820px">
     <select id="pa"></select> vs <select id="pb"></select>
-    <select id="ps"><option value="hard" data-i="hard"></option><option value="clay" data-i="clay"></option><option value="grass" data-i="grass"></option></select>
+    <select id="ps"><option value="hard" data-i="hard"></option><option value="clay" data-i="clay"></option><option value="grass" data-i="grass"></option><option value="indoor" data-i="indoor"></option></select>
     <select id="pbo"><option value="3" data-i="bo3"></option><option value="5" data-i="bo5"></option></select>
     <div class="pbar"><div id="ba" style="background:#1d3557"></div><div id="bb" style="background:#7a8ea8"></div></div>
     <div id="pexp" class="meta"></div>
@@ -371,9 +371,9 @@ const T = {
   rmeta_rt: 'Share of return points won against an average server on the tour (adjusted for the level of opponents) · last 12 months · <a href="#method/7">How is it calculated?</a>',
   sk_miss: n => `${n} player${n > 1 ? 's' : ''} of the ranking not shown here: not enough points played with stats on this surface in 12 months.`,
   h_sv: 'Serve', h_rt: 'Return', h_bps: 'Break points<br>saved', h_bpc: 'Break points<br>converted',
-  sk_none: 'Not enough matches with stats in the last 12 months.',
+  sk_none: 'Not enough matches with stats in the last 12 months.', sk_empty: 'Nobody has played enough matches with stats on this surface in the last 12 months yet.',
   sk_pl_note: 'Against an average opponent · <a href="#method/7">how?</a>',
-  all_surf: 'All surfaces', hard: 'Hard', clay: 'Clay', grass: 'Grass', search: 'Search a player…',
+  all_surf: 'All surfaces', hard: 'Hard', clay: 'Clay', grass: 'Grass', indoor: 'Indoor', search: 'Search a player…',
   t_title: 'Australian Open 2026 — title &amp; round probabilities', t_meta: 'Replay demo · state after the round of 16 · 50,000 simulated draws',
   t_note: 'On the real site this page has two tabs (<b>Title odds</b> | <b>Draw · What if?</b>): click any player in the draw to make him win and the whole tournament is replayed instantly — open <a href="australian-open-2026.html">australian-open-2026.html</a> to try it.',
   atp_rk: 'ATP ranking', by_surf: 'By surface', chart_t: 'Seeded Rating — last 24 months', recent_t: 'Last matches (12 months)',
@@ -402,11 +402,11 @@ const T = {
   cal_none: 'The 2027 calendar is coming very soon.',
   cal_chNote: (upto, v) => `The ATP releases the 2027 Challenger calendar in several parts: tournaments up to the week of ${upto} so far${v ? ' (ATP version of ' + v + ')' : ''}. More will be added as they are announced. No favourites are shown for Challengers: the top players never play them.`,
   cal_sum_ch: n => `<b>${n}</b> Challengers announced so far for 2027.`,
-  surf2: c => ({H: 'Hard', IH: 'Hard (indoor)', CL: 'Clay', G: 'Grass'})[c], cal_more: 'Full calendar →', home_next_t: 'Next tournaments',
+  surf2: c => ({H: 'Hard', IH: 'Indoor', CL: 'Clay', G: 'Grass'})[c], cal_more: 'Full calendar →', home_next_t: 'Next tournaments',
   cal_sum_next: (n, b, nx) => `<b>${n}</b> tournaments, including <b>${b}</b> Grand Slams &amp; Masters 1000.` + (nx ? `<br>Next: <b>${nx}</b>.` : '') + '<br>Seeded title odds are published as soon as each draw is out.',
   cal_sum_past: (n, f, t3) => `<b>${n}</b> tournaments completed.<br>Our pre-tournament favourite won <b>${f}</b> of them; the champion was in our top 3 in <b>${t3}</b>.<br><span class="meta">A 250 or 500 favourite usually has only a 20–35% title chance: a few wins out of many is expected.</span>`,
   wrk: (k, n) => k == null ? '–' : k === 1 ? '<b class="up">favourite</b>' : `#${k} / ${n}`, live_t: 'in progress',
-  sf_h: s => `${s} — Seeded Rating`, sf_meta: 'Ratings on this surface (recent matches on it count double). Specialty = places gained (or lost) compared with the overall Seeded ranking.', h_allrk: 'Overall rank',
+  sf_h: s => `${s} — Seeded Rating`, sf_meta_in: 'Indoor = hard courts under a roof (Paris, Vienna, Basel, the ATP Finals…). The indoor rating mixes the hard-court rating and the rating on indoor matches only. Specialty = places gained (or lost) compared with the overall Seeded ranking.', sf_meta: 'Ratings on this surface (recent matches on it count double). Specialty = places gained (or lost) compared with the overall Seeded ranking.', h_allrk: 'Overall rank',
   sf_top_t: s => `Top 50 on ${s.toLowerCase()}`, h_srt: 'Surface', h_all: 'Overall', h_spec: 'Specialty',
   sf_spec_t: 'Specialists (Seeded top 100)', sf_spec_note: 'Most places gained on this surface compared with the overall ranking.',
   sf_next_t: 'Next tournaments on this surface', sf_titles_t: y => `${y} ATP titles on this surface`, sf_links: 'Surface pages:', sf_none: 'No tournament on this surface for now.', pl_cmp: 'Compare with another player →', pl_12m: 'Last 12 months',
@@ -490,9 +490,9 @@ const T = {
   rmeta_rt: 'Part des points gagnés au retour face à un service moyen du circuit (corrigée du niveau des adversaires) · 12 derniers mois · <a href="#method/7">Comment c\'est calculé ?</a>',
   sk_miss: n => `${n} joueur${n > 1 ? 's' : ''} du classement n'apparai${n > 1 ? 'ssent' : 't'} pas ici : pas assez de points joués avec statistiques sur cette surface en 12 mois.`,
   h_sv: 'Service', h_rt: 'Retour', h_bps: 'Balles de break<br>sauvées', h_bpc: 'Balles de break<br>converties',
-  sk_none: 'Pas assez de matchs avec statistiques sur les 12 derniers mois.',
+  sk_none: 'Pas assez de matchs avec statistiques sur les 12 derniers mois.', sk_empty: 'Personne n\'a encore joué assez de matchs avec statistiques sur cette surface en 12 mois.',
   sk_pl_note: 'Face à un adversaire moyen · <a href="#method/7">comment&nbsp;?</a>',
-  all_surf: 'Toutes surfaces', hard: 'Dur', clay: 'Terre battue', grass: 'Gazon', search: 'Chercher un joueur…',
+  all_surf: 'Toutes surfaces', hard: 'Dur', clay: 'Terre battue', grass: 'Gazon', indoor: 'Indoor', search: 'Chercher un joueur…',
   t_title: 'Open d\'Australie 2026 — probabilités par tour et de titre', t_meta: 'Démo rejouée · état après les huitièmes de finale · 50 000 tableaux simulés',
   t_note: 'Sur le vrai site, cette page a deux onglets (<b>Chances de titre</b> | <b>Tableau · Et si ?</b>) : clique sur n\'importe quel joueur du tableau pour le faire gagner, et tout le tournoi est rejoué instantanément — ouvre <a href="australian-open-2026.html">australian-open-2026.html</a> pour l\'essayer (en anglais pour l\'instant).',
   atp_rk: 'Classement ATP', by_surf: 'Par surface', chart_t: 'Seeded Rating — 24 derniers mois', recent_t: 'Derniers matchs (12 mois)',
@@ -521,11 +521,11 @@ const T = {
   cal_none: 'Le calendrier 2027 arrive très bientôt.',
   cal_chNote: (upto, v) => `L'ATP publie le calendrier Challenger 2027 en plusieurs fois : pour l'instant, les tournois jusqu'à la semaine du ${upto}${v ? ' (version ATP du ' + v + ')' : ''}. La suite sera ajoutée au fur et à mesure. Pas de favoris pour les Challengers : les meilleurs joueurs n'y jouent pas.`,
   cal_sum_ch: n => `<b>${n}</b> Challengers annoncés pour l'instant en 2027.`,
-  surf2: c => ({H: 'Dur', IH: 'Dur (salle)', CL: 'Terre battue', G: 'Gazon'})[c], cal_more: 'Tout le calendrier →', home_next_t: 'Prochains tournois',
+  surf2: c => ({H: 'Dur', IH: 'Indoor', CL: 'Terre battue', G: 'Gazon'})[c], cal_more: 'Tout le calendrier →', home_next_t: 'Prochains tournois',
   cal_sum_next: (n, b, nx) => `<b>${n}</b> tournois, dont <b>${b}</b> Grands Chelems et Masters 1000.` + (nx ? `<br>Prochain : <b>${nx}</b>.` : '') + '<br>Les chances de titre Seeded sont publiées dès la sortie de chaque tableau.',
   cal_sum_past: (n, f, t3) => `<b>${n}</b> tournois terminés.<br>Notre favori d\'avant-tournoi en a gagné <b>${f}</b> ; le vainqueur était dans notre top 3 pour <b>${t3}</b> d\'entre eux.<br><span class="meta">Le favori d\'un 250 ou d\'un 500 n\'a souvent que 20 à 35 % de chances de titre : quelques victoires sur beaucoup de tournois, c\'est normal.</span>`,
   wrk: (k, n) => k == null ? '–' : k === 1 ? '<b class="up">favori</b>' : `n°${k} / ${n}`, live_t: 'en cours',
-  sf_h: s => `${s} — Seeded Rating`, sf_meta: 'Notes sur cette surface (les matchs récents joués dessus comptent double). Spécialité = places gagnées (ou perdues) par rapport au classement Seeded général.', h_allrk: 'Rang général',
+  sf_h: s => `${s} — Seeded Rating`, sf_meta_in: 'Indoor = dur en salle (Paris, Vienne, Bâle, les ATP Finals…). La note indoor mélange la note sur dur et la note sur les seuls matchs en salle. Spécialité = places gagnées (ou perdues) par rapport au classement Seeded général.', sf_meta: 'Notes sur cette surface (les matchs récents joués dessus comptent double). Spécialité = places gagnées (ou perdues) par rapport au classement Seeded général.', h_allrk: 'Rang général',
   sf_top_t: s => `Top 50 sur ${s.toLowerCase()}`, h_srt: 'Surface', h_all: 'Générale', h_spec: 'Spécialité',
   sf_spec_t: 'Spécialistes (top 100 Seeded)', sf_spec_note: 'Ceux qui gagnent le plus de places sur cette surface par rapport au classement général.',
   sf_next_t: 'Prochains tournois sur cette surface', sf_titles_t: y => `Titres ATP ${y} sur cette surface`, sf_links: 'Pages surface :', sf_none: 'Aucun tournoi sur cette surface pour l\'instant.', pl_cmp: 'Comparer avec un autre joueur →', pl_12m: '12 derniers mois',
@@ -556,7 +556,7 @@ const T = {
   pred_lock: 'Le face-à-face est affiché pour info : on l\'a testé, et l\'ajouter n\'améliore pas nos prédictions (log-loss 0,6043 → 0,6042 sur les matchs 2023-26).',
   h2h_t: 'Face-à-face', on_surf: s => `Sur ${s.toLowerCase()}`, last_meet: 'Dernier match', never: 'Ils ne se sont jamais affrontés (circuit, Challenger ou qualifs).',
   form_t: '10 derniers matchs', rec: (w, l) => `${w} V – ${l} D`, trend: '30 derniers jours', srank: 'Rang Seeded', atprank: 'Classement ATP', surf_rt: s => `Note ${s.toLowerCase()}`,
-  won: n => `victoire de ${n}`, all_meet: 'Toutes les confrontations', h_date2: 'Date', h_surf: 'Surface', h_winner: 'Vainqueur', more: n => `+ ${n} plus anciennes`,
+  won: n => `victoire ${/^[aeiouyhéèêâîôû]/i.test(n) ? "d'" : 'de '}${n}`, all_meet: 'Toutes les confrontations', h_date2: 'Date', h_surf: 'Surface', h_winner: 'Vainqueur', more: n => `+ ${n} plus anciennes`,
   tour: x => ({'Australian Open': 'Open d\'Australie', 'Roland Garros': 'Roland-Garros', 'Paris Masters': 'Masters de Paris',
                'Indian Wells Masters': 'Indian Wells', 'Miami Masters': 'Miami', 'Monte Carlo Masters': 'Monte-Carlo',
                'Madrid Masters': 'Madrid', 'Rome Masters': 'Rome', 'Canada Masters': 'Canada', 'Cincinnati Masters': 'Cincinnati',
@@ -710,7 +710,8 @@ function renderRating() {
       return `<td class="n b">${pct(a[j])}</td><td class="n">${a[j + 2] == null ? '–' : pct(a[j + 2], 0)}</td><td class="n">${fmt(r[surf])}</td>`; };
     $('#r-full').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th>${head}</tr>` +
       list.map((r, i) => ({r, k: i + 1})).filter(x => x.r.name.toLowerCase().includes(q)).map(({r, k}) =>
-        `<tr><td class="n">${k}</td><td><b>${plink(r.rank - 1)}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td>${cells(r)}</tr>`).join('');
+        `<tr><td class="n">${k}</td><td><b>${plink(r.rank - 1)}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td>${cells(r)}</tr>`).join('') +
+      (list.length ? '' : `<tr><td colspan="6" class="z" style="white-space:normal">${t('sk_empty')}</td></tr>`);
     return;
   }
   $('#r-skn').style.display = 'none';
@@ -718,7 +719,7 @@ function renderRating() {
     .filter(r => r.name.toLowerCase().includes(q));
   const sh = (k, lab) => `<th><a class="ql" href="#rating/${k}">${lab}</a>${surf === k ? ' ▼' : ''}</th>`;
   // la colonne triée passe juste après le nom (sur téléphone, c'est elle qu'on voit sans faire défiler)
-  const COLS = [surf, ...['note', 'hard', 'clay', 'grass'].filter(k => k !== surf)], lab = k => k === 'note' ? t('h_rating') : t(k);
+  const COLS = [surf, ...['note', 'hard', 'clay', 'grass', 'indoor'].filter(k => k !== surf)], lab = k => k === 'note' ? t('h_rating') : t(k);
   $('#r-full').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th>${sh(COLS[0], lab(COLS[0]))}<th>${t('h_trend')}</th>${COLS.slice(1).map(k => sh(k, lab(k))).join('')}<th>${TL}</th><th>${t('h_gap')}</th><th>${t('h_30')}</th></tr>` +
     rows.map(r => `<tr><td class="n">${r.srank}</td><td><b>${plink(r.rank - 1)}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td>
     <td class="n b">${fmt(r[COLS[0]])}</td><td class="sp">${spark(r.spark)}</td>${COLS.slice(1).map(k => `<td class="n">${fmt(r[k])}</td>`).join('')}
@@ -726,7 +727,9 @@ function renderRating() {
 }
 
 // ------------------------------------------------------------ calendrier et pages surface
-const SFKEY = {H: 'hard', IH: 'hard', CL: 'clay', G: 'grass'}, SFCODE = {hard: 'H', clay: 'CL', grass: 'G'};
+const SFKEY = {H: 'hard', IH: 'indoor', CL: 'clay', G: 'grass'}, SFCODE = {hard: 'H', clay: 'CL', grass: 'G', indoor: 'IH'}, SFS = ['hard', 'clay', 'grass', 'indoor'];
+// point 26 : la page « Dur » compte aussi le dur en salle (la note dur inclut les matchs en salle) ; « Indoor » = salle seulement
+const inSf = (c, sf) => sf === 'hard' ? ['H', 'IH'].includes(c) : SFKEY[c] === sf;
 const sfChip = c => `<a class="sf ${c}" href="#surface/${SFKEY[c]}">${t('surf2', c)}</a>`;
 const CATF = {G: 'big', M: 'big', F: 'big', '500': '500', '250': '250', C: 'C'};
 const catChip = (c, lvl) => CATF[c] ? `<a class="ct ${c}" href="#calendar/${CATF[c]}">${t('cat', c)}${lvl ? ' ' + lvl : ''}</a>` : `<span class="ct ${c}">${t('cat', c)}${lvl ? ' ' + lvl : ''}</span>`;
@@ -766,8 +769,8 @@ function renderCalendar() {
 let SF = 'hard';
 function renderSurface() {
   const nm = t(SF), code = SFCODE[SF], nr = L === 'fr' ? 'n°' : '#';
-  $('#sf-h').textContent = t('sf_h', nm); $('#sf-meta').textContent = t('sf_meta');
-  $('#sf-tabs').innerHTML = ['hard', 'clay', 'grass'].map(k => `<a class="btn ${k === SF ? 'on' : ''}" href="#surface/${k}" style="display:inline-block">${t(k)}</a>`).join('');
+  $('#sf-h').textContent = t('sf_h', nm); $('#sf-meta').textContent = t(SF === 'indoor' ? 'sf_meta_in' : 'sf_meta');
+  $('#sf-tabs').innerHTML = SFS.map(k => `<a class="btn ${k === SF ? 'on' : ''}" href="#surface/${k}" style="display:inline-block">${t(k)}</a>`).join('');
   $('#sf-top-t').textContent = t('sf_top_t', nm);
   const srk = {}; topOn(SF, R.length).forEach((r, k) => srk[r.id] = k + 1);
   const gain = r => r.rank - srk[r.id];                 // places gagnées (ou perdues) sur cette surface
@@ -777,17 +780,17 @@ function renderSurface() {
       <td class="n b">${fmt(r[SF])}</td><td class="n">${fmt(r.note)}</td><td class="n"><a class="ql" href="#rating">${r.rank}</a></td>${sp(r)}<td class="n">${r.atp ?? ''}</td></tr>`).join('');
   $('#sf-spec').innerHTML = [...R.slice(0, 100)].sort((a, b) => gain(b) - gain(a)).slice(0, 8)
     .map(r => `<tr><td><b>${plink(r.rank - 1)}</b></td><td class="n">${nr}${r.rank} → ${nr}${srk[r.id]}</td>${sp(r)}</tr>`).join('');
-  const up = D.cal.events.filter(e => SFKEY[e.surf] === SF && e.d >= today).slice(0, 6);
+  const up = D.cal.events.filter(e => inSf(e.surf, SF) && e.d >= today).slice(0, 6);
   $('#sf-next').innerHTML = up.length ? up.map(e => `<tr><td class="${e.sure ? '' : 'tbc'}">${e.sure ? dfmt(e.d) : monthName(e.d)}</td><td><a class="ql" href="#calendar">${t('tour', e.name)}</a></td><td>${catChip(e.cat)}</td></tr>`).join('') : `<tr><td>${t('sf_none')}</td></tr>`;
   $('#sf-titles-t').textContent = t('sf_titles_t', D.season_year);
-  const cnt = {}; D.season.filter(e => e.win && e.cat !== 'C' && SFKEY[e.surf] === SF).forEach(e => { (cnt[e.win] = cnt[e.win] || {n: 0, i: e.win_i, big: 0}).n++; if (['G', 'M', 'F'].includes(e.cat)) cnt[e.win].big++; });
+  const cnt = {}; D.season.filter(e => e.win && e.cat !== 'C' && inSf(e.surf, SF)).forEach(e => { (cnt[e.win] = cnt[e.win] || {n: 0, i: e.win_i, big: 0}).n++; if (['G', 'M', 'F'].includes(e.cat)) cnt[e.win].big++; });
   const tl = Object.entries(cnt).sort((a, b) => b[1].n - a[1].n || b[1].big - a[1].big).slice(0, 8);
   $('#sf-titles').innerHTML = tl.length ? tl.map(([n, v]) => `<tr><td><b>${plink(v.i, n)}</b></td><td class="n b">${v.n}</td></tr>`).join('') : `<tr><td>${t('sf_none')}</td></tr>`;
 }
 function renderHomeNext() {
   $('#home-next').innerHTML = (D.cal.events.length ? '' : `<tr><td class="z" style="white-space:normal">${t('cal_none')}</td></tr>`) + D.cal.events.filter(e => e.d >= today).slice(0, 5).map(e =>
     `<tr><td class="${e.sure ? '' : 'tbc'}">${e.sure ? dfmt(e.d) : monthName(e.d)}</td><td><a class="ql" href="#calendar">${t('tour', e.name)}</a></td><td>${sfChip(e.surf)}</td></tr>`).join('');
-  $('#r-sflinks').innerHTML = t('sf_links') + ' ' + ['hard', 'clay', 'grass'].map(k => `<a href="#surface/${k}">${t(k)}</a>`).join(' · ');
+  $('#r-sflinks').innerHTML = t('sf_links') + ' ' + SFS.map(k => `<a href="#surface/${k}">${t(k)}</a>`).join(' · ');
 }
 document.querySelectorAll('[data-cc]').forEach(b => b.onclick = () => { location.hash = '#calendar/' + b.dataset.cc; });
 
@@ -853,7 +856,7 @@ function renderPlayer() {
   $('#pl-rank').innerHTML = `<a class="ql" href="#rating/note/${I.slug}">Seeded <b>${nr}${I.rank}</b></a>` + (I.inactive ? `<span class="tag">${t('inactive')}</span>` : '') + d30;
   $('#pl-atp').textContent = I.atp ? nr + I.atp : '–';
   $('#pl-gap').innerHTML = I.gap == null ? '' : I.gap >= 3 ? `<span class="up">${t('under', I.gap)}</span>` : I.gap <= -3 ? `<span class="down">${t('over', -I.gap)}</span>` : t('inline');
-  $('#pl-surf').innerHTML = ['hard', 'clay', 'grass'].map(s => { const rk = R.filter(r => r[s] > I[s]).length + 1;
+  $('#pl-surf').innerHTML = SFS.map(s => { const rk = R.filter(r => r[s] > I[s]).length + 1;
     return `<tr><td><a class="ql" href="#rating/${s}/${I.slug}">${t(s)}</a></td><td class="n b">${fmt(I[s])}</td><td class="n meta" style="margin:0"><a class="ql" href="#rating/${s}/${I.slug}">${nr}${rk}</a></td></tr>`; }).join('');
   // point 6a : service et retour sur 12 mois, toutes surfaces (rang parmi le classement)
   $('#pl-sk').innerHTML = !I.sk || !I.sk.all ? '' : ['sv', 'rt'].map(v =>
@@ -874,8 +877,8 @@ function fillPlayer(I, P) {
   $('#pl-wls').innerHTML = [t('pl_titles', P.titles), t('pl_vs10', ...rc.top10)].join(sep);
   const wp = x => x[0] + x[1] ? pct(100 * x[0] / (x[0] + x[1]), 0) : '–';
   $('#pl-rec').innerHTML = `<tr><th></th><th>${t('h_wl')}</th><th>${t('h_wpct')}</th></tr>` +
-    [['pl_all', rc.all], ['hard', rc.hard], ['clay', rc.clay], ['grass', rc.grass], ['pl_main', rc.main], ['pl_top10', rc.top10]]
-      .map(([k, x], j) => `<tr><td style="white-space:normal">${j === 0 ? '<b>' + t(k) + '</b>' : ['hard', 'clay', 'grass'].includes(k) ? `<a class="ql" href="#surface/${k}">${t(k)}</a>` : t(k)}</td><td class="n">${wl(x)}</td><td class="n${j === 0 ? ' b' : ''}">${wp(x)}</td></tr>`).join('');
+    [['pl_all', rc.all], ['hard', rc.hard], ['clay', rc.clay], ['grass', rc.grass], ['indoor', rc.indoor || [0, 0]], ['pl_main', rc.main], ['pl_top10', rc.top10]]
+      .map(([k, x], j) => `<tr><td style="white-space:normal">${j === 0 ? '<b>' + t(k) + '</b>' : SFS.includes(k) ? `<a class="ql" href="#surface/${k}">${t(k)}</a>` : t(k)}</td><td class="n">${wl(x)}</td><td class="n${j === 0 ? ' b' : ''}">${wp(x)}</td></tr>`).join('');
   const bw = P.best;
   $('#pl-best').innerHTML = bw ? t('pl_best_txt', `<b>${plink(bw.opp_i, bw.opp)}</b>`, fmt(bw.opp_note), t('tour', bw.t), t('round', bw.rd), dt(bw.date)) + ` · <b>${bw.score}</b>` : t('pl_nobest');
   $('#pl-recent').innerHTML = `<tr><th>${t('h_date')}</th><th>${t('h_tourn')}</th><th>${t('h_rd')}</th><th>${t('h_opp')}</th><th>${t('h_opprt')}</th><th></th><th>${t('h_score')}</th><th>${t('h_dur')}</th><th>${t('h_pts')}</th></tr>` +
@@ -935,7 +938,7 @@ function renderPredictor() {
 }
 
 const dur = m => m ? Math.floor(m / 60) + 'h' + String(m % 60).padStart(2, '0') : '';
-const SURF_KEY = {Hard: 'hard', Clay: 'clay', Grass: 'grass', Carpet: 'hard'};
+const SURF_KEY = {Hard: 'hard', Clay: 'clay', Grass: 'grass', Carpet: 'hard', Indoor: 'indoor'};
 const monthYear = iso => { const d = new Date(iso + 'T12:00:00'); return d.toLocaleDateString(L === 'fr' ? 'fr-FR' : 'en-GB', {month: 'short', year: 'numeric'}); };
 function card(i, sf) {
   const r = R[i], f = D.form[i] || [], w = f.filter(x => x[5] === 'W').length;
@@ -965,7 +968,7 @@ function renderCompare(a, b, sf) {
   if (!list.length) { $('#ch').innerHTML = `<div class="h2hsub" style="margin:30px 0">${t('never')}</div>`; return; }
   const winnerIdx = m => m[4] === 0 ? Math.min(a, b) : Math.max(a, b);
   const wa = list.filter(m => winnerIdx(m) === a).length, wb = list.length - wa;
-  const onS = list.filter(m => SURF_KEY[m[3]] === sf), sa = onS.filter(m => winnerIdx(m) === a).length;
+  const onS = list.filter(m => sf === 'hard' ? ['hard', 'indoor'].includes(SURF_KEY[m[3]]) : SURF_KEY[m[3]] === sf), sa = onS.filter(m => winnerIdx(m) === a).length;
   const last = list[0], lw = winnerIdx(last);
   const ln = s => s.split(' ').slice(-1)[0];
   let h = `<div class="h2hbig">${ln(R[a].name)}<b>${wa} – ${wb}</b>${ln(R[b].name)}</div>
@@ -1071,7 +1074,7 @@ function renderArchives() {
   $('#arc-t').innerHTML = A.tours.length ? A.tours.map(x => {
     const nm = (L === 'fr' ? x.name_fr : x.name), b0 = x.snaps[0];
     const wp = x.winner ? x.snaps.find(s => s.stage === 'before') : null;
-    return `<div class="arc-t"><h3>${nm}${x.demo ? ` <span class="tag demo">${t('arc_demo_tag')}</span>` : ''} ${sfChip(x.surf[0] === 'h' ? 'H' : x.surf[0] === 'c' ? 'CL' : 'G')}</h3>
+    return `<div class="arc-t"><h3>${nm}${x.demo ? ` <span class="tag demo">${t('arc_demo_tag')}</span>` : ''} ${sfChip({h: 'H', c: 'CL', g: 'G', i: 'IH'}[x.surf[0]] || 'H')}</h3>
       <p>${x.winner ? t('arc_win', pn(x.wi, x.winner), x.w_rank, wp && wp.wp != null ? pct(wp.wp, 1) : '') : t('arc_live')}</p>
       <table><tr><th>${t('h_stage')}</th>${x.winner ? `<th>${t('h_wchances', last(x.winner))}</th>` : ''}<th>${t('h_ourfav')}</th>${x.demo ? '' : `<th>${t('h_saved')}</th>`}</tr>` +
       x.snaps.map(s => `<tr><td>${t('arc_stage', s.stage)}</td>` + (x.winner ? `<td class="n b">${s.wp == null ? '–' : pct(s.wp, 1)}</td>` : '') +
@@ -1124,9 +1127,9 @@ async function shDraw(kind) {
     c.font = shFont('bold', 34); c.fillText('Seeded Rating', 80 + nw, 410); c.font = shFont('normal', 30); c.fillStyle = GREY; c.fillText('/100', 80 + nw, 460);
     c.fillStyle = NAVY; c.font = shFont('bold', 36); c.fillText(t('sh_rank', I.rank, I.atp).replace('ATP', TL), 60, 590);
     c.font = shFont('bold', 32); c.fillText(t('sh_by'), 60, 690);
-    ['hard', 'clay', 'grass'].forEach((k, j) => { const y = 750 + j * 95, rk = R.filter(r => r[k] > I[k]).length + 1;
+    SFS.forEach((k, j) => { const y = 745 + j * 78, rk = R.filter(r => r[k] > I[k]).length + 1;
       c.font = shFont('normal', 30); c.fillStyle = NAVY; c.fillText(t(k), 60, y);
-      bar(250, y - 24, 560, 48, (I[k] - 40) / 60, NAVY);
+      bar(250, y - 22, 560, 42, (I[k] - 40) / 60, NAVY);
       c.font = shFont('bold', 32); c.fillText(fmt(I[k]), 835, y); c.font = shFont('normal', 26); c.fillStyle = GREY; c.fillText(nr + rk, 935, y); });
     const rc = P.record && P.record.all;
     c.fillStyle = SOFT; c.fillRect(60, 1060, W - 120, 130);
@@ -1314,9 +1317,9 @@ function route() {
   let [id, arg, arg2] = (location.hash || '#home').slice(1).split('/');
   if (!document.getElementById('p-' + id)) id = 'home';
   if (id === 'player') { if (arg && SLUG[arg] != null) PL = SLUG[arg]; renderPlayer(); }
-  if (id === 'surface') { if (['hard', 'clay', 'grass'].includes(arg)) SF = arg; renderSurface(); }
+  if (id === 'surface') { if (SFS.includes(arg)) SF = arg; renderSurface(); }
   if (id === 'rating') { const [v0, s0] = (arg || '').split('-'), isV = ['sv', 'rt'].includes(v0);
-    rview = isV ? v0 : 'gen'; const sa = isV ? s0 : v0; surf = ['hard', 'clay', 'grass'].includes(sa) ? sa : 'note';
+    rview = isV ? v0 : 'gen'; const sa = isV ? s0 : v0; surf = SFS.includes(sa) ? sa : 'note';
     document.querySelectorAll('[data-s]').forEach(x => x.classList.toggle('on', x.dataset.s === surf)); renderRating(); }
   if (id === 'contest' && CT.loaded) ctLoad();                       // rafraîchit en revenant sur la page
   if (id === 'calendar') { calCat = ['big', '500', '250', 'C'].includes(arg) ? arg : 'all'; renderCalendar(); }

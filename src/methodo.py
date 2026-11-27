@@ -39,7 +39,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 <li><b>Compared with the opponent's level.</b> Winning 45% of points against the world #1 is an excellent performance; winning 55% against the world #300 is ordinary. Each match gets a performance rating.</li>
 <li><b>Last 12 months, recent matches first.</b> A player's rating is the weighted average of his performances over the last 12 months (up to 30 matches). A match from 4 months ago counts half as much as yesterday's.</li>
 <li><b>Blended with a surface Elo</b> (70% Elo, 30% dominance): this mix predicts results best in our tests.</li>
-<li><b>By surface.</b> Hard, clay and grass ratings give double weight to matches on that surface.</li>
+<li><b>By surface.</b> Hard, clay and grass ratings give double weight to matches on that surface. <b>Indoor</b> (hard courts under a roof: Paris, Vienna, Basel, the ATP Finals…) is a fourth rating: half the hard-court rating, half a rating built only from indoor matches. Indoor matches still count in the hard-court rating. The WTA data does not say which events are played indoors, so we use a list of known indoor events.</li>
 <li><b>Comebacks.</b> After 90+ days without a match, a player's rating adapts 1.5× faster for his next 10 matches.</li>
 <li><b>Status.</b> <i>Reliable</i>: 15+ matches in the last 12 months (ranked) · <i>Provisional</i>: 5–14 matches (shown apart) · not rated below 5 · an <i>inactive</i> badge after 90 days without a match.</li>
 </ul>
@@ -58,7 +58,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 <tr><td>✅ Rhythm</td><td><b>Kept.</b> Each match played in the last 14 days (including earlier rounds and qualifying) adds a small bonus — about +0.9 percentage point per match more than the opponent. Players on a run win a bit more often than their rating says. Positive in every test year.</td></tr>
 <tr><td>✅ Ratings that live during the tournament</td><td><b>Kept.</b> During a tournament, every match already played updates the players' ratings (Elo, dominance and rhythm) before the rest of the draw is simulated — the same engine as our match-by-match predictions. Tested on 2012–26: neutral in Grand Slams (−0.1‰ log-loss), better in other tournaments (+1.5‰, positive in 12 of 15 years), especially in the late rounds.</td></tr>
 <tr><td>❌ Fatigue</td><td>Rejected. The length of the previous match, a deciding set or the minutes played in the tournament do not help. Surprisingly, a player coming out of a marathon wins slightly <i>more</i> often than expected: if he is still there, he is in form.</td></tr>
-<tr><td>❌ Indoor / outdoor</td><td>Rejected: no measurable effect beyond the surface rating.</td></tr>
+<tr><td>✅ Indoor as a 4th surface</td><td><b>Kept (v0.26).</b> On indoor matches, using the indoor rating instead of the hard-court rating improves predictions slightly: WTA better in all three periods tested (2012–17, 2018–22, 2023–26, −2.6 to −4.3‰ log-loss), ATP better in two of three (−0.9‰ and −1.7‰, +0.9‰ in 2018–22). Small gains, nothing changes outside indoor events. An earlier test (v0.6), as a simple indoor/outdoor bonus, had no effect.</td></tr>
 <tr><td>❌ Head-to-head</td><td>Rejected (see below).</td></tr>
 </table>
 <p>The rhythm bonus is used for predictions only: it does not change the Seeded Rating shown on the site.</p>
@@ -79,7 +79,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 <h2>7. Serve and return</h2>
 <p>On the Seeded Rating page (and on each player page and in the comparator), two extra rankings look at <b>how</b> a player wins his points, over the last 12 months, from the statistics of each match (main tour, Challengers and qualifying; about 98% of matches have them).</p>
 <ul><li><b>Serve</b>: share of service points won. <b>Return</b>: share of return points won. A raw percentage depends on who you played: 70% of service points won against Challenger returners is not the same as against the best returners on tour. So we correct it for the level of opponents: we fit “service points won = average on the surface + server's serve level − returner's return level” on every match, weighted by the number of points, with a pull towards the average for small samples. The figure shown is what the player would win <b>against an average returner</b> (or server) on the tour. Next to it: break points saved (Serve view) and converted (Return view), as they are.</li>
-<li>To be ranked: at least 1,200 service points and as many return points with stats in 12 months (700 on hard, 500 on clay, 300 on grass; 80% of that for the WTA, where matches are shorter).</li>
+<li>To be ranked: at least 1,200 service points and as many return points with stats in 12 months (700 on hard, 500 on clay, 300 on grass, 300 indoor; 80% of that for the WTA, where matches are shorter).</li>
 <li>These rankings are <b>for information only</b>: they are not used in the Seeded Rating or in the probabilities. Forehand and backhand: no public data exists for every match, so we do not rank them.</li></ul>
 
 <h2>8. Known limits</h2>
@@ -101,6 +101,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 <b>Can you change a prediction after the match?</b>No. Every prediction is saved before the match (or before each round for title odds), with its date, and never edited: only the result is added. The archive files are public on GitHub, whose history shows when each line was written. Everything is on the Archives page.
 <b>How does the “Beat the model” contest work?</b>For each match, you pick the winner before it starts. Right pick: 10 ÷ the chance Seeded gave your player (favourite at 80% → 13 points, underdog at 20% → 50, 100 at most). Wrong pick: 0. Seeded always plays its favourite, and the leaderboard ranks everyone by total points. You only need a nickname (no account, no email); it is kept in your browser. Everyone's picks become visible once the match has started.
 <b>What are the Serve and Return rankings?</b>Two extra views of the Seeded Rating page: the share of service points and return points won over 12 months, corrected for the level of opponents. They are for information only and do not change the Seeded Rating. Details in section 7.
+<b>Why is there an “Indoor” surface?</b>Hard courts under a roof (Paris, Vienna, Basel, the ATP Finals…) play differently: no wind, no sun, often faster. Some players are much better there. The Indoor rating mixes the hard-court rating and a rating built only from indoor matches; it is used for the probabilities of indoor tournaments. Details in section 2.
 <b>How often is it updated?</b>A full refresh every night. On top of that, a robot checks ongoing tournaments every 30 minutes: as soon as a new result appears in our source, ratings, draws and pages are recalculated and republished (usually within the hour). The limit is our source: when it publishes a result late, Seeded is late too. In practice (measured in November 2026), our source adds results several times a day, usually within a few hours. If a tournament is in progress and no new result has arrived for more than 24 hours, a yellow warning appears in the bar at the top of the page.
 </div>
 
@@ -109,6 +110,7 @@ to turn that level into probabilities. Every number on the site is measured and 
 
 <h2>11. Version history</h2>
 <table class="ver">
+<tr><td>v0.26</td><td>Indoor (hard courts under a roof) as a 4th surface: rating and ranking, surface page, player pages, comparator, calendar, Serve/Return views; used for the probabilities of indoor tournaments</td></tr>
 <tr><td>v0.25</td><td>Warning in the top bar when no new result has arrived from our source for more than 24 hours during a tournament</td></tr>
 <tr><td>v0.24</td><td>Seeded Rating page: Serve and Return rankings (12 months, corrected for the level of opponents, by surface), also on player pages and in the comparator</td></tr>
 <tr><td>v0.23</td><td>“Beat the model” contest (pick the winner, more points for underdogs Seeded did not believe in, leaderboard, everyone's picks visible once the match has started) · the top menu stays on one line</td></tr>
@@ -160,7 +162,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <li><b>Comparée au niveau de l'adversaire.</b> Gagner 45 % des points contre le n°1 mondial est une excellente performance ; en gagner 55 % contre le 300e mondial est banal. Chaque match reçoit une note de performance.</li>
 <li><b>12 derniers mois, les plus récents d'abord.</b> La note d'un joueur est la moyenne pondérée de ses performances sur 12 mois (30 matchs au plus). Un match d'il y a 4 mois compte moitié moins que celui d'hier.</li>
 <li><b>Mélangée avec un Elo par surface</b> (70 % Elo, 30 % domination) : c'est le mélange qui prédit le mieux dans nos tests.</li>
-<li><b>Par surface.</b> Les notes dur, terre et gazon comptent double les matchs joués sur cette surface.</li>
+<li><b>Par surface.</b> Les notes dur, terre et gazon comptent double les matchs joués sur cette surface. <b>Indoor</b> (le dur en salle : Paris, Vienne, Bâle, les ATP Finals…) est une 4e note : moitié note sur dur, moitié note calculée sur les seuls matchs en salle. Les matchs en salle comptent toujours aussi dans la note sur dur. Les données WTA ne disent pas quels tournois se jouent en salle : on utilise une liste des tournois en salle connus.</li>
 <li><b>Retours de blessure.</b> Après 90 jours ou plus sans match, la note d'un joueur s'adapte 1,5 fois plus vite pendant ses 10 matchs suivants.</li>
 <li><b>Statut.</b> <i>Fiable</i> : 15 matchs ou plus sur 12 mois (classé) · <i>Provisoire</i> : 5 à 14 matchs (affiché à part) · non classé en dessous de 5 · badge <i>inactif</i> après 90 jours sans match.</li>
 </ul>
@@ -179,7 +181,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <tr><td>✅ Rythme</td><td><b>Retenu.</b> Chaque match joué sur les 14 derniers jours (tours précédents et qualifs compris) ajoute un petit bonus : environ +0,9 point de pourcentage par match de plus que l'adversaire. Un joueur lancé gagne un peu plus souvent que ce que dit sa note. Positif chaque année testée.</td></tr>
 <tr><td>✅ Notes qui vivent pendant le tournoi</td><td><b>Retenu.</b> Pendant un tournoi, chaque match déjà joué met à jour les notes des joueurs (Elo, domination et rythme) avant de simuler la suite du tableau — le même moteur que nos prédictions match par match. Testé sur 2012-26 : neutre en Grand Chelem (−0,1 ‰ de log-loss), mieux dans les autres tournois (+1,5 ‰, positif 12 années sur 15), surtout dans les derniers tours.</td></tr>
 <tr><td>❌ Fatigue</td><td>Rejetée. La durée du match précédent, un set décisif ou les minutes jouées dans le tournoi n'aident pas. Surprise : un joueur qui sort d'un marathon gagne même un peu <i>plus</i> souvent que prévu — s'il est encore là, c'est qu'il est en forme.</td></tr>
-<tr><td>❌ Salle / extérieur</td><td>Rejeté : aucun effet mesurable au-delà de la note par surface.</td></tr>
+<tr><td>✅ Indoor comme 4e surface</td><td><b>Retenu (v0.26).</b> Sur les matchs en salle, prendre la note indoor plutôt que la note sur dur améliore un peu les prédictions : WTA mieux sur les trois périodes testées (2012-17, 2018-22, 2023-26, −2,6 à −4,3 ‰ de log-loss), ATP mieux sur deux sur trois (−0,9 ‰ et −1,7 ‰, +0,9 ‰ en 2018-22). Petits gains, rien ne change en dehors des tournois en salle. Un premier test (v0.6), sous forme de simple bonus salle/extérieur, n'avait rien donné.</td></tr>
 <tr><td>❌ Face-à-face</td><td>Rejeté (voir plus bas).</td></tr>
 </table>
 <p>Le bonus de rythme sert uniquement aux prédictions : il ne change pas le Seeded Rating affiché sur le site.</p>
@@ -200,7 +202,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <h2>7. Service et retour</h2>
 <p>Sur la page Seeded Rating (et sur chaque page joueur et dans le comparateur), deux classements en plus regardent <b>comment</b> un joueur gagne ses points, sur les 12 derniers mois, à partir des statistiques de chaque match (circuit principal, Challengers et qualifs ; environ 98 % des matchs en ont).</p>
 <ul><li><b>Service</b> : part des points gagnés au service. <b>Retour</b> : part des points gagnés au retour. Un pourcentage brut dépend de qui on a joué : gagner 70 % de ses points de service face à des relanceurs de Challenger, ce n'est pas pareil que face aux meilleurs relanceurs du circuit. On le corrige donc du niveau des adversaires : on ajuste « points gagnés au service = moyenne de la surface + niveau de service du serveur − niveau de retour du relanceur » sur tous les matchs, pondéré par le nombre de points, avec un rappel vers la moyenne pour les petits échantillons. Le chiffre affiché, c'est ce que le joueur gagnerait <b>face à un retour moyen</b> (ou un service moyen) du circuit. À côté : les balles de break sauvées (vue Service) et converties (vue Retour), telles quelles.</li>
-<li>Pour être classé : au moins 1 200 points au service et autant au retour avec statistiques sur 12 mois (700 sur dur, 500 sur terre, 300 sur gazon ; 80 % de ces seuils pour la WTA, où les matchs sont plus courts).</li>
+<li>Pour être classé : au moins 1 200 points au service et autant au retour avec statistiques sur 12 mois (700 sur dur, 500 sur terre, 300 sur gazon, 300 en indoor ; 80 % de ces seuils pour la WTA, où les matchs sont plus courts).</li>
 <li>Ces classements sont <b>pour information</b> : ils n'entrent ni dans le Seeded Rating ni dans les probabilités. Coup droit et revers : il n'existe pas de données publiques pour chaque match, donc on ne les classe pas.</li></ul>
 
 <h2>8. Limites connues</h2>
@@ -222,6 +224,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 <b>Pouvez-vous modifier une prédiction après le match ?</b>Non. Chaque prédiction est enregistrée avant le match (ou avant chaque tour pour les chances de titre), avec sa date, et n'est jamais retouchée : seul le résultat est ajouté. Les fichiers d'archives sont publics sur GitHub, dont l'historique montre quand chaque ligne a été écrite. Tout est sur la page Archives.
 <b>Comment marche le concours « Battez le modèle » ?</b>Pour chaque match, tu choisis le vainqueur avant le début. Bon choix : 10 ÷ la chance que Seeded donnait à ton joueur (favori à 80 % → 13 points, outsider à 20 % → 50, 100 au maximum). Mauvais choix : 0. Seeded joue toujours son favori, et le classement range tout le monde par total de points. Il suffit d'un pseudo (pas de compte, pas d'e-mail), gardé dans ton navigateur. Les pronostics de tous deviennent visibles dès que le match commence.
 <b>Que sont les classements Service et Retour ?</b>Deux vues en plus sur la page Seeded Rating : la part des points gagnés au service et au retour sur 12 mois, corrigée du niveau des adversaires. Ils sont là pour information et ne changent pas le Seeded Rating. Détails en partie 7.
+<b>Pourquoi une surface « Indoor » ?</b>Le dur en salle (Paris, Vienne, Bâle, les ATP Finals…) se joue différemment : pas de vent, pas de soleil, souvent plus rapide. Certains joueurs y sont bien meilleurs. La note Indoor mélange la note sur dur et une note calculée sur les seuls matchs en salle ; elle sert aux probabilités des tournois en salle. Détails en partie 2.
 <b>À quelle fréquence c'est mis à jour ?</b>Une mise à jour complète chaque nuit. En plus, un robot vérifie les tournois en cours toutes les 30 minutes : dès qu'un nouveau résultat apparaît dans notre source, les notes, les tableaux et les pages sont recalculés et republiés (en général dans l'heure). La limite, c'est notre source : quand elle publie un résultat en retard, Seeded l'est aussi. En pratique (mesuré en novembre 2026), notre source ajoute des résultats plusieurs fois par jour, en général dans les quelques heures. Si un tournoi est en cours et qu'aucun nouveau résultat n'est arrivé depuis plus de 24 h, un avertissement jaune s'affiche dans la barre en haut de la page.
 </div>
 
@@ -230,6 +233,7 @@ pour transformer ce niveau en probabilités. Chaque chiffre du site est mesuré,
 
 <h2>11. Historique des versions</h2>
 <table class="ver">
+<tr><td>v0.26</td><td>Indoor (dur en salle) comme 4e surface : note et classement, page surface, pages joueurs, comparateur, calendrier, vues Service/Retour ; sert aux probabilités des tournois en salle</td></tr>
 <tr><td>v0.25</td><td>Avertissement dans la barre du haut quand aucun nouveau résultat n'est arrivé de notre source depuis plus de 24 h pendant un tournoi</td></tr>
 <tr><td>v0.24</td><td>Page Seeded Rating : classements Service et Retour (12 mois, corrigés du niveau des adversaires, par surface), aussi sur les pages joueurs et dans le comparateur</td></tr>
 <tr><td>v0.23</td><td>Concours « Battez le modèle » (trouve le vainqueur, plus de points pour les outsiders auxquels Seeded ne croyait pas, classement, pronostics de tous visibles dès le début du match) · le menu du haut tient sur une ligne</td></tr>

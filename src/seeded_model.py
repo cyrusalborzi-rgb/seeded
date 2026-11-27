@@ -37,6 +37,26 @@ COLS = ["tourney_id", "tourney_name", "surface", "tourney_level",
         "minutes", "indoor"]
 
 
+# Point 26 : la source WTA ne dit pas si un tournoi se joue en salle → liste des tournois WTA en salle (dur).
+# (nom exact dans les données ; années quand le tournoi a changé de lieu)
+WTA_INDOOR = {"Antwerp", "Biel", "Cluj-Napoca", "Cluj-Napoca 2", "Copenhagen", "Courmayeur", "Katowice", "Limoges", "Linz",
+              "Luxembourg", "Lyon", "Memphis", "Moscow", "Nur-Sultan", "Ostrava", "Paris", "Quebec City", "St. Petersburg",
+              "Taipei", "Tallinn", "WTA Finals", "Shenzhen Finals", "Fort Worth Finals", "Riyadh Finals"}
+WTA_INDOOR_YEARS = {"Budapest": range(2017, 2020), "Tournament of Champions": range(2012, 2016),
+                    "WTA Championships": range(2011, 2014)}
+INDOOR_MIX = 0.5           # en salle : note surface = moitié dur, moitié salle (test 2012-26, cf. lab/indoor_test.py)
+
+
+def is_indoor(row):
+    """Match sur dur en salle (le Carpet est déjà rangé avec le dur)."""
+    return row.surface == "Hard" and str(getattr(row, "indoor", "")) == "I"
+
+
+def psurf(row):
+    """Surface utilisée pour PRÉDIRE un match : « Indoor » pour le dur en salle."""
+    return "Indoor" if is_indoor(row) else row.surface
+
+
 def load_matches(data_dir="data", start_year=1995, end_year=2026, tour="atp"):
     """Charge tous les matchs ATP (circuit principal + Challengers + qualifs),
     ou WTA avec tour="wta" (circuit principal seulement : la source n'a pas les WTA 125 / ITF)."""
@@ -77,6 +97,13 @@ def load_matches(data_dir="data", start_year=1995, end_year=2026, tour="atp"):
     m = m[keep].copy()
 
     # Surface : le "Carpet" (indoor) est rangé avec le dur
+    if wta:      # point 26 : la source WTA n'a pas l'info salle/extérieur
+        yr = pd.to_numeric(m["tourney_date"], errors="coerce") // 10000
+        inn = m["tourney_name"].isin(WTA_INDOOR) | pd.Series([n in WTA_INDOOR_YEARS and y in WTA_INDOOR_YEARS[n] for n, y in zip(m["tourney_name"], yr)], index=m.index)
+        m["indoor"] = np.where(inn | m.get("indoor", pd.Series(None, index=m.index)).astype(str).eq("I"), "I", "O")
+    elif "indoor" not in m:
+        m["indoor"] = None
+    # (Carpet : testé comme « salle », moins bon → reste du dur seulement)
     m["surface"] = m["surface"].replace({"Carpet": "Hard"}).fillna("Hard")
     m["best_of"] = m["best_of"].fillna(3).astype(int)
     m["round_order"] = m["round"].map(ROUND_ORDER).fillna(9)
@@ -178,8 +205,8 @@ class EloModel:
         self.k_slam = k_slam
         self.start = start
         self.overall, self.n_overall = {}, {}
-        self.surf = {"Hard": {}, "Clay": {}, "Grass": {}}
-        self.n_surf = {"Hard": {}, "Clay": {}, "Grass": {}}
+        self.surf = {"Hard": {}, "Clay": {}, "Grass": {}, "Indoor": {}}
+        self.n_surf = {"Hard": {}, "Clay": {}, "Grass": {}, "Indoor": {}}
         self.names = {}
         self.layoff_days, self.layoff_boost, self.layoff_matches = layoff_days, layoff_boost, layoff_matches
         self.last_day, self.boost_left = {}, {}
@@ -188,7 +215,10 @@ class EloModel:
     def rating(self, pid, surface):
         """Note utilisée pour prédire sur une surface donnée (mélange)."""
         o = self.overall.get(pid, self.start)
-        s = self.surf.get(surface, self.surf["Hard"]).get(pid, self.start)
+        if surface == "Indoor":      # point 26 : en salle = moitié note dur, moitié note salle
+            s = (1 - INDOOR_MIX) * self.surf["Hard"].get(pid, self.start) + INDOOR_MIX * self.surf["Indoor"].get(pid, self.start)
+        else:
+            s = self.surf.get(surface, self.surf["Hard"]).get(pid, self.start)
         return (1 - self.w) * o + self.w * s
 
     def prob(self, pid_a, pid_b, surface, best_of=3):
@@ -212,11 +242,20 @@ class EloModel:
             return self.layoff_boost
         return 1.0
 
-    def update(self, w_id, l_id, surface, mult=1.0, day=None):
+    def update(self, w_id, l_id, surface, mult=1.0, day=None, indoor=False):
         bw, bl = self._comeback(w_id, day), self._comeback(l_id, day)
+        if surface == "Indoor":
+            surface, indoor = "Hard", True
         tracks = [(self.overall, self.n_overall)]                 # note globale
         if surface in self.surf:
             tracks.append((self.surf[surface], self.n_surf[surface]))  # note surface
+        if indoor and surface == "Hard":                          # point 26 : un match en salle compte aussi pour la note « salle »
+            S, N = self.surf["Indoor"], self.n_surf["Indoor"]      # (sans le bonus de retour de pause : testé, moins bon)
+            rw, rl = S.get(w_id, self.start), S.get(l_id, self.start)
+            e = expected(rw, rl)
+            nw, nl = N.get(w_id, 0), N.get(l_id, 0)
+            S[w_id], S[l_id] = rw + mult * self._k(nw) * (1 - e), rl - mult * self._k(nl) * (1 - e)
+            N[w_id], N[l_id] = nw + 1, nl + 1
         for S, N in tracks:
             rw, rl = S.get(w_id, self.start), S.get(l_id, self.start)
             e = expected(rw, rl)
@@ -263,11 +302,11 @@ class EloModel:
             self.names[row.winner_id] = row.winner_name
             self.names[row.loser_id] = row.loser_name
             if record_from is not None and row.tourney_date >= record_from:
-                p = self.prob(row.winner_id, row.loser_id, row.surface, row.best_of)
+                p = self.prob(row.winner_id, row.loser_id, psurf(row), row.best_of)
                 preds.append((row.tourney_date, row.tourney_id, row.tourney_name,
                               row.tourney_level, row.source, row.round, p,
                               row.winner_rank, row.loser_rank))
-            self.update(row.winner_id, row.loser_id, row.surface, self.multiplier(row), row.day)
+            self.update(row.winner_id, row.loser_id, row.surface, self.multiplier(row), row.day, is_indoor(row))
         cols = ["date", "tourney_id", "tourney_name", "level", "source", "round",
                 "p_winner", "winner_rank", "loser_rank"]
         return pd.DataFrame(preds, columns=cols)
