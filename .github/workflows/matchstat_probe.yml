@@ -1,0 +1,22 @@
+name: Matchstat probe
+on:
+  workflow_dispatch:
+    inputs:
+      paths:
+        description: "chemins à tester (séparés par des espaces)"
+        required: false
+        default: ""
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Sonde
+        env:
+          MATCHSTAT_KEY: ${{ secrets.MATCHSTAT_KEY }}
+        run: python tools/matchstat_probe.py ${{ github.event.inputs.paths }}
