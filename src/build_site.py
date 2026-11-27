@@ -437,7 +437,7 @@ const T = {
   rhythm_line: (who, d, an, a, bn, b) => `Rhythm: ${an} ${a} match${a === 1 ? '' : 'es'} in the last 14 days, ${bn} ${b}` + (who ? ` → <b>+${d} for ${who}</b>` : ' → no real effect') + ' <a href="#method">(?)</a>',
   pred_lock: 'Head-to-head is shown for context only: we tested it, and adding it does not improve our predictions (log-loss 0.6043 → 0.6042 on 2023–26 matches).',
   h2h_t: 'Head-to-head', on_surf: s => `On ${s.toLowerCase()}`, last_meet: 'Last meeting', never: 'They have never played each other (tour, Challenger or qualifying).',
-  form_t: 'Last 10 matches', rec: (w, l) => `${w}–${l}`, trend: 'Last 30 days', srank: 'Seeded rank', atprank: 'ATP rank', surf_rt: s => `${s} rating`,
+  form_t: 'Last 10 matches', rec: (w, l) => `${w}–${l}`, trend: 'Last 30 days', srank: 'Seeded rank', atprank: 'ATP rank', rk_off: d => `Official ATP ranking of ${d}`, rk_off_pl: d => `official ranking of ${d}`, rk_old: d => `ATP rank at his last match (${d}): it may have changed since`, rk_old_pl: d => `rank at his last match, on ${d} — it may have changed since`, surf_rt: s => `${s} rating`,
   won: n => `${n} won`, all_meet: 'All meetings', h_date2: 'Date', h_surf: 'Surface', h_winner: 'Winner', more: n => `+ ${n} older`,
   tour: x => x, round: x => x,
   nav_contest: 'Contest', ct_h: 'Beat the model', ct_meta: 'Pick the winner of each match. The less Seeded believed in your player, the more points you score.',
@@ -555,7 +555,7 @@ const T = {
   rhythm_line: (who, d, an, a, bn, b) => `Rythme : ${an} ${a} match${a > 1 ? 's' : ''} sur les 14 derniers jours, ${bn} ${b}` + (who ? ` → <b>+${d} pour ${who}</b>` : ' → effet négligeable') + ' <a href="#method">(?)</a>',
   pred_lock: 'Le face-à-face est affiché pour info : on l\'a testé, et l\'ajouter n\'améliore pas nos prédictions (log-loss 0,6043 → 0,6042 sur les matchs 2023-26).',
   h2h_t: 'Face-à-face', on_surf: s => `Sur ${s.toLowerCase()}`, last_meet: 'Dernier match', never: 'Ils ne se sont jamais affrontés (circuit, Challenger ou qualifs).',
-  form_t: '10 derniers matchs', rec: (w, l) => `${w} V – ${l} D`, trend: '30 derniers jours', srank: 'Rang Seeded', atprank: 'Classement ATP', surf_rt: s => `Note ${s.toLowerCase()}`,
+  form_t: '10 derniers matchs', rec: (w, l) => `${w} V – ${l} D`, trend: '30 derniers jours', srank: 'Rang Seeded', atprank: 'Classement ATP', rk_off: d => `Classement ATP officiel du ${d}`, rk_off_pl: d => `classement officiel du ${d}`, rk_old: d => `Classement ATP à son dernier match (${d}) : il a pu changer depuis`, rk_old_pl: d => `rang à son dernier match, le ${d} — il a pu changer depuis`, surf_rt: s => `Note ${s.toLowerCase()}`,
   won: n => `victoire ${/^[aeiouyhéèêâîôû]/i.test(n) ? "d'" : 'de '}${n}`, all_meet: 'Toutes les confrontations', h_date2: 'Date', h_surf: 'Surface', h_winner: 'Vainqueur', more: n => `+ ${n} plus anciennes`,
   tour: x => ({'Australian Open': 'Open d\'Australie', 'Roland Garros': 'Roland-Garros', 'Paris Masters': 'Masters de Paris',
                'Indian Wells Masters': 'Indian Wells', 'Miami Masters': 'Miami', 'Monte Carlo Masters': 'Monte-Carlo',
@@ -633,6 +633,10 @@ const pct = (v, d = 1) => v == null ? '' : fmt(v, d) + (L === 'fr' ? ' %' : '%')
 const gapCell = g => g == null ? '<td class="n z">–</td>' : Math.abs(g) < 3 ? '<td class="n z">=</td>' :
   `<td class="n ${g > 0 ? 'up' : 'down'}">${g > 0 ? '+' : ''}${g}</td>`;
 const R = D.ranking;
+// point 5 : rang officiel = rang au dernier match du joueur ; « ≈ » s'il date de plus de 3 semaines (peut avoir changé)
+const dRk = iso => new Date(iso + 'T12:00:00').toLocaleDateString(L === 'fr' ? 'fr-FR' : 'en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
+const atpTxt = (r, pre = '') => r.atp ? (r.atp_old ? '≈' : '') + pre + r.atp : '–';
+const atpCell = r => !r.atp ? '<td class="n"></td>' : r.atp_off ? `<td class="n" title="${t('rk_off', dRk(D.rank_off))}">${r.atp}</td>` : r.atp_old ? `<td class="n z" title="${t('rk_old', dRk(r.atp_d))}">≈${r.atp}</td>` : `<td class="n">${r.atp}</td>`;
 // ---- un lien par joueur : #player/<nom-sans-accents>
 const slug = x => x.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const SLUG = {}, BYNAME = {};
@@ -675,13 +679,13 @@ function spark(vals, w = 80, h = 20) {
 
 function renderHome() {
   $('#h1').innerHTML = plink(0); $('#h1s').textContent = `${fmt(R[0].note)} / 100`;
-  const und = R.filter(r => r.rank <= 50 && r.atp).sort((a, b) => b.gap - a.gap)[0];
+  const und = R.filter(r => r.rank <= 50 && r.gap != null).sort((a, b) => b.gap - a.gap)[0];
   $('#h4').innerHTML = plink(und.rank - 1); const nr = L === 'fr' ? 'n°' : '#';
   $('#h4s').textContent = `Seeded ${nr}${und.rank} · ${TL} ${nr}${und.atp}`;
   $('#ao-mini').innerHTML = `<tr><th>${t('h_player')}</th><th>${t('h_qf')}</th><th>${t('h_sf')}</th><th>${t('h_f')}</th><th>${t('h_win')}</th></tr>` +
     D.ao.slice(0, 5).map(r => `<tr><td><b>${nlink(r.player)}</b></td><td class="n">${fmt(r.QF)}</td><td class="n">${fmt(r.SF)}</td><td class="n">${fmt(r.F)}</td><td class="n b">${pct(r.Titre)}</td></tr>`).join('');
   $('#r-mini').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th><th>${t('h_rating')}</th><th>${t('h_trend')}</th><th>${TL}</th><th>${t('h_gap')}</th></tr>` +
-    R.slice(0, 10).map(r => `<tr><td class="n">${r.rank}</td><td><b>${plink(r.rank - 1)}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td><td class="n b">${fmt(r.note)}</td><td class="sp">${spark(r.spark)}</td><td class="n">${r.atp ?? ''}</td>${gapCell(r.gap)}</tr>`).join('');
+    R.slice(0, 10).map(r => `<tr><td class="n">${r.rank}</td><td><b>${plink(r.rank - 1)}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td><td class="n b">${fmt(r.note)}</td><td class="sp">${spark(r.spark)}</td>${atpCell(r)}${gapCell(r.gap)}</tr>`).join('');
   const mv = R.filter(r => r.rank <= 100 && r.d30 != null);
   const ups = [...mv].sort((a, b) => b.d30 - a.d30).slice(0, 5), downs = [...mv].sort((a, b) => a.d30 - b.d30).slice(0, 5);
   $('#movers').innerHTML = `<tr><th>${t('h_rising')}</th><th>${t('h_rating')}</th><th>${t('h_30s')}</th><th>${t('h_falling')}</th><th>${t('h_rating')}</th><th>${t('h_30s')}</th></tr>` +
@@ -723,7 +727,7 @@ function renderRating() {
   $('#r-full').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th>${sh(COLS[0], lab(COLS[0]))}<th>${t('h_trend')}</th>${COLS.slice(1).map(k => sh(k, lab(k))).join('')}<th>${TL}</th><th>${t('h_gap')}</th><th>${t('h_30')}</th></tr>` +
     rows.map(r => `<tr><td class="n">${r.srank}</td><td><b>${plink(r.rank - 1)}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td>
     <td class="n b">${fmt(r[COLS[0]])}</td><td class="sp">${spark(r.spark)}</td>${COLS.slice(1).map(k => `<td class="n">${fmt(r[k])}</td>`).join('')}
-    <td class="n">${r.atp ?? ''}</td>${gapCell(r.gap)}<td class="n ${r.d30 > 0 ? 'up' : r.d30 < 0 ? 'down' : 'z'}">${r.d30 == null ? '–' : (r.d30 > 0 ? '+' : '') + fmt(r.d30)}</td></tr>`).join('');
+    ${atpCell(r)}${gapCell(r.gap)}<td class="n ${r.d30 > 0 ? 'up' : r.d30 < 0 ? 'down' : 'z'}">${r.d30 == null ? '–' : (r.d30 > 0 ? '+' : '') + fmt(r.d30)}</td></tr>`).join('');
 }
 
 // ------------------------------------------------------------ calendrier et pages surface
@@ -777,7 +781,7 @@ function renderSurface() {
   const sp = r => { const d = gain(r); return `<td class="n ${d >= 3 ? 'up' : d <= -3 ? 'down' : 'z'}">${d > 0 ? '+' : ''}${d}</td>`; };
   $('#sf-top').innerHTML = `<tr><th>#</th><th>${t('h_player')}</th><th>${t('h_ctry')}</th><th>${t('h_srt')}</th><th>${t('h_all')}</th><th>${t('h_allrk')}</th><th>${t('h_spec')}</th><th>${TL}</th></tr>` +
     topOn(SF, 50).map((r, k) => `<tr><td class="n">${k + 1}</td><td><b>${plink(r.rank - 1)}</b>${r.inactive ? `<span class="tag">${t('inactive')}</span>` : ''}</td><td>${r.ioc}</td>
-      <td class="n b">${fmt(r[SF])}</td><td class="n">${fmt(r.note)}</td><td class="n"><a class="ql" href="#rating">${r.rank}</a></td>${sp(r)}<td class="n">${r.atp ?? ''}</td></tr>`).join('');
+      <td class="n b">${fmt(r[SF])}</td><td class="n">${fmt(r.note)}</td><td class="n"><a class="ql" href="#rating">${r.rank}</a></td>${sp(r)}${atpCell(r)}</tr>`).join('');
   $('#sf-spec').innerHTML = [...R.slice(0, 100)].sort((a, b) => gain(b) - gain(a)).slice(0, 8)
     .map(r => `<tr><td><b>${plink(r.rank - 1)}</b></td><td class="n">${nr}${r.rank} → ${nr}${srk[r.id]}</td>${sp(r)}</tr>`).join('');
   const up = D.cal.events.filter(e => inSf(e.surf, SF) && e.d >= today).slice(0, 6);
@@ -854,8 +858,8 @@ function renderPlayer() {
   $('#pl-note').textContent = fmt(I.note);
   const d30 = I.d30 == null ? '' : `<br><span class="meta">${t('pl_d30', `<b class="${I.d30 > 0 ? 'up' : I.d30 < 0 ? 'down' : ''}">${(I.d30 > 0 ? '+' : '') + fmt(I.d30)}</b>`)}</span>`;
   $('#pl-rank').innerHTML = `<a class="ql" href="#rating/note/${I.slug}">Seeded <b>${nr}${I.rank}</b></a>` + (I.inactive ? `<span class="tag">${t('inactive')}</span>` : '') + d30;
-  $('#pl-atp').textContent = I.atp ? nr + I.atp : '–';
-  $('#pl-gap').innerHTML = I.gap == null ? '' : I.gap >= 3 ? `<span class="up">${t('under', I.gap)}</span>` : I.gap <= -3 ? `<span class="down">${t('over', -I.gap)}</span>` : t('inline');
+  $('#pl-atp').textContent = atpTxt(I, nr);
+  $('#pl-gap').innerHTML = (I.atp_off ? `<span class="meta" style="margin:0">${t('rk_off_pl', dRk(D.rank_off))}</span><br>` : '') + (I.atp_old ? `<span class="meta" style="margin:0">${t('rk_old_pl', dRk(I.atp_d))}</span>` : I.gap == null ? '' : I.gap >= 3 ? `<span class="up">${t('under', I.gap)}</span>` : I.gap <= -3 ? `<span class="down">${t('over', -I.gap)}</span>` : t('inline'));
   $('#pl-surf').innerHTML = SFS.map(s => { const rk = R.filter(r => r[s] > I[s]).length + 1;
     return `<tr><td><a class="ql" href="#rating/${s}/${I.slug}">${t(s)}</a></td><td class="n b">${fmt(I[s])}</td><td class="n meta" style="margin:0"><a class="ql" href="#rating/${s}/${I.slug}">${nr}${rk}</a></td></tr>`; }).join('');
   // point 6a : service et retour sur 12 mois, toutes surfaces (rang parmi le classement)
@@ -947,7 +951,7 @@ function card(i, sf) {
   return `<div style="display:flex;align-items:flex-end;gap:12px"><div><div class="big">${fmt(r.note)}</div><div class="meta"><a class="ql" href="#method/2">Seeded Rating</a> /100</div></div>
     <div style="margin-bottom:10px">${spark(r.spark, 150, 38)}<div class="meta" style="margin:0;text-align:center">${t('h_trend')}</div></div></div>
     <div class="kv"><span>${t('srank')}</span><b><a class="ql" href="#rating">${nr}${r.rank}</a></b></div>
-    <div class="kv"><span>${t('atprank')}</span><b>${r.atp ? nr + r.atp : '–'}</b></div>
+    <div class="kv"><span>${t('atprank')}</span><b${r.atp_old ? ` title="${t('rk_old', dRk(r.atp_d))}"` : ''}>${atpTxt(r, nr)}</b></div>
     <div class="kv"><span><a class="ql" href="#rating/${sf}">${t('surf_rt', t(sf))}</a></span><b>${fmt(r[sf])}</b></div>
     ${['sv', 'rt'].map(v => { const val = skv(r, v, sf);
       return `<div class="kv"><span><a class="ql" href="${rHash(v, sf)}">${t('v_' + v)}</a> <span class="meta" style="margin:0">(${t(sf).toLowerCase()})</span></span><b>${val == null ? '–' : pct(val) + ` <span class="meta" style="margin:0;font-weight:normal">${nr}${skRank(r, v, sf)}</span>`}</b></div>`; }).join('')}
@@ -1125,7 +1129,7 @@ async function shDraw(kind) {
     c.fillStyle = NAVY; c.font = shFont('bold', 210); c.fillText(fmt(I.note), 52, 450);
     const nw = c.measureText(fmt(I.note)).width;
     c.font = shFont('bold', 34); c.fillText('Seeded Rating', 80 + nw, 410); c.font = shFont('normal', 30); c.fillStyle = GREY; c.fillText('/100', 80 + nw, 460);
-    c.fillStyle = NAVY; c.font = shFont('bold', 36); c.fillText(t('sh_rank', I.rank, I.atp).replace('ATP', TL), 60, 590);
+    c.fillStyle = NAVY; c.font = shFont('bold', 36); c.fillText(t('sh_rank', I.rank, I.atp && (I.atp_old ? '≈' : '') + I.atp).replace('ATP', TL), 60, 590);
     c.font = shFont('bold', 32); c.fillText(t('sh_by'), 60, 690);
     SFS.forEach((k, j) => { const y = 745 + j * 78, rk = R.filter(r => r[k] > I[k]).length + 1;
       c.font = shFont('normal', 30); c.fillStyle = NAVY; c.fillText(t(k), 60, y);

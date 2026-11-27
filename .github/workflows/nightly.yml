@@ -36,6 +36,7 @@ jobs:
         run: python src/run_all.py --download
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}   # secret GitHub (vide = pas de cotes, le site marche quand même)
+          MATCHSTAT_KEY: ${{ secrets.MATCHSTAT_KEY }}  # point 5 : classement officiel ATP/WTA (vide = rang du dernier match, avec « ≈ »)
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}                       # point 15a : concours (vide = pas de concours)
           SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}   # publique par nature : mise dans la page
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}         # secrète : seulement pour le robot

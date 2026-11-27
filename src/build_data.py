@@ -71,6 +71,10 @@ both = pd.concat([
     m[["winner_id", "winner_rank", "winner_ioc", "day"]].set_axis(["id", "rank", "ioc", "day"], axis=1),
     m[["loser_id", "loser_rank", "loser_ioc", "day"]].set_axis(["id", "rank", "ioc", "day"], axis=1)])
 last = both.sort_values("day").drop_duplicates("id", keep="last").set_index("id")
+# point 5 : rang ATP/WTA = celui du dernier match où il est connu ; « ancien » s'il date de plus de 3 semaines
+# avant le dernier match du circuit principal dans nos données (on n'a pas de source de classement officiel : on le signale au lieu de le cacher)
+last_rk = both.dropna(subset=["rank"]).sort_values("day").drop_duplicates("id", keep="last").set_index("id")
+DATA_DAY, RANK_STALE = int(m[m.source == "main"].day.max()), 21     # dernier match du circuit principal (hors saison : les rangs bougent peu)
 
 def avg_min(pm):
     out = {}
@@ -89,7 +93,9 @@ for pid in sr.hist:
                  "note": round(sr.note(pid, today), 1), "hard": round(sr.note(pid, today, "Hard"), 1),
                  "clay": round(sr.note(pid, today, "Clay"), 1), "grass": round(sr.note(pid, today, "Grass"), 1),
                  "indoor": round(sr.note(pid, today, "Indoor"), 1),      # point 26 : dur en salle
-                 "atp": None if pid not in last.index or pd.isna(last.at[pid, "rank"]) else int(last.at[pid, "rank"]),
+                 "atp": int(last_rk.at[pid, "rank"]) if pid in last_rk.index else None,
+                 "atp_d": date.fromordinal(int(last_rk.at[pid, "day"])).isoformat() if pid in last_rk.index else None,
+                 "atp_old": bool(pid in last_rk.index and DATA_DAY - int(last_rk.at[pid, "day"]) > RANK_STALE),
                  "d30": round(sr.note(pid, today) - snap30[pid], 1) if snap30 and pid in snap30 else None,
                  "inactive": bool(today - sr.last_day(pid) > 90),
                  "n14": sr.n_rhythm(pid, today),
@@ -98,7 +104,38 @@ for pid in sr.hist:
                  "spark": [round(w[pid], 1) if pid in w else None for w in weekly] + [round(sr.note(pid, today), 1)]})
 df = pd.DataFrame(rows).sort_values("note", ascending=False).reset_index(drop=True)
 df["rank"] = df.index + 1
-df["gap"] = df.atp - df["rank"]
+# point 5 : classement OFFICIEL du jour (Matchstat, data/rankings_*.json, cache privé du robot) quand il existe ;
+# sinon (joueur hors top 500 ou nom pas retrouvé) on garde le rang du dernier match, avec « ≈ » s'il est ancien.
+import unicodedata
+_n = lambda x: "".join(c for c in unicodedata.normalize("NFKD", str(x)).lower() if c.isalnum())
+RANK_OFF = None
+_rf = DATA / f"rankings_{TOUR}.json"
+try:
+    _rj = json.loads(_rf.read_text()) if _rf.exists() else None
+    if _rj and (today - date.fromisoformat(_rj["date"]).toordinal()) <= 14:
+        RANK_OFF = _rj["date"]
+        _by = {_n(x["name"]): x["pos"] for x in _rj["rows"]}
+        _ln = {}
+        for x in _rj["rows"]:                                   # secours : nom de famille + pays (s'il est unique)
+            _ln.setdefault((_n(x["name"].split()[-1]), x.get("ioc")), []).append(x["pos"])
+        def _off(name, ioc):
+            if _n(name) in _by:
+                return _by[_n(name)]
+            c = _ln.get((_n(str(name).split()[-1]), ioc), [])
+            return c[0] if len(c) == 1 else None
+        _pos = [_off(r.name, r.ioc) for r in df.itertuples(index=False)]
+        _hit = [p_ is not None for p_ in _pos]
+        df.loc[_hit, "atp"] = [p_ for p_ in _pos if p_ is not None]
+        df.loc[_hit, "atp_d"] = RANK_OFF
+        df.loc[_hit, "atp_old"] = False
+        df["atp_off"] = _hit
+        print(f"classement officiel du {RANK_OFF} : {sum(_hit)} joueurs retrouvés sur {len(df)}")
+except Exception as e:                                          # jamais bloquant
+    print("classement officiel ignoré :", e)
+if "atp_off" not in df:
+    df["atp_off"] = False
+df["atp"] = df["atp"].astype("Int64")
+df["gap"] = (df.atp - df["rank"]).where(~df.atp_old)          # pas d'écart calculé sur un rang ancien (point 5)
 top = df.head(300)
 
 ao = pd.read_csv(OUT / f"{FEATURED['slug']}.csv").head(16)
@@ -418,7 +455,7 @@ try:
     fresh = _fr.get(ONGOING[0].name)          # même fichier que le bandeau « En cours » (circuit principal)
 except Exception:
     fresh = None
-out = {"date": date.fromordinal(today).strftime("%d %b %Y"), "live": live, "fresh": fresh,
+out = {"date": date.fromordinal(today).strftime("%d %b %Y"), "live": live, "fresh": fresh, "rank_off": RANK_OFF,
        "built": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(timespec="minutes"),
        "next": {"en": nxt["next"]["en"], "fr": nxt["next"]["fr"]} if nxt else None,
        "ranking": [{**r_, "sk": _skrow(r_["id"])} for r_ in json.loads(top.to_json(orient="records"))],

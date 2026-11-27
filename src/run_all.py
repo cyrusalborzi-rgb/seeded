@@ -1,6 +1,7 @@
 """
 Mise à jour complète du site Seeded (lancée chaque nuit par GitHub Actions) :
   1. téléchargement des données (option --download) + cotes du marché si la clé ODDS_API_KEY existe
+     + classement officiel ATP/WTA si la clé MATCHSTAT_KEY existe (point 5)
   2. backtest  -> facts.json (précision, calibration…) = source de vérité des chiffres
   3. pages tournoi (tournaments/tournaments.json)
   4. données du site (classement, joueurs, comparateur…)
@@ -56,6 +57,7 @@ if "--download" in sys.argv:
     step("1. Téléchargement des données", ["fetch_data.py"])
     step("1b. Cotes du marché (affichage seulement, jamais utilisées par le modèle)", ["fetch_odds.py"])
     step("1b. Cotes WTA (si les dernières ont plus de 12 h, quota partagé)", ["fetch_odds.py", "--wta", "--if-older", "12"])
+    step("1c. Classement officiel ATP/WTA (Matchstat, 1 relevé par jour)", ["fetch_rankings.py", "--if-older", "6"])
 step("2. Backtest (chiffres de précision)", ["backtest.py"])
 step("2. Backtest WTA", ["backtest.py", "--wta"])
 for t in json.loads((TOURNAMENTS / "tournaments.json").read_text()):
